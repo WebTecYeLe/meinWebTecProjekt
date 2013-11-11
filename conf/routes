@@ -1,0 +1,33 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                                controllers.ExampleController.index
+
+
+# Controller Beispiele
+GET     /example/output                  controllers.ExampleController.output
+GET     /example/counter                 controllers.ExampleController.cookiecounter
+GET     /example/simpletemplate          controllers.ExampleController.simpletemplate
+
+
+# Beispiel ShopLIst
+GET     /shoplist/                       controllers.ShopListController.list
+POST    /shoplist/                       controllers.ShopListController.addItem
+POST    /shoplist/:itemname/delete       controllers.ShopListController.deleteItem(itemname: String)
+
+GET     /example/simpletemplate          controllers.ExampleController.simpletemplate
+
+
+# Formulare
+GET      /login                          controllers.Login.showLoginForm()
+POST     /login                          controllers.Login.login3()
+
+GET     /userlogin                       controllers.UserLogin.index()
+POST    /userlogin						 controllers.UserLogin.login()
+
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)

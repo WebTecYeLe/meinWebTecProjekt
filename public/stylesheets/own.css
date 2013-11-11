@@ -1,0 +1,7 @@
+.box_ortsuche {position: absolute; width: 250px; height: 250px; left: 40%; top: 20%}
+.login_form {position: absolute; width: 630px; height: 10px; left: 48%; top: 15%}
+.checkbox_login {color:#FFFFFF}
+header, nav, footer, article {display: block;} 
+nav {float:left; width:20%;}
+article {float:right; width:79%;}
+footer {clear:both;}
