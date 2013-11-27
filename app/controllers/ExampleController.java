@@ -18,7 +18,10 @@ public class ExampleController extends Controller{
 	 * @return
 	 */
 	public static Result index(){
-		return redirect("/assets/html/start.html");
+		
+		//Hier muss der User überprüft werden ob er bereits schon eingeloggt ist
+		
+		return redirect("/assets/html/start_unlogged.html");
 	}
 	
 	/**

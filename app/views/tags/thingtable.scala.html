@@ -1,0 +1,41 @@
+@(items: Iterator[Thing])
+		<table class="table table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Datum</th>
+              <th>Was</th>
+              <th>Name</th>
+              <th>Wo</th>
+            </tr>
+          </thead>
+         <tbody>
+         @for( i <- items ){
+         
+            <tr>
+              <td>
+              <div class="btn-group">
+  				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+    				Action <span class="caret"></span>
+  				</button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li><a href="@routes.Things.show(i._id)">Bearbeiten</a></li>
+				    <li><a href="@routes.Things.near(3000, i.longitude(), i.latitude() )">In der Nähe</a></li>
+				  </ul>
+				</div>
+			 </td>	
+              <td>@i.dateCreated.format("dd. MMMM yyyy HH:mm:ss")</td>
+              <td>@i.what</td>
+              <td>@i.name</td>
+              <td>
+              @if(i.hasLocation()){
+               @mapimage(i.longitude(), i.latitude())
+              <br/>
+               @i.longitude(), @i.latitude()
+              }
+              </td>
+             </tr>
+         }   
+        
+        </tbody>
+      </table>

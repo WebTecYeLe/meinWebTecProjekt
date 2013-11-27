@@ -1,0 +1,10 @@
+# Deutsche Texte
+
+# form validation messages
+error.invalid=Ungültig
+error.required=Wert ist erforderlich
+form.error.required=My custom message
+
+# Examples of the default messages you can find in $PLAY_HOME/framework/src/play/src/main/resources/messages.
+# see https://groups.google.com/forum/#!topic/play-framework/_hPxGIwnH3I
+constraint.required=Erforderlich
