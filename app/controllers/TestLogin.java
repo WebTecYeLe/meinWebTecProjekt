@@ -1,17 +1,16 @@
 package controllers;
 
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import play.Logger;
+import play.mvc.Controller;
 import play.mvc.Result;
 
-import models.TestEingabeDatenbank;
-import models.User;
-import models.ValidUser;
-
-import play.data.DynamicForm;
-import play.data.Form;
-import play.mvc.Controller;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
 
 public class TestLogin extends Controller {
 
@@ -32,10 +31,22 @@ public class TestLogin extends Controller {
 		}
 
 		String testEingabe = parameters.get("testEingabe")[0];
-	
 
-		return ok("Hello. Dein Request war: " + parameters.keySet()
-				+ " testEingabe:" + testEingabe);
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+			DBCollection coll = db.getCollection("test");
+			BasicDBObject doc = new BasicDBObject("eingabe", testEingabe);
+			coll.insert(doc);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+
+		return redirect("/assets/html/testVerbindung.html");
+
+		// return ok("Hello. Dein Request war: " + parameters.keySet()
+		// + " testEingabe:" + testEingabe);
+
 	}
 
 }
