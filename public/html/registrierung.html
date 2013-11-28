@@ -18,36 +18,9 @@
 	media="screen">
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
-<script>
-	document.createElement('header');
-	document.createElement('nav');
-	document.createElement('article');
-	document.createElement('footer');
-</script>
-
-<script>
-function jahresfunktion() {
-	var von = 1920;
-	var jahr = new Date();
-	var bis = jahr.getFullYear();
-	
-	bis = bis - 16;
-	
-	for(i=von; i <= bis; i++) {
-		document.getElementById("Jahresangaben").innerHTML("<option>"+i.value+"</option>");
-		
-	}
-	
-	
-	
-	
-	
-}
-
-
-</script>
-
 <meta charset="ISO-8859-1">
+
+
 </head>
 <body>
 	<header>
@@ -84,7 +57,8 @@ function jahresfunktion() {
 		<div class="box_registrierung">
 			<div>
 				<!-- Hier ist das Formular für den Login -->
-				<form class="form-inline" role="form" method="POST" action="/registrierung/abschicken">
+				<form class="form-inline" role="form" method="POST"
+					action="/registrierung/abschicken">
 
 					<div class="input-group">
 
@@ -110,66 +84,128 @@ function jahresfunktion() {
 							type="password" class="form-control"
 							name="exampleInputPasswordRegistrierung" placeholder="Password">
 					</div>
-					<br> <br> <br> 
-				<!--  
-					<label class="radio inline"> <input
-						type="radio" name="optionsRadios" id="optionsRadios1"
-						value="option1" checked> Frau &nbsp;</label> <label class="radio"> <input type="radio"
-						name="optionsRadios" id="optionsRadios2" value="option2"> Herr </label>
-				-->	
-					<br><br>
-					
+					<br> <br>
+
+					<!--  <label class="radio inline"> -->
+					<p>
+						<input type="radio" name="optionsRadios" id="optionsRadios1"
+							value="option1" checked> Frau &nbsp;
+						<!--  </label>-->
+						<!--  <label class="radio">-->
+						<input type="radio" name="optionsRadios" id="optionsRadios2"
+							value="option2"> Herr
+						<!-- </label> -->
+					</p>
+
+					<br>
+
 					<div class="input-group">
 
 						<span class="input-group-addon">Vorname: &nbsp;&nbsp;</span> <input
 							type="text" class="form-control" name="exampleInputVorname"
 							placeholder="Vorname" required> <br>
 
-					</div><br>
-					
+					</div>
+					<br>
+
 					<div class="input-group">
 
-						<span class="input-group-addon">Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" name="exampleInputName"
-							placeholder="Name" required> <br>
+						<span class="input-group-addon">Name:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
+							class="form-control" name="exampleInputName" placeholder="Name"
+							required> <br>
 
-					</div><br>
-					<!-- Hier ist das Formular für den Login 
-					<span class= "input-group-addon"><p class="position_links">Geburtsdatum:</p>
-					<select name="Tag" size="1">
- 						<option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='01'>05</option>
- 						<option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option>
-  						<option value='11'>11</option><option value='12'>12</option><option value='13'>13</option><option value='14'>14</option><option value='15'>15</option>
-  						<option value='16'>16</option><option value='17'>17</option><option value='18'>18</option><option value='19'>19</option><option value='20'>20</option>
-  						<option value='21'>21</option><option value='22'>22</option><option value='23'>23</option><option value='24'>24</option><option value='25'>25</option>
-  						<option value='26'>26</option><option value='27'>27</option><option value='28'>28</option><option value='29'>29</option><option value='30'>30</option>
-  						<option value='31'>31</option>
-					</select>
-					<select name ="Monat" size="1">
-						<option value='01'>01</option><option value='02'>02</option><option value='03'>03</option><option value='04'>04</option><option value='01'>05</option>
- 						<option value='06'>06</option><option value='07'>07</option><option value='08'>08</option><option value='09'>09</option><option value='10'>10</option>
-  						<option value='11'>11</option><option value='12'>12</option>
-					</select >
-					<select name="Jahr" size="1">
-					<div id="Jahresangaben" onload="jahresfunktion()">
-						<option>2000</option>
 					</div>
-					</select>
-					</span><br>
-					-->
-						<div class="input-group">
+					<br> <span class="input-group-addon"><p
+							class="position_links">Geburtsdatum:</p> <select name="Tag"
+						size="1">
+							<option value='01'>01</option>
+							<option value='02'>02</option>
+							<option value='03'>03</option>
+							<option value='04'>04</option>
+							<option value='01'>05</option>
+							<option value='06'>06</option>
+							<option value='07'>07</option>
+							<option value='08'>08</option>
+							<option value='09'>09</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+							<option value='19'>19</option>
+							<option value='20'>20</option>
+							<option value='21'>21</option>
+							<option value='22'>22</option>
+							<option value='23'>23</option>
+							<option value='24'>24</option>
+							<option value='25'>25</option>
+							<option value='26'>26</option>
+							<option value='27'>27</option>
+							<option value='28'>28</option>
+							<option value='29'>29</option>
+							<option value='30'>30</option>
+							<option value='31'>31</option>
+					</select> <select name="Monat" size="1">
+							<option value='01'>01</option>
+							<option value='02'>02</option>
+							<option value='03'>03</option>
+							<option value='04'>04</option>
+							<option value='01'>05</option>
+							<option value='06'>06</option>
+							<option value='07'>07</option>
+							<option value='08'>08</option>
+							<option value='09'>09</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+					</select> <select id="AuswahlJahre" name="Jahr" size="1">
 
-						<span class="input-group-addon">Tel.: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <input
+					</select> </span><br>
+
+					<div class="input-group">
+
+						<span class="input-group-addon">Tel.:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <input
 							type="text" class="form-control" name="exampleInputTel"
 							placeholder="Telefonnummer" required> <br>
 
-					</div><br>
-					
-					
+					</div>
+					<br>
+
+
 					<button type="submit" class="btn btn-primary">Registrieren</button>
 				</form>
+
 			</div>
 		</div>
 	</article>
+
+	<script>
+	(function() {
+	    var el = document.getElementById('AuswahlJahre'),
+	    dc = document.createDocumentFragment();
+	    
+	    var jetzt = new Date();
+		var jahr = jetzt.getFullYear();
+		var von = jahr - 90;
+		jahr -= 16;
+		
+		
+	    //Sicherstellung dass jmd. mindestens 16 und höchstens 90 Jahre alt ist.
+	    for (var i = von; i <= jahr; i++) {
+	        var option = document.createElement('option');
+	        option.value = i;
+	        option.appendChild(document.createTextNode(i));
+	        dc.appendChild(option);
+	    }
+	    el.appendChild(dc);
+	}());
+	
+	</script>
 </body>
 </html>
