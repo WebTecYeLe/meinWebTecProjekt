@@ -24,7 +24,13 @@ POST    /shoplist/:itemname/delete       controllers.ShopListController.deleteIt
 
 # Formulare
 GET      /login                          controllers.Login.showLoginForm()
-POST     /login                          controllers.Login.login3()
+# POST     /login                        controllers.Login.login3()
+POST 	/login							 controllers.TestLogin.test()
+
+# Registrierung
+GET 	/registrierung					 controllers.Registrierung.registrieren()
+POST	/registrierung/abschicken		 controllers.Registrierung.abschicken()
+
 
 GET     /userlogin                       controllers.UserLogin.index()
 POST    /userlogin						 controllers.UserLogin.login()

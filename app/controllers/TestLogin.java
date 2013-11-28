@@ -1,6 +1,7 @@
 package controllers;
 
 import java.net.UnknownHostException;
+
 import java.util.Map;
 
 import play.Logger;
@@ -38,6 +39,7 @@ public class TestLogin extends Controller {
 			DBCollection coll = db.getCollection("test");
 			BasicDBObject doc = new BasicDBObject("eingabe", testEingabe);
 			coll.insert(doc);
+			mongoClient.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
