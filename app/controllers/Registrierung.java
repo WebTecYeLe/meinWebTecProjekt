@@ -1,6 +1,7 @@
 package controllers;
 
 import java.net.UnknownHostException;
+
 import java.util.GregorianCalendar;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import play.data.DynamicForm;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
+import views.html.registrierung.*;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -20,9 +22,8 @@ import com.mongodb.MongoClient;
 public class Registrierung extends Controller {
 
 	public static Result registrieren() {
-
-		return redirect("/assets/html/registrierung.html");
-
+		//return redirect("/assets/html/registrierung.html");
+		return ok(views.html.registrierung.pr.render("Registrierung",""));
 	}
 
 	public static Result abschicken() {
@@ -67,7 +68,7 @@ public class Registrierung extends Controller {
 
 		// Ueberpruefung ob das Password korrekt wiederholt eingegeben wurde
 		if (!password.equals(passwordValidierung)) {
-			return redirect("/assets/html/registrierung.html");
+			return ok(views.html.registrierung.pr.render("Registrierung","Sie haben das Password nicht korrekt eingegeben."));
 
 		}
 
@@ -114,7 +115,7 @@ public class Registrierung extends Controller {
 
 		// Prueft ob der Fahrer mindestens 18 Jahre alt ist
 		if (fahrertyp.equals("Fahrer") && alt < 18) {
-			return redirect("/assets/html/registrierung.html");
+			return ok(views.html.registrierung.pr.render("Registrierung","Sie sind leider nicht volljährig. Registrierung nicht angenommen."));
 		}
 
 		// Daten werden an die Datenbank uebertragen
@@ -142,7 +143,7 @@ public class Registrierung extends Controller {
 			// Datenbank vorkommt
 			if (!sucheUsername.isEmpty()) {
 				mongoClient.close();
-				return redirect("/assets/html/registrierung.html");
+				return ok(views.html.registrierung.pr.render("Registrierung","Der Username ist schon vergeben. Versuchen Sie bitte einen anderen Namen."));
 			}
 
 			query = new BasicDBObject("email", email);
@@ -161,7 +162,7 @@ public class Registrierung extends Controller {
 			// Email darf nur einmal in der Datenbank vorkommen
 			if (!sucheEmail.isEmpty()) {
 				mongoClient.close();
-				return redirect("/assets/html/registrierung.html");
+				return ok(views.html.registrierung.pr.render("Registrierung","Diese Email Adresse wird schon bereits verwendet. Verwenden Sie bitte eine andere Email Adresse."));
 			}
 
 			BasicDBObject doc = new BasicDBObject("username", username)

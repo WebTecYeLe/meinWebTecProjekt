@@ -1,0 +1,248 @@
+@(title: String)(message: String)
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>@title</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+
+<link href="/assets/stylesheets/bootstrap.css" rel="stylesheet"
+	media="screen">
+<link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet"
+	media="screen">
+<link href="/assets/stylesheets/bootstrap-theme.css" rel="stylesheet"
+	media="screen">
+<link href="/assets/stylesheets/bootstrap-theme.min.css"
+	rel="stylesheet" media="screen">
+<link href="/assets/stylesheets/main.css" rel="stylesheet"
+	media="screen">
+<link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
+
+<meta charset="ISO-8859-1">
+
+
+</head>
+<body>
+	<header>
+		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target=".navbar-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+
+					<a class="navbar-brand" href="/">ProTramp Mitfahrgelegenheit</a>
+				</div>
+				<div class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="/">Suche</a></li>
+						<li><a href="#">&Uuml;ber uns</a></li>
+						<li class="active"><a href="#">Registrierung</a></li>
+					</ul>
+
+
+
+
+				</div>
+				<!-- /.nav-collapse -->
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /.navbar -->
+
+	</header>
+
+
+
+
+
+	<article>
+		<div class="box_registrierung">
+
+			@if(message) {
+			<div class="alert alert-info">@message</div>
+
+			}
+
+
+			<div>
+				<!-- Hier ist das Formular für den Login -->
+				<form class="form-inline" role="form" method="POST"
+					action="/registrierung/abschicken">
+
+					<div class="input-group">
+
+						<span class="input-group-addon">Username:
+							&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+							name="exampleInputUsername" placeholder="Username" required>
+
+
+
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Email:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span> <input
+							type="email" class="form-control"
+							name="exampleInputEmailRegistrierung" placeholder="Email"
+							required>
+					</div>
+					<br>
+
+
+					<div class="input-group">
+						<span class="input-group-addon">Pwd:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;</span> <input type="password" class="form-control"
+							name="exampleInputPasswordRegistrierung" placeholder="Password">
+					</div>
+					<br>
+
+					<div class="input-group">
+						<span class="input-group-addon">Pwd(Wdh.): &nbsp;</span> <input
+							type="password" class="form-control"
+							name="exampleInputPasswordRegistrierungValidierung"
+							placeholder="Password">
+					</div>
+					<br> <br>
+
+					<p>Fahrertyp:</p>
+					<!--  <label class="radio inline"> -->
+					<p>
+						<input type="radio" name="optionsFahrer" id="optionsRadios1Fahrer"
+							value="Fahrer" checked> Fahrer &nbsp;
+						<!--  </label>-->
+						<!--  <label class="radio">-->
+						<input type="radio" name="optionsFahrer" id="optionsRadios2Fahrer"
+							value="Mitfahrer"> Mitfahrer
+						<!-- </label> -->
+					</p>
+
+					<br>
+
+					<p>Geschlecht:</p>
+					<!--  <label class="radio inline"> -->
+					<p>
+						<input type="radio" name="optionsRadios" id="optionsRadios1"
+							value="Frau" checked> Frau &nbsp;
+						<!--  </label>-->
+						<!--  <label class="radio">-->
+						<input type="radio" name="optionsRadios" id="optionsRadios2"
+							value="Herr"> Herr
+						<!-- </label> -->
+					</p>
+
+					<br>
+
+					<div class="input-group">
+
+						<span class="input-group-addon">Vorname:
+							&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+							name="exampleInputVorname" placeholder="Vorname" required>
+
+					</div>
+					<br>
+
+					<div class="input-group">
+
+						<span class="input-group-addon">Name:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
+							type="text" class="form-control" name="exampleInputName"
+							placeholder="Name" required>
+
+					</div>
+					<br> <span class="input-group-addon"><p
+							class="position_links">Geburtsdatum:</p> <select name="Tag"
+						size="1">
+							<option value='01'>01</option>
+							<option value='02'>02</option>
+							<option value='03'>03</option>
+							<option value='04'>04</option>
+							<option value='01'>05</option>
+							<option value='06'>06</option>
+							<option value='07'>07</option>
+							<option value='08'>08</option>
+							<option value='09'>09</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+							<option value='13'>13</option>
+							<option value='14'>14</option>
+							<option value='15'>15</option>
+							<option value='16'>16</option>
+							<option value='17'>17</option>
+							<option value='18'>18</option>
+							<option value='19'>19</option>
+							<option value='20'>20</option>
+							<option value='21'>21</option>
+							<option value='22'>22</option>
+							<option value='23'>23</option>
+							<option value='24'>24</option>
+							<option value='25'>25</option>
+							<option value='26'>26</option>
+							<option value='27'>27</option>
+							<option value='28'>28</option>
+							<option value='29'>29</option>
+							<option value='30'>30</option>
+							<option value='31'>31</option>
+					</select> <select name="Monat" size="1">
+							<option value='01'>01</option>
+							<option value='02'>02</option>
+							<option value='03'>03</option>
+							<option value='04'>04</option>
+							<option value='01'>05</option>
+							<option value='06'>06</option>
+							<option value='07'>07</option>
+							<option value='08'>08</option>
+							<option value='09'>09</option>
+							<option value='10'>10</option>
+							<option value='11'>11</option>
+							<option value='12'>12</option>
+					</select> <select id="AuswahlJahre" name="Jahr" size="1">
+
+					</select> </span><br>
+
+					<div class="input-group">
+
+						<span class="input-group-addon">Tel.:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span> <input type="text" class="form-control" id="exampleInputTelId"
+							name="exampleInputTel" placeholder="Telefonnummer" required>
+
+					</div>
+					<br>
+
+
+					<button type="submit" class="btn btn-primary">Registrieren</button>
+				</form>
+
+			</div>
+		</div>
+	</article>
+
+	<script>
+		(function() {
+			var el = document.getElementById('AuswahlJahre'), dc = document
+					.createDocumentFragment();
+
+			var jetzt = new Date();
+			var jahr = jetzt.getFullYear();
+			var von = jahr - 90;
+			jahr -= 16;
+
+			//Sicherstellung dass jmd. mindestens 16 und höchstens 90 Jahre alt ist.
+			for (var i = jahr; i >= von; i--) {
+				var option = document.createElement('option');
+				option.value = i;
+				option.appendChild(document.createTextNode(i));
+				dc.appendChild(option);
+			}
+			el.appendChild(dc);
+
+		}());
+	</script>
+</body>
+</html>
