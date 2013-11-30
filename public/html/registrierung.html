@@ -62,9 +62,9 @@
 
 					<div class="input-group">
 
-						<span class="input-group-addon">Username: &nbsp;</span> <input
-							type="text" class="form-control" name="exampleInputUsername"
-							placeholder="Username" required> <br>
+						<span class="input-group-addon">Username:
+							&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+							name="exampleInputUsername" placeholder="Username" required>
 
 
 
@@ -72,28 +72,46 @@
 					<br>
 					<div class="input-group">
 						<span class="input-group-addon">Email:
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;</span> <input type="email"
-							class="form-control" name="exampleInputEmailRegistrierung"
-							placeholder="Email" required>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span> <input
+							type="email" class="form-control"
+							name="exampleInputEmailRegistrierung" placeholder="Email"
+							required>
 					</div>
 					<br>
 
 
 					<div class="input-group">
-						<span class="input-group-addon">Password: &nbsp;</span> <input
-							type="password" class="form-control"
+						<span class="input-group-addon">Pwd:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							&nbsp;&nbsp;&nbsp;</span> <input type="password" class="form-control"
 							name="exampleInputPasswordRegistrierung" placeholder="Password">
 					</div>
-					<br> <br>
+					<br>
 
+					<div class="input-group">
+						<span class="input-group-addon">Pwd(Wdh.): &nbsp;</span> <input
+							type="password" class="form-control"
+							name="exampleInputPasswordRegistrierungValidierung" placeholder="Password">
+					</div>
+					<br> <br>
+					
+					<p>Sind Sie der Fahrer ? </p>
+					<span>
+						<input type="checkbox" name="mfg_fahrer" value="Fahrer">
+						Fahrer&nbsp;
+					</span>
+
+					<br><br>
+					
+					<p>Geschlecht: </p>
 					<!--  <label class="radio inline"> -->
 					<p>
 						<input type="radio" name="optionsRadios" id="optionsRadios1"
-							value="option1" checked> Frau &nbsp;
+							value="Frau" checked> Frau &nbsp;
 						<!--  </label>-->
 						<!--  <label class="radio">-->
 						<input type="radio" name="optionsRadios" id="optionsRadios2"
-							value="option2"> Herr
+							value="Herr"> Herr
 						<!-- </label> -->
 					</p>
 
@@ -101,9 +119,9 @@
 
 					<div class="input-group">
 
-						<span class="input-group-addon">Vorname: &nbsp;&nbsp;</span> <input
-							type="text" class="form-control" name="exampleInputVorname"
-							placeholder="Vorname" required> <br>
+						<span class="input-group-addon">Vorname:
+							&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+							name="exampleInputVorname" placeholder="Vorname" required>
 
 					</div>
 					<br>
@@ -111,9 +129,9 @@
 					<div class="input-group">
 
 						<span class="input-group-addon">Name:
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" name="exampleInputName" placeholder="Name"
-							required> <br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
+							type="text" class="form-control" name="exampleInputName"
+							placeholder="Name" required>
 
 					</div>
 					<br> <span class="input-group-addon"><p
@@ -170,9 +188,9 @@
 					<div class="input-group">
 
 						<span class="input-group-addon">Tel.:
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <input
-							type="text" class="form-control" name="exampleInputTel"
-							placeholder="Telefonnummer" required> <br>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span> <input type="text" class="form-control" id="exampleInputTelId"
+							name="exampleInputTel" placeholder="Telefonnummer" required>
 
 					</div>
 					<br>
@@ -186,26 +204,25 @@
 	</article>
 
 	<script>
-	(function() {
-	    var el = document.getElementById('AuswahlJahre'),
-	    dc = document.createDocumentFragment();
-	    
-	    var jetzt = new Date();
-		var jahr = jetzt.getFullYear();
-		var von = jahr - 90;
-		jahr -= 16;
-		
-		
-	    //Sicherstellung dass jmd. mindestens 16 und höchstens 90 Jahre alt ist.
-	    for (var i = von; i <= jahr; i++) {
-	        var option = document.createElement('option');
-	        option.value = i;
-	        option.appendChild(document.createTextNode(i));
-	        dc.appendChild(option);
-	    }
-	    el.appendChild(dc);
-	}());
-	
+		(function() {
+			var el = document.getElementById('AuswahlJahre'), dc = document
+					.createDocumentFragment();
+
+			var jetzt = new Date();
+			var jahr = jetzt.getFullYear();
+			var von = jahr - 90;
+			jahr -= 16;
+
+			//Sicherstellung dass jmd. mindestens 16 und höchstens 90 Jahre alt ist.
+			for (var i = jahr; i >= von; i--) {
+				var option = document.createElement('option');
+				option.value = i;
+				option.appendChild(document.createTextNode(i));
+				dc.appendChild(option);
+			}
+			el.appendChild(dc);
+
+		}());
 	</script>
 </body>
 </html>
