@@ -19,9 +19,17 @@ public class ExampleController extends Controller{
 	 */
 	public static Result index(){
 		
-		//Hier muss der User überprüft werden ob er bereits schon eingeloggt ist
+		//Hier muss der User überprüft werden ob er bereits schon eingeloggt ist		
 		
-		return redirect("/assets/html/start_unlogged.html");
+		String user = session("connected");
+		if(user != null) {
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user));
+		} else {
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+			
+		}
+		
+		
 	}
 	
 	/**

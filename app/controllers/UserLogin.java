@@ -1,10 +1,6 @@
 package controllers;
 
-import java.util.Map;
-
-import models.User;
 import models.ValidUser;
-import play.Logger;
 import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;

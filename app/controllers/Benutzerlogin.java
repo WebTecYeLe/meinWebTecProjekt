@@ -3,12 +3,9 @@ package controllers;
 import java.net.UnknownHostException;
 import java.util.Map;
 
-import org.mongojack.DBCursor;
-
 import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
 import play.mvc.Controller;
+import play.mvc.Http.Session;
 import play.mvc.Result;
 
 import com.mongodb.BasicDBObject;
@@ -92,10 +89,19 @@ public class Benutzerlogin extends Controller {
 		}
 
 		if (fertig) {
-			return ok("Einloggen OK.");
+			
+			session("connected", nutzer);			
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", nutzer));
 		} else {
-			return ok("Versuchen Sie es erneut.");
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
 		}
 
+	}
+	
+	
+	public static Result logout() {
+		session().clear();
+		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+		
 	}
 }

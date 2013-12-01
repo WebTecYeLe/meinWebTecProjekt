@@ -3,18 +3,14 @@ package controllers;
 import java.net.UnknownHostException;
 
 
+
+
 import java.util.GregorianCalendar;
 import java.util.Map;
 
-import org.mongojack.DBCursor;
-
 import play.Logger;
-import play.data.DynamicForm;
-import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
-import views.html.registrierung.*;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -177,6 +173,7 @@ public class Registrierung extends Controller {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		return redirect("/assets/html/start_unlogged.html");
+		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+		
 	}
 }
