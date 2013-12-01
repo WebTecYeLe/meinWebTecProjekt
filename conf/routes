@@ -27,6 +27,10 @@ GET      /login                          controllers.Login.showLoginForm()
 # POST     /login                        controllers.Login.login3()
 POST 	/login							 controllers.TestLogin.test()
 
+# Benutzerlogin
+
+POST	/benutzerlogin/login			controllers.Benutzerlogin.login()
+
 # Registrierung
 GET 	/registrierung					 controllers.Registrierung.registrieren()
 POST	/registrierung/abschicken		 controllers.Registrierung.abschicken()
