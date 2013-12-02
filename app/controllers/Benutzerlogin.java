@@ -14,6 +14,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 public class Benutzerlogin extends Controller {
+    
+    
 
 	public static Result login() {
 
@@ -88,20 +90,24 @@ public class Benutzerlogin extends Controller {
 			e.printStackTrace();
 		}
 
+        String info = "";
+
 		if (fertig) {
 			
 			session("connected", nutzer);			
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", nutzer));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", nutzer, info));
 		} else {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info));
 		}
 
 	}
 	
 	
 	public static Result logout() {
+        String info = "";
 		session().clear();
-		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info));
 		
 	}
 }

@@ -173,7 +173,7 @@ public class Registrierung extends Controller {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", ""));
 		
 	}
 }

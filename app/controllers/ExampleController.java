@@ -23,9 +23,9 @@ public class ExampleController extends Controller{
 		
 		String user = session("connected");
 		if(user != null) {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user, ""));
 		} else {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", ""));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", ""));
 			
 		}
 		

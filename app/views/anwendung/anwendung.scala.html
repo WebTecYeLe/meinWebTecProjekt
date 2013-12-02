@@ -1,4 +1,4 @@
-@(title: String)(message: String)
+@(title: String)(message: String)(info: String)
 
 <!DOCTYPE html>
 <html>
@@ -59,12 +59,12 @@
 						<!-- <span>Sie sind angemeldet als @message</span> -->
 						<form class="form-inline" method="POST"
 							action="/benutzerlogin/logout">
-							
+
 							<div class="form-group">
-								<label class="sr-only" for="exampleInputEmail2"></label>
-								<a class="active">&nbsp;&nbsp;&nbsp;Willkommen, @message</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								<label class="sr-only" for="exampleInputEmail2"></label> <a
+									class="active">&nbsp;&nbsp;&nbsp;Willkommen, @message</a>&nbsp;&nbsp;&nbsp;&nbsp;
 							</div>
-							
+
 							<button type="submit" class="btn btn-primary">Logout</button>
 						</form>
 					</div>
@@ -116,8 +116,20 @@
 	</header>
 
 	<article>
+
+		
+
+
 		<form action="">
 			<div class="box_ortsuche">
+                @if(info) {
+
+    	            <div class="row">
+			            <br />
+			            <div class="alert alert-info">@info</div>
+		            </div>
+
+        		}
 				<br> <br> <br>
 				<div>
 					<div class="input-group">
