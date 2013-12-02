@@ -32,9 +32,11 @@ public class Benutzerlogin extends Controller {
 		// Parameterwerte werden ausgelesen
 		String nutzer = parameters.get("nutzer")[0];
 		String kennwort = parameters.get("kennwort")[0];
+		
 
 		//Kontrollvariable wird fuer die Suche verwendet
 		boolean fertig = false;
+		boolean testeFahrer = false;
 
 		//Verbindung mit der Datenbank aufbauen
 		try {
@@ -62,6 +64,9 @@ public class Benutzerlogin extends Controller {
 			//Falls Username und Password korrekt, dann Login-Prozess erfolgreich
 			if (!sucheDocumentFuerUser.isEmpty()) {
 				fertig = true;
+				if(sucheDocumentFuerUser.contains("Mitfahrer")) {
+					testeFahrer = true;
+				}
 			}
 
 			//Falls der Benutzer eine Email statt Username eingegeben hat wird die Email und das Password ueberprueft
@@ -82,6 +87,9 @@ public class Benutzerlogin extends Controller {
 				//Falls Email und Password korrekt, dann Login-Prozess erfolgreich
 				if (!sucheDocumentFuerEmail.isEmpty()) {
 					fertig = true;
+					if(sucheDocumentFuerEmail.contains("Mitfahrer")) {
+						testeFahrer = true;
+					}
 				}
 			}
 
@@ -90,15 +98,31 @@ public class Benutzerlogin extends Controller {
 			e.printStackTrace();
 		}
 
+		
+		
         String info = "";
+        String typ = "";
+        
 
 		if (fertig) {
+			//Falls ein Fahrer sich einloggt, soll die Zielseite dementsprechend gestaltet werden.
+			if(testeFahrer) {
+				session("typ", "Mitfahrer");
+			} else {
+				session("typ", "Fahrer");
+			}
+			
+			typ = session("typ");
+			
+			if(!typ.equals("Fahrer")) {
+				typ = "";
+			}
 			
 			session("connected", nutzer);			
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", nutzer, info));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", nutzer, info, typ));
 		} else {
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info, typ));
 		}
 
 	}
@@ -107,7 +131,7 @@ public class Benutzerlogin extends Controller {
 	public static Result logout() {
         String info = "";
 		session().clear();
-		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info));
+		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", info, ""));
 		
 	}
 }

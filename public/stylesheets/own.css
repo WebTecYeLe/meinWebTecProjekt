@@ -1,9 +1,11 @@
-.box_ortsuche {position: absolute; width: 300px; height: 250px; left: 40%; top: 20%}
+.box_ortsuche {position: absolute; width: 300px; height: 250px; left: 40%; top: 18%}
+.box_ortsuche_eingelogged {position: absolute; width: 300px; height: 250px; left: 48%; top: 18%}
 .box_registrierung {position: absolute; width: 350px; height: 750px; left: 39%; top: 14%}
-.login_form {position: absolute; width: 630px; height: 10px; left: 48%; top: 15%}
 .checkbox_login {color:#FFFFFF}
-.position_links {left: 0%;}
-header, nav, footer, article {display: block;} 
-nav {float:left; width:20%;}
-article {float:right; width:79%;}
-footer {clear:both;}
+.login_form {position: absolute; width: 630px; height: 10px; left: 48%; top: 15%}
+.menue_anwendung {position: absolute; width: 300px; 350px; left: 20%; top: 20%}
+.position_links {left: 0%}
+header, nav, footer, article {display: block} 
+nav {float:left; width:20%}
+article {float:right; width:79%}
+footer {clear:both}

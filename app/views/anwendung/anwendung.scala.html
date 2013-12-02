@@ -1,4 +1,4 @@
-@(title: String)(message: String)(info: String)
+@(title: String)(message: String)(info: String)(typ: String)
 
 <!DOCTYPE html>
 <html>
@@ -21,10 +21,10 @@
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
 <script>
-        document.createElement('header');
-        document.createElement('nav');
-        document.createElement('article');
-        document.createElement('footer');
+	document.createElement('header');
+	document.createElement('nav');
+	document.createElement('article');
+	document.createElement('footer');
 </script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -117,38 +117,117 @@
 
 	<article>
 
-		
+
 
 
 		<form action="">
-			<div class="box_ortsuche">
-                @if(info) {
+			@if(message) {
+			<div class="box_ortsuche_eingelogged">
+				@if(info) {
 
-    	            <div class="row">
-			            <br />
-			            <div class="alert alert-info">@info</div>
-		            </div>
+				<div class="row">
+					<br />
+					<div class="alert alert-info">@info</div>
+				</div>
 
-        		}
-				<br> <br> <br>
+				} <br>
 				<div>
 					<div class="input-group">
-						<span class="input-group-addon">Von: &nbsp;</span> <input
+						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
 							type="text" class="form-control" placeholder="Startort">
 					</div>
 				</div>
-				<br> <br> <br>
+				<br>
+				<br>
 				<div>
 					<div class="input-group">
-						<span class="input-group-addon">Nach:</span> <input type="text"
-							class="form-control" placeholder="Zielort">
+						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
+							type="text" class="form-control" placeholder="Zielort">
 					</div>
 				</div>
-				<br> <br>
+				<br>
+				<br>
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Datum:</span> <input type="text"
+							class="form-control" placeholder="Datum">
+					</div>
+				</div>
+				<br>
+				<br>
 				<button type="submit" class="btn btn-primary">Suchen</button>
 			</div>
+
+			} else {
+			<div class="box_ortsuche">
+				@if(info) {
+
+				<div class="row">
+					<br />
+					<div class="alert alert-info">@info</div>
+				</div>
+
+				} <br>
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
+							type="text" class="form-control" placeholder="Startort">
+					</div>
+				</div>
+				<br>
+				<br>
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
+							type="text" class="form-control" placeholder="Zielort">
+					</div>
+				</div>
+				<br>
+				<br>
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Datum:</span> <input type="text"
+							class="form-control" placeholder="Datum">
+					</div>
+				</div>
+				<br>
+				<br>
+				<button type="submit" class="btn btn-primary">Suchen</button>
+			</div>
+
+			}
+
+
+
+
+
+
 		</form>
 	</article>
+
+	@if(message) { @if(typ) {
+	<div class="menue_anwendung">
+		<div class="list-group">
+			<a href="/" class="list-group-item active"> MFG suchen </a> <a
+				href="#" class="list-group-item">MFG Anbieten</a> <a href="#"
+				class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
+				class="list-group-item">Anfragen</a> <a href="#"
+				class="list-group-item">Profil</a>
+		</div>
+	</div>
+
+	} else {
+		<div class="menue_anwendung">
+		<div class="list-group">
+			<a href="/" class="list-group-item active"> MFG suchen </a><a href="#"
+				class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
+				class="list-group-item">Anfragen</a> <a href="#"
+				class="list-group-item">Profil</a>
+		</div>
+	</div>
+	
+	} }
+
 
 
 

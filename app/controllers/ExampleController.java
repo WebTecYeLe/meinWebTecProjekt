@@ -22,10 +22,19 @@ public class ExampleController extends Controller{
 		//Hier muss der User überprüft werden ob er bereits schon eingeloggt ist		
 		
 		String user = session("connected");
-		if(user != null) {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user, ""));
+		String typ = session("typ");
+		
+		if(typ != null) {
+			typ = "Fahrer";
+			
 		} else {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", ""));
+			typ = "";
+		}
+		
+		if(user != null) {
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user, "", typ));
+		} else {
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", "", typ));
 			
 		}
 		
