@@ -25,7 +25,7 @@ public class ExampleController extends Controller{
 		String user = session("connected");
 		String typ = session("typ");
 		
-		if(typ.equals("Fahrer")) {
+		if(typ != null)) {
 			typ = "Fahrer";
 			
 		} else {
