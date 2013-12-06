@@ -50,13 +50,10 @@
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Suche</a></li>
-						<li><a href="#">&Uuml;ber uns</a></li>
-						@if(message) {
-							<li><a href="#">Konto</a></li>
-						} else {
-							<li><a href="/registrierung">Registrierung</a></li>
-						}
-						
+						<li><a href="#">&Uuml;ber uns</a></li> @if(message) {
+						<li><a href="#">Konto</a></li> } else {
+						<li><a href="/registrierung">Registrierung</a></li> }
+
 					</ul>
 
 					@if(message) {
@@ -68,8 +65,8 @@
 							<div class="form-group">
 								<label class="sr-only" for="exampleInputEmail2"></label> <a
 									class="active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;Willkommen, @message</a>&nbsp;&nbsp;&nbsp;&nbsp;
+									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Willkommen,
+									@message</a>&nbsp;&nbsp;&nbsp;&nbsp;
 							</div>
 
 							<button type="submit" class="btn btn-primary">Logout</button>
@@ -122,40 +119,73 @@
 
 	</header>
 
+
 	<article>
 
 
 
 
-		<form action="">
+		<form method="POST" action="/anwendung/mfg_anbieten/anbieten">
 			@if(message) {
 			<div class="box_ortsuche_eingelogged">
+				@if(info) {
+
+				<div class="row">
+					<br />
+					<div class="alert alert-info">@info</div>
+				</div>
+
+				} <br>
+
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Start:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
+							class="form-control" placeholder="Start-Haltestelle">
+					</div>
+				</div>
+
 				<br>
 				<div>
 					<div class="input-group">
-						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Startort">
+						<span class="input-group-addon">Ziel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<input type="text" class="form-control"
+							placeholder="Ziel-Haltestelle">
 					</div>
 				</div>
-				<br>
+
 				<br>
 				<div>
 					<div class="input-group">
-						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort">
+						<span class="input-group-addon">Strecke:&nbsp;&nbsp;</span> <input
+							type="text" class="form-control"
+							placeholder="Zwischenhaltestelle">
 					</div>
 				</div>
-				<br>
+
+				<br> <span class="input-group-addon"><p
+						class="position_links">Datum:</p> <select id="AuswahlTage"
+					name="Tag" size="1"></select> <select id="AuswahlMonate"
+					name="Monat" size="1"></select> <select id="AuswahlJahre"
+					name="Jahr" size="1"></select> </span><br>
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Zeit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<input type="text" class="form-control" placeholder="z.ß. 12:00">
+					</div>
+				</div>
+
 				<br>
 				<div>
 					<div class="input-group">
-						<span class="input-group-addon">Datum:</span> <input type="text"
-							class="form-control" placeholder="Datum">
+						<span class="input-group-addon">Plätze:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<input type="text" class="form-control" placeholder="max. 10">
 					</div>
 				</div>
-				<br>
-				<br>
-				<button type="submit" class="btn btn-primary">Suchen</button>
+
+				<br> <br>
+				<button type="submit" class="btn btn-primary">MFG anbieten</button>
+
 			</div>
 
 			} else {
@@ -168,77 +198,115 @@
 				</div>
 
 				} <br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Startort">
-					</div>
-				</div>
-				<br>
-				<br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort">
-					</div>
-				</div>
-				<br>
-				<br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Datum:</span> <input type="text"
-							class="form-control" placeholder="Datum">
-					</div>
-				</div>
-				<br>
-				<br>
-				<button type="submit" class="btn btn-primary">Suchen</button>
+
 			</div>
 
 			}
 
 
 
-			
+
 
 
 		</form>
 	</article>
+
+
+	<script>
+		(function() {
+			var elJahr = document.getElementById('AuswahlJahre'), dc = document
+					.createDocumentFragment();
+			
+			
+			
+			
+			
+
+			var jetzt = new Date();
+			var jahr = jetzt.getFullYear();
+			var bis = jahr + 1;
+			
+			
+			
+
+			//Nur Datum in der Gegenwart und Zukunft werden angenommen
+			for (var i = jahr; i <= bis; i++) {
+				var option = document.createElement('option');
+				option.value = i;
+				option.appendChild(document.createTextNode(i));
+				dc.appendChild(option);
+			}
+			elJahr.appendChild(dc);
+			
+			
+			var elMonat = document.getElementById('AuswahlMonate'), dc = document
+			.createDocumentFragment();
+			
+			for (var i = 1; i <= 12; i++) {
+				var option = document.createElement('option');
+				option.value = i;
+				if(i<10) {
+					option.appendChild(document.createTextNode("0"+i));
+				} else {
+					option.appendChild(document.createTextNode(i));
+				}
+				
+				
+				
+				dc.appendChild(option);
+			}
+			elMonat.appendChild(dc);
+			
+			
+			var elTag = document.getElementById('AuswahlTage'), dc = document
+			.createDocumentFragment();
+			
+			for (var i = 1; i <= 31; i++) {
+				var option = document.createElement('option');
+				option.value = i;
+				if(i<10) {
+					option.appendChild(document.createTextNode("0"+i));
+				} else {
+					option.appendChild(document.createTextNode(i));
+				}
+				
+				
+				
+				dc.appendChild(option);
+			}
+			elTag.appendChild(dc);
+			
+			
+			
+			
+
+		}());
+	</script>
 	
 	
-	
+
+
+
 
 	@if(message) { @if(typ) {
 	<div class="menue_anwendung">
 		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen </a> <a
-				href="/anwendung/mfg_anbieten" class="list-group-item">MFG anbieten</a> <a href="#"
-				class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
-				class="list-group-item">Anfragen</a> <a href="#"
+			<a href="/" class="list-group-item"> MFG suchen </a> <a
+				href="/anwendung/mfg_anbieten" class="list-group-item active">MFG
+				anbieten</a> <a href="#" class="list-group-item">Meine MFGs anzeigen</a>
+			<a href="#" class="list-group-item">Anfragen</a> <a href="#"
 				class="list-group-item">Profil</a>
 		</div>
 	</div>
 
 	} else {
-		<div class="menue_anwendung">
+	<div class="menue_anwendung">
 		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen </a><a href="#"
-				class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
+			<a href="/" class="list-group-item active"> MFG suchen </a><a
+				href="#" class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
 				class="list-group-item">Anfragen</a> <a href="#"
 				class="list-group-item">Profil</a>
 		</div>
 	</div>
-	
+
 	} }
-
-
-
-
-
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
-
-</body>
-
-</html>

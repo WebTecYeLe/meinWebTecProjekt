@@ -27,6 +27,10 @@ GET      /login                          controllers.Login.showLoginForm()
 # POST     /login                        controllers.Login.login3()
 POST 	/login							 controllers.TestLogin.test()
 
+# Anwendung
+GET		/anwendung/mfg_anbieten			 controllers.Anwendung.mfg_anbieten()
+POST	/anwendung/mfg_anbieten/anbieten controllers.Anwendung.anbieten()
+
 # Benutzerlogin
 
 POST	/benutzerlogin/login			 controllers.Benutzerlogin.login()

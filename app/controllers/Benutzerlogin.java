@@ -42,6 +42,7 @@ public class Benutzerlogin extends Controller {
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
+			
 			//Die Collection user abrufen. Collection user enthaelt Benutzerdaten
 			DBCollection coll = db.getCollection("user");
 			
@@ -113,6 +114,8 @@ public class Benutzerlogin extends Controller {
 			}
 			
 			typ = session("typ");
+			
+			
 			
 			if(!typ.equals("Fahrer")) {
 				typ = "";

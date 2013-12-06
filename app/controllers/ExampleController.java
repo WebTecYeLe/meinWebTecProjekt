@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.Date;
 
+
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
@@ -20,11 +21,11 @@ public class ExampleController extends Controller{
 	public static Result index(){
 		
 		//Hier muss der User überprüft werden ob er bereits schon eingeloggt ist		
-		
+			
 		String user = session("connected");
 		String typ = session("typ");
 		
-		if(typ != null) {
+		if(typ.equals("Fahrer")) {
 			typ = "Fahrer";
 			
 		} else {
