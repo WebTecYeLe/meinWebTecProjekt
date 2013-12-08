@@ -31,6 +31,8 @@ POST 	/login							 controllers.TestLogin.test()
 GET		/anwendung/mfg_anbieten			 controllers.Anwendung.mfg_anbieten_index()
 POST	/anwendung/mfg_anbieten/anbieten controllers.Anwendung.anbieten()
 
+GET		/anwendung/mfg_anzeigen			 controllers.Anwendung.anzeigen()
+
 # Benutzerlogin
 
 POST	/benutzerlogin/login			 controllers.Benutzerlogin.login()

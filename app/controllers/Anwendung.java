@@ -208,7 +208,7 @@ public class Anwendung extends Controller {
 			}
 			
 			
-			return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
+			return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ));
 		} else {
 			return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
@@ -218,6 +218,18 @@ public class Anwendung extends Controller {
 
 		
 
+	}
+	
+	public static Result anzeigen() {
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		if(!typ.equals("Fahrer")) {
+			typ = "";
+		}
+		
+		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ));
+		
 	}
 
 }
