@@ -132,7 +132,7 @@
 
 				<div class="row">
 					<br />
-					<div class="alert alert-info">@info</div>
+					<div class="alert alert-danger">@info</div>
 				</div>
 
 				} <br>
@@ -141,7 +141,8 @@
 					<div class="input-group">
 						<span class="input-group-addon">Start:
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" placeholder="Start-Haltestelle">
+							class="form-control" name="mfg_anbieten_start"
+							placeholder="Start-Haltestelle" required>
 					</div>
 				</div>
 
@@ -149,8 +150,8 @@
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Ziel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						<input type="text" class="form-control"
-							placeholder="Ziel-Haltestelle">
+						<input type="text" class="form-control" name="mfg_anbieten_ziel"
+							placeholder="Ziel-Haltestelle" required>
 					</div>
 				</div>
 
@@ -158,8 +159,8 @@
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Strecke:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control"
-							placeholder="Zwischenhaltestelle">
+							type="text" class="form-control" name="mfg_anbieten_strecke"
+							placeholder="Zwischenhaltestelle" required>
 					</div>
 				</div>
 
@@ -167,23 +168,33 @@
 						class="position_links">Datum:</p> <select id="AuswahlTage"
 					name="Tag" size="1"></select> <select id="AuswahlMonate"
 					name="Monat" size="1"></select> <select id="AuswahlJahre"
-					name="Jahr" size="1"></select> </span><br>
+					name="Jahr" size="1"></select></span> 
+					
+					<br> <span
+					class="input-group-addon"><p class="position_links">Uhrzeit:</p>
+					<select id="AuswahlStunden" name="Stunden" size="1"></select><span>
+						:</span> <select id="AuswahlMinuten" name="Minuten" size="1"></select></span><br>
+
+				<!--  
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Zeit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						<input type="text" class="form-control" placeholder="z.ß. 12:00">
+						<input type="text" class="form-control"  name="mfg_anbieten_zeit" placeholder="z.ß. 12:00" required>
+					</div>
+				</div>
+					-->
+
+
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Plätze:&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						<input type="text" class="form-control"
+							name="mfg_anbieten_plaetze" placeholder="max. 10" required>
 					</div>
 				</div>
 
 				<br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Plätze:&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						<input type="text" class="form-control" placeholder="max. 10">
-					</div>
-				</div>
-
-				<br> <br>
+				<br>
 				<button type="submit" class="btn btn-primary">MFG anbieten</button>
 
 			</div>
@@ -194,7 +205,7 @@
 
 				<div class="row">
 					<br />
-					<div class="alert alert-info">@info</div>
+					<div class="alert alert-danger">@info</div>
 				</div>
 
 				} <br>
@@ -214,13 +225,10 @@
 
 	<script>
 		(function() {
+			
+			//Datum einstellen
 			var elJahr = document.getElementById('AuswahlJahre'), dc = document
 					.createDocumentFragment();
-			
-			
-			
-			
-			
 
 			var jetzt = new Date();
 			var jahr = jetzt.getFullYear();
@@ -276,15 +284,92 @@
 			}
 			elTag.appendChild(dc);
 			
+			elJahr.value = jahr;
+			
+			var akt_monat = jetzt.getMonth() + 1;
+			
+			if(akt_monat < 10) {
+				elMonat.value = "0" + akt_monat;
+				
+			} else {
+				elMonat.value = akt_monat;
+			}
+			
+			
+			var d = new Date();
+			var q = d.getDate();
+			document.getElementById("AuswahlTage").value = q;
+			
+			
+			//Stunden und Minuten einstellen
+			var stunden = document.getElementById('AuswahlStunden'), dc = document
+			.createDocumentFragment();
+			
+			for (var i = 1; i <= 23; i++) {
+				var option = document.createElement('option');
+				option.value = i;
+				if(i<10) {
+					option.appendChild(document.createTextNode("0"+i));
+				} else {
+					option.appendChild(document.createTextNode(i));
+				}
+				
+				
+				
+				dc.appendChild(option);
+			}
+			stunden.appendChild(dc);
+			
+			
+			var minuten = document.getElementById('AuswahlMinuten'), dc = document
+			.createDocumentFragment();
+			
+			for (var i = 0; i <= 59; i++) {
+				var option = document.createElement('option');
+				option.value = i;
+				if(i<10) {
+					option.appendChild(document.createTextNode("0"+i));
+				} else {
+					option.appendChild(document.createTextNode(i));
+				}
+				
+				
+				
+				dc.appendChild(option);
+			}
+			
+			minuten.appendChild(dc);
+			
+			var akt_stunden = jetzt.getHours();
 			
 			
 			
-
+			
+			
+			
+			var akt_minuten = jetzt.getMinutes();
+			if(akt_minuten < 30) {
+				minuten.value = 30;
+			} else {
+				minuten.value = 0;
+				akt_stunden = akt_stunden + 1;
+			}
+			
+			
+			if(akt_stunden < 10) {
+				stunden.value = "0" + akt_stunden;				
+				
+			} else {
+				stunden.value = akt_stunden;
+			}
+			//minuten.value = akt_minuten;
+			
+			
 		}());
 	</script>
-	
-	
 
+
+	
 
 
 

@@ -28,7 +28,7 @@ GET      /login                          controllers.Login.showLoginForm()
 POST 	/login							 controllers.TestLogin.test()
 
 # Anwendung
-GET		/anwendung/mfg_anbieten			 controllers.Anwendung.mfg_anbieten()
+GET		/anwendung/mfg_anbieten			 controllers.Anwendung.mfg_anbieten_index()
 POST	/anwendung/mfg_anbieten/anbieten controllers.Anwendung.anbieten()
 
 # Benutzerlogin

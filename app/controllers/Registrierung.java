@@ -135,7 +135,9 @@ public class Registrierung extends Controller {
 			} finally {
 				cursor.close();
 			}
-
+			
+			
+			
 			// Sicherstellung dass der Username eindeutig nur einmal in der
 			// Datenbank vorkommt
 			if (!sucheUsername.isEmpty()) {

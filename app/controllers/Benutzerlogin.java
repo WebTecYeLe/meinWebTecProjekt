@@ -104,6 +104,7 @@ public class Benutzerlogin extends Controller {
         String info = "";
         String typ = "";
         
+        
 
 		if (fertig) {
 			//Falls ein Fahrer sich einloggt, soll die Zielseite dementsprechend gestaltet werden.
