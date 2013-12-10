@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="ISO-8859-1">
 <title>@title</title>
@@ -73,10 +74,10 @@
 							<button type="submit" class="btn btn-primary">Logout</button>
 						</form>
 					</div>
-                    }
-					 else {
+                    
+					} else {
 					<div class="login_form">
-						<!-- Hier ist das Formular fÃƒÂ¼r den Login -->
+						<!-- Hier ist das Formular f�r den Login -->
 						<form class="form-inline" role="form" method="POST"
 							action="/benutzerlogin/login">
 
@@ -115,7 +116,7 @@
 			</div>
 			<!-- /.navbar -->
 	</header>
-
+<form method="GET" action="/anwendung/mfg_anzeigen">
 	@if(message) { @if(typ) {
 	<div class="menue_anwendung">
 		<div class="list-group">
@@ -157,7 +158,7 @@
 		</table>
 	</div>
 	}
-
+</form>
 
 
 
