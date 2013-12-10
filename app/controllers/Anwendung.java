@@ -3,10 +3,13 @@ package controllers;
 import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+
+import models.AnzeigeDetails;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -28,12 +31,14 @@ public class Anwendung extends Controller {
 		return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ));
 
+		
 	}
 
 	public static Result anbieten() {
 
 		String nutzer = session("connected");
 		String typ = session("typ");
+		List <AnzeigeDetails> details = new ArrayList<>();
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 
@@ -151,8 +156,8 @@ public class Anwendung extends Controller {
 		
 		String uhrzeit = stunden+":"+minuten;
 		
-		
-		
+		String email = "";
+		List<DBObject> feld;
 		
 		if(datumGueltig) {
 			
@@ -172,12 +177,15 @@ public class Anwendung extends Controller {
 				String vorname = "";
 				String name = "";
 				
+				
+				
 				//Den Vornamen und Namen des Nutzers herausfinden
-				List<DBObject> feld = coll.find(query).toArray();
+				feld = coll.find(query).toArray();
 				for(DBObject s : feld) {
 					if(s.containsField("vorname")) {
 						vorname = (String) s.get("vorname");
-						name = (String) s.get("name");						
+						name = (String) s.get("name");	
+						email = (String) s.get("email");
 						
 					}
 				}
@@ -192,6 +200,7 @@ public class Anwendung extends Controller {
 				.append("datum", datum)
 				.append("uhrzeit", uhrzeit)
 				.append("fahrer", vorname+" "+name.substring(0, 1)+".")
+				.append("email", email)
 				.append("fahrzeug", "")
 				.append("anzahl_plaetze", plaetze)
 				.append("preis", "")
@@ -207,9 +216,39 @@ public class Anwendung extends Controller {
 				e.printStackTrace();
 			}
 			
+			//AnzeigeDetails List erforderlich
+			
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+				
+				DBCollection coll = db.getCollection("mfg");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("email", email);
+				cursor = coll.find(query);
+				
+				feld = coll.find(query).toArray();
+				
+				for(DBObject s : feld) {
+					if(s.containsField("vorname")) {
+						email = (String) s.get("email");
+						
+					}
+				}
+				
+				feld = coll.find(query).toArray();
+				for(int s=0; s<feld.size(); s++) {
+					details.add(s, (AnzeigeDetails) feld.get(s));
+				
+				}
+				
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			
 			return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
-					"ProTramp Mitfahrgelegenheit", nutzer, "", typ));
+					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details));
 		} else {
 			return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "Das Datum muss in der Zukunft liegen. Versuchen Sie es bitte erneut.", typ));
@@ -220,15 +259,70 @@ public class Anwendung extends Controller {
 
 	}
 	
+	/*********************************/
 	public static Result anzeigen() {
 		String nutzer = session("connected");
 		String typ = session("typ");
+		List <AnzeigeDetails> details = new ArrayList<>();
 		
 		if(!typ.equals("Fahrer")) {
 			typ = "";
 		}
 		
-		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ));
+		
+		//AnzeigeDetails List erforderlich
+		String email = "";
+		List<DBObject> feld;
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+			
+			//Die Collection des Nutzers finden
+			DBCollection coll = db.getCollection("user");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username", nutzer);
+			cursor = coll.find(query);
+			
+			String vorname = "";
+			String name = "";
+			
+			
+			
+			//Den Vornamen und Namen des Nutzers herausfinden
+			feld = coll.find(query).toArray();
+			for(DBObject s : feld) {
+				if(s.containsField("vorname")) {
+					vorname = (String) s.get("vorname");
+					name = (String) s.get("name");	
+					email = (String) s.get("email");
+					
+				}
+			}
+			
+			
+			coll = db.getCollection("mfg");
+			cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("email", email);
+			cursor = coll.find(query);
+			
+			
+			
+			feld = coll.find(query).toArray();
+			for(int s=0; s<feld.size(); s++) {
+				details.add(s, (AnzeigeDetails) feld.get(s));
+			
+			}
+					
+			mongoClient.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		nutzer = session("connected");
+		
+		
+		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, details));
 		
 	}
 

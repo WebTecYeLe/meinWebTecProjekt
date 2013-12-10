@@ -1,4 +1,4 @@
-@(title: String)(message: String)(info: String)(typ: String)
+@(title: String)(message: String)(info: String)(typ: String)(anzeige: List[AnzeigeDetails])
 
 <!DOCTYPE html>
 <html>
@@ -73,10 +73,10 @@
 							<button type="submit" class="btn btn-primary">Logout</button>
 						</form>
 					</div>
-
-					} else {
+                    }
+					 else {
 					<div class="login_form">
-						<!-- Hier ist das Formular f�r den Login -->
+						<!-- Hier ist das Formular fÃƒÂ¼r den Login -->
 						<form class="form-inline" role="form" method="POST"
 							action="/benutzerlogin/login">
 
@@ -103,33 +103,27 @@
 							<button type="submit" class="btn btn-primary">Einloggen</button>
 						</form>
 					</div>
-
-					}
-
+                    }
 
 
 
 
-
+					</div>
+					<!-- /.nav-collapse -->
 				</div>
-				<!-- /.nav-collapse -->
+				<!-- /.container -->
 			</div>
-			<!-- /.container -->
-		</div>
-		<!-- /.navbar -->
-
+			<!-- /.navbar -->
 	</header>
-
-
-
 
 	@if(message) { @if(typ) {
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item"> MFG suchen </a> <a
 				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item active">Meine MFGs anzeigen</a>
-			<a href="#" class="list-group-item">Anfragen</a> <a href="#"
+				anbieten</a> <a href="/anwendung/mfg_anzeigen"
+				class="list-group-item active">Meine MFGs anzeigen</a> <a href="#"
+				class="list-group-item">Anfragen</a> <a href="#"
 				class="list-group-item">Profil</a>
 		</div>
 	</div>
@@ -138,13 +132,35 @@
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item"> MFG suchen </a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item active">Meine MFGs anzeigen</a> <a href="#"
-				class="list-group-item">Anfragen</a> <a href="#"
-				class="list-group-item">Profil</a>
+				href="/anwendung/mfg_anzeigen" class="list-group-item active">Meine
+				MFGs anzeigen</a> <a href="#" class="list-group-item">Anfragen</a> <a
+				href="#" class="list-group-item">Profil</a>
 		</div>
 	</div>
 
 	} }
+
+
+	    @if(anzeige.isEmpty()) {
+      <p>Es wurden keine Fahrten gefunden</p>
+    }else{
+	<div class="anzeige_details">
+		<table class="table table-hover">
+			<tr><th>Start</th><th>Ziel</th><th>Uhrzeit</th><th>Datum</th></tr>
+			@for( i <- anzeige ){
+				<tr><td>@i.start</td>
+		    		<td>@i.ziel</td>
+		    		<td>@i.uhrzeit</td>
+		    		<td>@i.datum</td>
+		    	</tr>
+			}
+		</table>
+	</div>
+	}
+
+
+
+
 
 </body>
 </html>
