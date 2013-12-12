@@ -1,8 +1,8 @@
-@(title: String)(message: String)(info: String)(typ: String)(anzeige: List[AnzeigeDetails])
+@(title: String)(message: String)(info: String)(typ: String)(anzeige:
+List[AnzeigeDetails])
 
 <!DOCTYPE html>
 <html>
-
 <head>
 <meta charset="ISO-8859-1">
 <title>@title</title>
@@ -74,10 +74,9 @@
 							<button type="submit" class="btn btn-primary">Logout</button>
 						</form>
 					</div>
-                    
 					} else {
 					<div class="login_form">
-						<!-- Hier ist das Formular f�r den Login -->
+						<!-- Hier ist das Formular fÃƒÂ¼r den Login -->
 						<form class="form-inline" role="form" method="POST"
 							action="/benutzerlogin/login">
 
@@ -104,19 +103,21 @@
 							<button type="submit" class="btn btn-primary">Einloggen</button>
 						</form>
 					</div>
-                    }
+					}
 
 
 
 
-					</div>
-					<!-- /.nav-collapse -->
 				</div>
-				<!-- /.container -->
+				<!-- /.nav-collapse -->
 			</div>
-			<!-- /.navbar -->
+			<!-- /.container -->
+		</div>
+		<!-- /.navbar -->
 	</header>
-<form method="GET" action="/anwendung/mfg_anzeigen">
+
+
+	<form method="GET" action="/anwendung/mfg_anzeigen"></form>
 	@if(message) { @if(typ) {
 	<div class="menue_anwendung">
 		<div class="list-group">
@@ -140,25 +141,38 @@
 	</div>
 
 	} }
+	</form>
 
 
-	    @if(anzeige.isEmpty()) {
-      <p>Es wurden keine Fahrten gefunden</p>
-    }else{
 	<div class="anzeige_details">
+		@if(anzeige.isEmpty()) {
+		<p>
+		<h3>Keine MFG Eintraege gefunden.</h3>
+		</p>
+		} else {
+
 		<table class="table table-hover">
-			<tr><th>Start</th><th>Ziel</th><th>Uhrzeit</th><th>Datum</th></tr>
+			<tr>
+				<th>TestID</th>
+				<th>Start</th>
+				<th>Ziel</th>
+				<th>Uhrzeit</th>
+				<th>Datum</th>
+			</tr>
 			@for( i <- anzeige ){
-				<tr><td>@i.start</td>
-		    		<td>@i.ziel</td>
-		    		<td>@i.uhrzeit</td>
-		    		<td>@i.datum</td>
-		    	</tr>
+			<tr>
+				<td>@i.id</td>
+				<td>@i.start</td>
+				<td>@i.ziel</td>
+				<td>@i.uhrzeit</td>
+				<td>@i.datum</td>
+			</tr>
 			}
 		</table>
+		}
 	</div>
-	}
-</form>
+
+
 
 
 

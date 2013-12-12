@@ -10,4 +10,4 @@ nav {float:left; width:20%}
 article {float:right; width:79%}
 footer {clear:both}
 a:hover {text-decoration: none}
-.anzeige_details{position: absolute; width: 500px; height: 250px; left: 48%; top: 18%}
+.anzeige_details{position: absolute; width: 500px; height: 250px; left: 48%; top: 20%}

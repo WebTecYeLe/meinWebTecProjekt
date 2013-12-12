@@ -1,30 +1,32 @@
 package models;
 
-import play.data.validation.Constraints;
+public class AnzeigeDetails extends Entity {
 
-public class AnzeigeDetails {
-
-	@Constraints.Required(message="Menge ist erforderlich")
-	public String start;
+	public AnzeigeDetails(String id, String start, String ziel, String strecke, String uhrzeit, 
+			String datum, String fahrer, int anzahl_plaetze, String email) {
+		
+		
+		this.id = id;
+		this.start = start;
+		this.ziel = ziel;
+		this.strecke = strecke;
+		this.uhrzeit = uhrzeit;
+		this.datum = datum;
+		this.fahrer = fahrer;
+		this.anzahl_plaetze = anzahl_plaetze;
+		this.email = email;
+		
+	}
 	
-	@Constraints.Required(message="Menge ist erforderlich")
+	public String id;
+	public String start;	
 	public String ziel;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
-	public String strecke;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
-	public String uhrzeit;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
-	public String datum;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
-	public String fahrer;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
-	public int anzahl_plaetze;
-	
-	@Constraints.Required(message="Menge ist erforderlich")
+	public String strecke;	
+	public String uhrzeit;	
+	public String datum;	
+	public String fahrer;	
+	public int anzahl_plaetze;	
 	public String email;
+	
+	
 }
