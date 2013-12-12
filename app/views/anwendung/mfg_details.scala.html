@@ -29,16 +29,7 @@ List[AnzeigeDetails])
 	document.createElement('footer');
 </script>
 
-<script type="text/javascript">
 
-function_test() {
-	alert('Hi');
-	
-	
-	
-}
-
-</script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -116,9 +107,6 @@ function_test() {
 					</div>
 					}
 
-
-
-
 				</div>
 				<!-- /.nav-collapse -->
 			</div>
@@ -154,46 +142,40 @@ function_test() {
 	} }
 	</form>
 
-
-	<div class="anzeige_details">
-		@if(anzeige.isEmpty()) {
-		<p>
-		<h3>Keine MFG Eintraege gefunden.</h3>
-		</p>
-		} else {
-
-		<table class="table table-hover">
+	<div id="box_ortsuche_eingelogged">
+	
 		
-			<tr>
-				<th>TestID</th>
-				<th>Start</th>
-				<th>Ziel</th>
-				<th>Datum</th>
-				<th>Uhrzeit</th>
-				<th>Abschicken</th>
-			</tr>
-			<tbody>
-			@for( i <- anzeige ){
-			<tr>
-				<td>@i.id</td>
-				<td>@i.start</td>
-				<td>@i.ziel</td>
-				<td>@i.datum</td>
-				<td>@i.uhrzeit</td>
-				<td>
-		    		<form method="post" action="@i.id/mfg_details_zeigen">
-		    			<button type="submit">anzeigen</button>
-		    		</form>
-		    		</td>
-			</tr>
-			}
-			</tbody>
-		</table>
+		@for(i <- anzeige) {
+		
+				<div>
+					<div class="input-group">
+						<span class="input-group-addon">Start:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
+							class="form-control" name="mfg_anbieten_start"
+							placeholder=@i.start required>
+					</div>
+				</div>
+		
+			<div class="form-group">
+						<span class="form-group">Start:
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
+							class="form-control" name="mfg_anbieten_start"
+							placeholder= @i.start>
+					</div>
+			<!-- 
+			<span class="input-group">Start: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.start</input>
+			<span class="input-group">Ziel: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.ziel</input>
+			<span class="input-group">&Uuml;ber: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.strecke</input>
+			<span class="input-group">Datum: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.datum</input>
+			<span class="input-group">Uhrzeit: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.uhrzeit</input>
+			<span class="input-group">Fahrer: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.fahrer</input>
+			<span class="input-group">Freie Plaetze: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.anzahl_plaetze</input>
+			 -->
 		}
-	</div>
-
-
-
+		
+		
+		
+		
 
 
 

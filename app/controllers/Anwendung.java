@@ -6,26 +6,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.mongojack.DBCursor;
-import org.mongojack.ObjectId;
-
 import models.AnzeigeDetails;
-import models.Thing;
+
+import org.bson.types.ObjectId;
+
+import play.Logger;
+import play.mvc.Controller;
+import play.mvc.Result;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
-
-import db.ThingDB;
-import play.Logger;
-import play.mvc.Controller;
-import play.mvc.Result;
 
 public class Anwendung extends Controller {
 
@@ -293,7 +289,6 @@ public class Anwendung extends Controller {
 		List<DBObject> feld;
 		String testfeld = "";	
 		
-		
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -306,7 +301,6 @@ public class Anwendung extends Controller {
 			
 			String vorname = "";
 			String name = "";
-			
 			
 			
 			//Den Vornamen und Namen des Nutzers herausfinden
@@ -325,35 +319,18 @@ public class Anwendung extends Controller {
 			cursor = coll.find();
 			query = (BasicDBObject) new BasicDBObject("email", email);
 			cursor = coll.find(query);
-			
-			
-			
-			feld = coll.find(query).toArray();
-			
-			
-			
-			
-			
-			
+						
+			feld = coll.find(query).toArray();	
+						
 			for(DBObject s : feld) {
 				
-				
-				
-				
+
 				details.add(new AnzeigeDetails(s.get("_id").toString(), (String) s.get("start"), (String) s.get("ziel"), 
 						(String) s.get("strecke"),(String) s.get("uhrzeit"), (String) s.get("datum"), 
 						(String) s.get("fahrer"),  Integer.parseInt((String) s.get("anzahl_plaetze")), 
 						(String) s.get("email")));
-				
-				
-				
-				
+					
 			}
-			
-			
-			
-			
-			
 					
 			mongoClient.close();
 			
@@ -361,12 +338,55 @@ public class Anwendung extends Controller {
 			// TODO: handle exception
 			return ok("Im try Block stimmt etwas nicht. Methode: anzeigen()");
 		}
-		
-		
-		
-		
 		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, details));
+	}
+	
+	/*********************************/
+	
+	public static Result detailsAnzeigen(String id){
 		
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		List <AnzeigeDetails> details2 = new ArrayList<>();
+		
+		if(!typ.equals("Fahrer")) {
+			typ = "";
+		}
+		
+		List<DBObject> feld;
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+			
+			DBCollection coll = db.getCollection("mfg");
+			com.mongodb.DBCursor cursor = coll.find();
+			
+			
+			ObjectId idO = new ObjectId(id);        
+			BasicDBObject obj = new BasicDBObject();        
+			obj.append("_id", id);        
+			BasicDBObject query = new BasicDBObject();        		
+		
+			cursor = coll.find(query);
+			feld = coll.find(query).toArray();
+			
+			for(DBObject s : feld){
+				details2.add(new AnzeigeDetails(s.get("_id").toString(), (String) s.get("start"), (String) s.get("ziel"), 
+						(String) s.get("strecke"),(String) s.get("uhrzeit"), (String) s.get("datum"), 
+						(String) s.get("fahrer"),  Integer.parseInt((String) s.get("anzahl_plaetze")), 
+						(String) s.get("email")));
+			}
+			
+			mongoClient.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+			return ok("Ich war schon hier.");
+			
+		}
+		
+		return ok(views.html.anwendung.mfg_details.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2));
 	}
 
 }

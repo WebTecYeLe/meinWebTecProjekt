@@ -15,7 +15,7 @@
       <div class="shoplistitems">
 		    <table>
 		    @for( i <- items ){
-		    	<tr><td>@i.amount</td>
+		    	<a href="/"><tr><td>@i.amount</td>
 		    		<td>@i.name</td>
 		    		<td>
 		    			<form method="post" action="@i.name/delete">
@@ -23,6 +23,7 @@
 		    			</form>
 		    		</td>
 		    	</tr>
+		    	</a>
 		    }	
 		    </table>
 	     </div>

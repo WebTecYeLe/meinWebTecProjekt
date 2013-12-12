@@ -47,6 +47,12 @@ GET     /userlogin                       controllers.UserLogin.index()
 POST    /userlogin						 controllers.UserLogin.login()
 
 
+
+# MFG Details zeigen
+
+POST	/anwendung/:id/mfg_details_zeigen controllers.Anwendung.detailsAnzeigen(id: String)	
+
+
 ##############
 # THINGS - CRUD example using forms, contraints, MongoDB, twitter bootstrap
 ##############
