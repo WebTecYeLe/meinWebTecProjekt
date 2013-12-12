@@ -22,6 +22,7 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
+import com.mongodb.QueryBuilder;
 
 public class Anwendung extends Controller {
 
@@ -277,7 +278,7 @@ public class Anwendung extends Controller {
 		//List <String> details = new ArrayList<>();
 		List <AnzeigeDetails> details = new ArrayList<>();
 		
-		ObjectId id;
+		
 		
 		if(!typ.equals("Fahrer")) {
 			typ = "";
@@ -343,11 +344,15 @@ public class Anwendung extends Controller {
 	
 	/*********************************/
 	
+	@SuppressWarnings("deprecation")
 	public static Result detailsAnzeigen(String id){
+		
+		
+		 
 		
 		String nutzer = session("connected");
 		String typ = session("typ");
-		
+		DBObject teste;
 		List <AnzeigeDetails> details2 = new ArrayList<>();
 		
 		if(!typ.equals("Fahrer")) {
@@ -362,30 +367,27 @@ public class Anwendung extends Controller {
 			
 			DBCollection coll = db.getCollection("mfg");
 			com.mongodb.DBCursor cursor = coll.find();
+						
+			DBObject query;
+			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
+			cursor = coll.find(query);
 			
-			
-			ObjectId idO = new ObjectId(id);        
-			BasicDBObject obj = new BasicDBObject();        
-			obj.append("_id", id);        
-			BasicDBObject query = new BasicDBObject();        		
-		
 			cursor = coll.find(query);
 			feld = coll.find(query).toArray();
 			
 			for(DBObject s : feld){
 				details2.add(new AnzeigeDetails(s.get("_id").toString(), (String) s.get("start"), (String) s.get("ziel"), 
 						(String) s.get("strecke"),(String) s.get("uhrzeit"), (String) s.get("datum"), 
-						(String) s.get("fahrer"),  Integer.parseInt((String) s.get("anzahl_plaetze")), 
+						s.get("fahrer").toString(),  Integer.parseInt((String) s.get("anzahl_plaetze")), 
 						(String) s.get("email")));
 			}
 			
 			mongoClient.close();
 		} catch (Exception e) {
-			// TODO: handle exception
-			return ok("Ich war schon hier.");
+			e.printStackTrace();
 			
 		}
-		
+				
 		return ok(views.html.anwendung.mfg_details.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2));
 	}
 

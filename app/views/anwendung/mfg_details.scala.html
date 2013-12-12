@@ -145,38 +145,85 @@ List[AnzeigeDetails])
 	</form>
 
 	<div class="anzeige_details">
-	
+
+		@if(anzeige.isEmpty) {
+			<p><h3>Keine Eintr&auml;ge gefunden.</h3></p>
 		
+		} else {
+		 
+
+
 		@for(i <- anzeige) {
+
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Start:
+					&nbsp;&nbsp;&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_start" value=@i.start
+					readonly>
+			</div>
+		</div>
+		<br> 
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Ziel:
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_ziel" value=@i.ziel
+					readonly>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Strecke:
+					</span> <input type="text"
+					class="form-control" name="mfg_anbieten_strecke" value=@i.strecke
+					readonly>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Datum:
+					&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_datum" value=@i.datum
+					readonly>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Uhrzeit:
+					&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_uhrzeit" value=@i.uhrzeit
+					readonly>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Fahrer:
+					&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_fahrer" value=@i.fahrer readonly>
+			</div>
+		</div>
+		<br>
+		<div>
+			<div class="input-group">
+				<span class="input-group-addon">Pl&auml;tze:
+					&nbsp;&nbsp;</span> <input type="text"
+					class="form-control" name="mfg_anbieten_ziel" value=@i.anzahl_plaetze
+					readonly>
+			</div>
+		</div>
+		<br>
 		
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Start:
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" name="mfg_anbieten_start"
-							placeholder=@i.start required>
-					</div>
-				</div>
-		
-			<div class="form-group">
-						<span class="form-group">Start:
-							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" name="mfg_anbieten_start"
-							placeholder= @i.start>
-					</div>
-			<!-- 
-			<span class="input-group">Start: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.start</input>
-			<span class="input-group">Ziel: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.ziel</input>
-			<span class="input-group">&Uuml;ber: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.strecke</input>
-			<span class="input-group">Datum: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.datum</input>
-			<span class="input-group">Uhrzeit: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.uhrzeit</input>
-			<span class="input-group">Fahrer: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.fahrer</input>
-			<span class="input-group">Freie Plaetze: &nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control" placeholder="" readonly>@i.anzahl_plaetze</input>
-			 -->
 		}
 		
-		
-				
+		}
+
+
+
 	</div>
 
 
