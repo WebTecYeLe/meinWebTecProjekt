@@ -279,8 +279,7 @@ public class Anwendung extends Controller {
 			// Die Collection des Nutzers finden
 			DBCollection coll = db.getCollection("user");
 			com.mongodb.DBCursor cursor = coll.find();
-			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-					nutzer);
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",nutzer);
 			cursor = coll.find(query);
 
 			String vorname = "";
@@ -305,9 +304,9 @@ public class Anwendung extends Controller {
 			feld = coll.find(query).toArray();
 			for (int s = 0; s < feld.size(); s++) {
 				details.add(s, (AnzeigeDetails) feld.get(s));
-
 			}
-
+		
+			
 			mongoClient.close();
 		} catch (Exception e) {
 			// TODO: handle exception
