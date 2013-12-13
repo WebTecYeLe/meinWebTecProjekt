@@ -1,10 +1,6 @@
 package controllers;
 
 import java.net.UnknownHostException;
-
-
-
-
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
@@ -24,8 +20,8 @@ import com.mongodb.MongoClient;
 public class Registrierung extends Controller {
 
 	public static Result registrieren() {
-		//return redirect("/assets/html/registrierung.html");
-		return ok(views.html.registrierung.pr.render("Registrierung",""));
+		// return redirect("/assets/html/registrierung.html");
+		return ok(views.html.registrierung.pr.render("Registrierung", ""));
 	}
 
 	public static Result abschicken() {
@@ -70,7 +66,8 @@ public class Registrierung extends Controller {
 
 		// Ueberpruefung ob das Password korrekt wiederholt eingegeben wurde
 		if (!password.equals(passwordValidierung)) {
-			return ok(views.html.registrierung.pr.render("Registrierung","Sie haben das Password nicht korrekt eingegeben."));
+			return ok(views.html.registrierung.pr.render("Registrierung",
+					"Sie haben das Password nicht korrekt eingegeben."));
 
 		}
 
@@ -117,7 +114,9 @@ public class Registrierung extends Controller {
 
 		// Prueft ob der Fahrer mindestens 18 Jahre alt ist
 		if (fahrertyp.equals("Fahrer") && alt < 18) {
-			return ok(views.html.registrierung.pr.render("Registrierung","Sie sind leider nicht volljährig. Registrierung nicht angenommen."));
+			return ok(views.html.registrierung.pr
+					.render("Registrierung",
+							"Sie sind leider nicht volljährig. Registrierung nicht angenommen."));
 		}
 
 		// Daten werden an die Datenbank uebertragen
@@ -140,14 +139,14 @@ public class Registrierung extends Controller {
 			} finally {
 				cursor.close();
 			}
-			
-			
-			
+
 			// Sicherstellung dass der Username eindeutig nur einmal in der
 			// Datenbank vorkommt
 			if (!sucheUsername.isEmpty()) {
 				mongoClient.close();
-				return ok(views.html.registrierung.pr.render("Registrierung","Der Username ist schon vergeben. Versuchen Sie bitte einen anderen Namen."));
+				return ok(views.html.registrierung.pr
+						.render("Registrierung",
+								"Der Username ist schon vergeben. Versuchen Sie bitte einen anderen Namen."));
 			}
 
 			query = new BasicDBObject("email", email);
@@ -166,7 +165,9 @@ public class Registrierung extends Controller {
 			// Email darf nur einmal in der Datenbank vorkommen
 			if (!sucheEmail.isEmpty()) {
 				mongoClient.close();
-				return ok(views.html.registrierung.pr.render("Registrierung","Diese Email Adresse wird schon bereits verwendet. Verwenden Sie bitte eine andere Email Adresse."));
+				return ok(views.html.registrierung.pr
+						.render("Registrierung",
+								"Diese Email Adresse wird schon bereits verwendet. Verwenden Sie bitte eine andere Email Adresse."));
 			}
 
 			BasicDBObject doc = new BasicDBObject("username", username)
@@ -180,52 +181,53 @@ public class Registrierung extends Controller {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
-		List <Orte> ortsdetails = new ArrayList<>();
-    	List <DBObject> feld;
+
+		List<Orte> ortsdetails = new ArrayList<>();
+		List<DBObject> feld;
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
 
-			DBCollection coll = db.getCollection("mfg");
+			DBCollection coll = (DBCollection) db.getCollection("mfg");
 			BasicDBObject query = new BasicDBObject();
 
 			feld = coll.find(query).toArray();
-			
-			String vergleicher = "";
-			
-			
+
+			String vergleich = "";
+
 			for (DBObject s : feld) {
-				
-				vergleicher = s.get("start").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("start").toString()));
-					
+
+				if (vergleich.contains(s.get("start").toString())) {
+
+				} else {
+					vergleich += s.get("start").toString();
+					ortsdetails.add(new Orte((String) s.get("start")));
 				}
-				
-				vergleicher = s.get("ziel").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("ziel").toString()));
-					
+
+				if (vergleich.contains(s.get("ziel").toString())) {
+
+				} else {
+					vergleich += s.get("ziel").toString();
+					ortsdetails.add(new Orte((String) s.get("ziel")));
 				}
-				
-				vergleicher = s.get("strecke").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("strecke").toString()));
-					
+
+				if (vergleich.contains(s.get("strecke").toString())) {
+
+				} else {
+					vergleich += s.get("strecke").toString();
+					ortsdetails.add(new Orte((String) s.get("strecke")));
 				}
-				
+
 			}
-			
-			
+
 			mongoClient.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails));
-		
+		return ok(views.html.anwendung.anwendung.render(
+				"ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails));
+
 	}
 }

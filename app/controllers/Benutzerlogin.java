@@ -108,49 +108,49 @@ public class Benutzerlogin extends Controller {
 		String info = "";
 		String typ = "";
 
-		List <Orte> ortsdetails = new ArrayList<>();
-		List <DBObject> feld;
+		List<Orte> ortsdetails = new ArrayList<>();
+		List<DBObject> feld;
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
 
-			DBCollection coll = db.getCollection("mfg");
+			DBCollection coll = (DBCollection) db.getCollection("mfg");
 			BasicDBObject query = new BasicDBObject();
 
 			feld = coll.find(query).toArray();
-			
-			String vergleicher = "";
-			
-			
+
+			String vergleich = "";
+
 			for (DBObject s : feld) {
-				
-				vergleicher = s.get("start").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte((String)s.get("start")));
-					
+
+				if (vergleich.contains(s.get("start").toString())) {
+
+				} else {
+					vergleich += s.get("start").toString();
+					ortsdetails.add(new Orte((String) s.get("start")));
 				}
-				
-				vergleicher = s.get("ziel").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte((String)s.get("ziel")));
-					
+
+				if (vergleich.contains(s.get("ziel").toString())) {
+
+				} else {
+					vergleich += s.get("ziel").toString();
+					ortsdetails.add(new Orte((String) s.get("ziel")));
 				}
-				
-				vergleicher = s.get("strecke").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte((String)s.get("strecke")));
-					
+
+				if (vergleich.contains(s.get("strecke").toString())) {
+
+				} else {
+					vergleich += s.get("strecke").toString();
+					ortsdetails.add(new Orte((String) s.get("strecke")));
 				}
-				
+
 			}
-			
-			
+
 			mongoClient.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return ok("Fehler.");
 		}
 
 		if (fertig) {
@@ -170,7 +170,8 @@ public class Benutzerlogin extends Controller {
 
 			session("connected", nutzer);
 			return ok(views.html.anwendung.anwendung.render(
-					"ProTramp Mitfahrgelegenheit", nutzer, info, typ, ortsdetails));
+					"ProTramp Mitfahrgelegenheit", nutzer, info, typ,
+					ortsdetails));
 		} else {
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
 			return ok(views.html.anwendung.anwendung.render(
@@ -182,51 +183,52 @@ public class Benutzerlogin extends Controller {
 	public static Result logout() {
 		String info = "";
 		session().clear();
-        
-        List <Orte> ortsdetails = new ArrayList<>();
-    	List <DBObject> feld;
+
+		List<Orte> ortsdetails = new ArrayList<>();
+		List<DBObject> feld;
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
 
-			DBCollection coll = db.getCollection("mfg");
+			DBCollection coll = (DBCollection) db.getCollection("mfg");
 			BasicDBObject query = new BasicDBObject();
 
 			feld = coll.find(query).toArray();
-			
-			String vergleicher = "";
-			
-			
+
+			String vergleich = "";
+
 			for (DBObject s : feld) {
-				
-				vergleicher = s.get("start").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("start").toString()));
-					
+
+				if (vergleich.contains(s.get("start").toString())) {
+
+				} else {
+					vergleich += s.get("start").toString();
+					ortsdetails.add(new Orte((String) s.get("start")));
 				}
-				
-				vergleicher = s.get("ziel").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("ziel").toString()));
-					
+
+				if (vergleich.contains(s.get("ziel").toString())) {
+
+				} else {
+					vergleich += s.get("ziel").toString();
+					ortsdetails.add(new Orte((String) s.get("ziel")));
 				}
-				
-				vergleicher = s.get("strecke").toString();
-				if(!ortsdetails.toString().contains(vergleicher)) {
-					ortsdetails.add(new Orte(s.get("strecke").toString()));
-					
+
+				if (vergleich.contains(s.get("strecke").toString())) {
+
+				} else {
+					vergleich += s.get("strecke").toString();
+					ortsdetails.add(new Orte((String) s.get("strecke")));
 				}
-				
+
 			}
-			
-			
+
 			mongoClient.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-        
+
 		return ok(views.html.anwendung.anwendung.render(
 				"ProTramp Mitfahrgelegenheit", "", info, "", ortsdetails));
 
