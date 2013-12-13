@@ -31,8 +31,8 @@
 	document.createElement('footer');
 </script>
 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -135,17 +135,68 @@
 			@if(message) {
 			<div class="box_ortsuche_eingelogged">
 				<br>
-				<div>
+				<div><div class="ui-widget">
 					<div class="input-group">
 						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Startort">
-					</div>
+							type="text" class="form-control" id="von" list="datalist3" placeholder="Startort">
+							<datalist id="datalist3">
+								<option value="Konstanz">
+								<option value="Radolfzell am Bodensee">
+								<option value="Allensbach">
+								<option value="Gottmadingen">
+								<option value="Überlingen">
+								<option value="Meersburg">
+								<option value="Schaffhausen">
+								<option value="Tuttlingen">
+								<option value="Ravensburg">
+								<option value="Lindau">
+								<option value="Stockach">
+								<option value="Meßkirch">
+								<option value="Litzelstetten">
+								<option value="Wallhausen">
+								<option value="Immenstaad am Bodensee">
+								<option value="Kreuzlingen">
+								<option value="Winterthur">
+								<option value="Donaueschingen">
+								<option value="Rottweil">
+								<option value="Stuttgart">
+								<option value="Singen">
+								<option value="Friedrichshafen">
+								<option value="Zürich">
+							</datalist>
+					</div></div>
 				</div>
-				<br> 
+				<br>
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort" required>
+							type="text" class="form-control" id="nach" list="datalist4" placeholder="Zielort"
+							required>
+							<datalist id="datalist4">
+								<option value="Konstanz">
+								<option value="Radolfzell am Bodensee">
+								<option value="Allensbach">
+								<option value="Gottmadingen">
+								<option value="Überlingen">
+								<option value="Meersburg">
+								<option value="Schaffhausen">
+								<option value="Tuttlingen">
+								<option value="Ravensburg">
+								<option value="Lindau">
+								<option value="Stockach">
+								<option value="Meßkirch">
+								<option value="Litzelstetten">
+								<option value="Wallhausen">
+								<option value="Immenstaad am Bodensee">
+								<option value="Kreuzlingen">
+								<option value="Winterthur">
+								<option value="Donaueschingen">
+								<option value="Rottweil">
+								<option value="Stuttgart">
+								<option value="Singen">
+								<option value="Friedrichshafen">
+								<option value="Zürich">
+							</datalist>
 					</div>
 				</div>
 				<br> <span class="input-group-addon"><p
@@ -167,24 +218,76 @@
 				</div>
 
 				} <br>
-				<div>
+				<div><div class="ui-widget">
 					<div class="input-group">
 						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Startort" required>
-					</div>
+							type="text" class="form-control" id="von" placeholder="Startort" list="datalist1" required />
+							<datalist id="datalist1">
+								<option value="Konstanz">
+								<option value="Radolfzell am Bodensee">
+								<option value="Allensbach">
+								<option value="Gottmadingen">
+								<option value="Überlingen">
+								<option value="Meersburg">
+								<option value="Schaffhausen">
+								<option value="Tuttlingen">
+								<option value="Ravensburg">
+								<option value="Lindau">
+								<option value="Stockach">
+								<option value="Meßkirch">
+								<option value="Litzelstetten">
+								<option value="Wallhausen">
+								<option value="Immenstaad am Bodensee">
+								<option value="Kreuzlingen">
+								<option value="Winterthur">
+								<option value="Donaueschingen">
+								<option value="Rottweil">
+								<option value="Stuttgart">
+								<option value="Singen">
+								<option value="Friedrichshafen">
+								<option value="Zürich">
+							</datalist>
+					</div></div>
 				</div>
 				<br>
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort" required>
+							type="text" class="form-control" placeholder="Zielort" list="datalist2" required>
+							
+							<datalist id="datalist2">
+								<option value="Konstanz">
+								<option value="Radolfzell am Bodensee">
+								<option value="Allensbach">
+								<option value="Gottmadingen">
+								<option value="Überlingen">
+								<option value="Meersburg">
+								<option value="Schaffhausen">
+								<option value="Tuttlingen">
+								<option value="Ravensburg">
+								<option value="Lindau">
+								<option value="Stockach">
+								<option value="Meßkirch">
+								<option value="Litzelstetten">
+								<option value="Wallhausen">
+								<option value="Immenstaad am Bodensee">
+								<option value="Kreuzlingen">
+								<option value="Winterthur">
+								<option value="Donaueschingen">
+								<option value="Rottweil">
+								<option value="Stuttgart">
+								<option value="Singen">
+								<option value="Friedrichshafen">
+								<option value="Zürich">
+							</datalist>
 					</div>
 				</div>
-				<br>  <span class="input-group-addon"><p
+				<br> <span class="input-group-addon"><p
 						class="position_links">Datum:</p> <select id="AuswahlTage"
 					name="Tag" size="1"></select> <select id="AuswahlMonate"
 					name="Monat" size="1"></select> <select id="AuswahlJahre"
-					name="Jahr" size="1"></select></span> <br> <br> 
+					name="Jahr" size="1"></select></span> <br> <br>
+					
 
 
 
@@ -207,7 +310,7 @@
 
 	<script>
 		(function() {
-			
+
 			//Datum einstellen
 			var elJahr = document.getElementById('AuswahlJahre'), dc = document
 					.createDocumentFragment();
@@ -215,9 +318,6 @@
 			var jetzt = new Date();
 			var jahr = jetzt.getFullYear();
 			var bis = jahr + 1;
-			
-			
-			
 
 			//Nur Datum in der Gegenwart und Zukunft werden angenommen
 			for (var i = jahr; i <= bis; i++) {
@@ -227,68 +327,62 @@
 				dc.appendChild(option);
 			}
 			elJahr.appendChild(dc);
-			
-			
+
 			var elMonat = document.getElementById('AuswahlMonate'), dc = document
-			.createDocumentFragment();
-			
+					.createDocumentFragment();
+
 			for (var i = 1; i <= 12; i++) {
 				var option = document.createElement('option');
 				option.value = i;
-				if(i<10) {
-					option.appendChild(document.createTextNode("0"+i));
+				if (i < 10) {
+					option.appendChild(document.createTextNode("0" + i));
 				} else {
 					option.appendChild(document.createTextNode(i));
 				}
-				
-				
-				
+
 				dc.appendChild(option);
 			}
 			elMonat.appendChild(dc);
-			
-			
+
 			var elTag = document.getElementById('AuswahlTage'), dc = document
-			.createDocumentFragment();
-			
+					.createDocumentFragment();
+
 			for (var i = 1; i <= 31; i++) {
 				var option = document.createElement('option');
 				option.value = i;
-				if(i<10) {
-					option.appendChild(document.createTextNode("0"+i));
+				if (i < 10) {
+					option.appendChild(document.createTextNode("0" + i));
 				} else {
 					option.appendChild(document.createTextNode(i));
 				}
-				
-				
-				
+
 				dc.appendChild(option);
 			}
 			elTag.appendChild(dc);
-			
+
 			elJahr.value = jahr;
-			
+
 			var akt_monat = jetzt.getMonth() + 1;
-			
-			if(akt_monat < 10) {
+
+			if (akt_monat < 10) {
 				elMonat.value = "0" + akt_monat;
-				
+
 			} else {
 				elMonat.value = akt_monat;
 			}
-			
-			
+
 			var d = new Date();
 			var q = d.getDate();
 			document.getElementById("AuswahlTage").value = q;
-			
-			
-			
-			
-			
+
 		}());
 	</script>
 
+
+	
+
+
+	
 
 
 	@if(message) { @if(typ) {
@@ -296,9 +390,9 @@
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen </a> <a
 				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen</a>
-			<a href="#" class="list-group-item">Anfragen</a> <a href="#"
-				class="list-group-item">Profil</a>
+				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+				MFGs anzeigen</a> <a href="#" class="list-group-item">Anfragen</a> <a
+				href="#" class="list-group-item">Profil</a>
 		</div>
 	</div>
 
@@ -306,9 +400,9 @@
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen </a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
-				class="list-group-item">Anfragen</a> <a href="#"
-				class="list-group-item">Profil</a>
+				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+				MFGs anzeigen</a> <a href="#" class="list-group-item">Anfragen</a> <a
+				href="#" class="list-group-item">Profil</a>
 		</div>
 	</div>
 
