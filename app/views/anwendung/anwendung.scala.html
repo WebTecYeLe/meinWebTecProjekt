@@ -1,4 +1,4 @@
-@(title: String)(message: String)(info: String)(typ: String)
+@(title: String)(message: String)(info: String)(typ: String)(listeorte: List[Orte])
 
 <!DOCTYPE html>
 <html>
@@ -140,6 +140,16 @@
 						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
 							type="text" class="form-control" id="von" list="datalist3" placeholder="Startort">
 							<datalist id="datalist3">
+								@if(listeorte.isEmpty()) {
+								
+								} else {
+									@for(i <- listeorte) {
+										<option value=@i.name>
+									
+									}
+								
+								}
+								<!--  
 								<option value="Konstanz">
 								<option value="Radolfzell am Bodensee">
 								<option value="Allensbach">
@@ -163,6 +173,8 @@
 								<option value="Singen">
 								<option value="Friedrichshafen">
 								<option value="Zürich">
+								
+								-->
 							</datalist>
 					</div></div>
 				</div>
@@ -173,6 +185,16 @@
 							type="text" class="form-control" id="nach" list="datalist4" placeholder="Zielort"
 							required>
 							<datalist id="datalist4">
+								@if(listeorte.isEmpty()) {
+								
+								} else {
+									@for(i <- listeorte) {
+										<option value=@i.name>
+									
+									}
+								
+								}
+							<!-- 
 								<option value="Konstanz">
 								<option value="Radolfzell am Bodensee">
 								<option value="Allensbach">
@@ -196,6 +218,9 @@
 								<option value="Singen">
 								<option value="Friedrichshafen">
 								<option value="Zürich">
+								
+								 -->
+								
 							</datalist>
 					</div>
 				</div>
@@ -223,7 +248,17 @@
 						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
 							type="text" class="form-control" id="von" placeholder="Startort" list="datalist1" required />
 							<datalist id="datalist1">
-								<option value="Konstanz">
+								@if(listeorte.isEmpty()) {
+								
+								} else {
+									@for(i <- listeorte) {
+										<option value=@i.name>
+									
+									}
+								
+								}
+							 <!-- 
+							 	<option value="Konstanz">
 								<option value="Radolfzell am Bodensee">
 								<option value="Allensbach">
 								<option value="Gottmadingen">
@@ -246,6 +281,9 @@
 								<option value="Singen">
 								<option value="Friedrichshafen">
 								<option value="Zürich">
+								
+								
+								-->
 							</datalist>
 					</div></div>
 				</div>
@@ -255,7 +293,21 @@
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
 							type="text" class="form-control" placeholder="Zielort" list="datalist2" required>
 							
+							
+						
 							<datalist id="datalist2">
+							
+							@if(listeorte.isEmpty()) {
+								
+								} else {
+									@for(i <- listeorte) {
+										<option value=@i.name>
+									
+									}
+								
+								}
+								
+								<!--  
 								<option value="Konstanz">
 								<option value="Radolfzell am Bodensee">
 								<option value="Allensbach">
@@ -279,6 +331,9 @@
 								<option value="Singen">
 								<option value="Friedrichshafen">
 								<option value="Zürich">
+								
+								
+								-->
 							</datalist>
 					</div>
 				</div>

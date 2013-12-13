@@ -1,17 +1,25 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
+
 
 
 import play.mvc.Controller;
 import play.mvc.Http.Cookie;
 import play.mvc.Result;
 
-/**
- * Einfache Beispiele
- * @author mike
- *
- */
+import java.util.List;
+
+import models.Orte;
+
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+
+
 public class ExampleController extends Controller{
 	
 	/**
@@ -24,6 +32,50 @@ public class ExampleController extends Controller{
 			
 		String user = session("connected");
 		String typ = session("typ");
+		
+		List <Orte> ortsdetails = new ArrayList<>();
+    	List <DBObject> feld;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			BasicDBObject query = new BasicDBObject();
+
+			feld = coll.find(query).toArray();
+			
+			String vergleicher = "";
+			
+			
+			for (DBObject s : feld) {
+				
+				vergleicher = s.get("start").toString();
+				if(!ortsdetails.toString().contains(vergleicher)) {
+					ortsdetails.add(new Orte(s.get("start").toString()));
+					
+				}
+				
+				vergleicher = s.get("ziel").toString();
+				if(!ortsdetails.toString().contains(vergleicher)) {
+					ortsdetails.add(new Orte(s.get("ziel").toString()));
+					
+				}
+				
+				vergleicher = s.get("strecke").toString();
+				if(!ortsdetails.toString().contains(vergleicher)) {
+					ortsdetails.add(new Orte(s.get("strecke").toString()));
+					
+				}
+				
+			}
+			
+			
+			mongoClient.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		if(typ != null) {
@@ -39,9 +91,9 @@ public class ExampleController extends Controller{
 		}
 		
 		if(user != null) {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user, "", typ));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails));
 		} else {
-			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", "", typ));
+			return ok(views.html.anwendung.anwendung.render("ProTramp Mitfahrgelegenheit", "", "", typ, ortsdetails));
 			
 		}
 		
