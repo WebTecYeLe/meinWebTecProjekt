@@ -1,12 +1,14 @@
 package controllers;
 
 import java.net.UnknownHostException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.List;
 
 import models.Orte;
+import models.Zaehler;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -24,6 +26,7 @@ public class Registrierung extends Controller {
 		return ok(views.html.registrierung.pr.render("Registrierung", ""));
 	}
 
+	@SuppressWarnings("deprecation")
 	public static Result abschicken() {
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
@@ -109,6 +112,9 @@ public class Registrierung extends Controller {
 		sb.append(years);
 		alter = sb.toString();
 
+		DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+		String registrierungsdatum = df.format(today.getTime());
+
 		// Bestimmung des Alters als ganze Zahl
 		alt = (int) Math.floor(Double.parseDouble(alter));
 
@@ -175,7 +181,8 @@ public class Registrierung extends Controller {
 					.append("titel", titel).append("fahrertyp", fahrertyp)
 					.append("geburtsdatum", geburtsdatum).append("alt", alt)
 					.append("vorname", vorname).append("name", name)
-					.append("tel", telefon);
+					.append("tel", telefon)
+					.append("registrierungsdatum", registrierungsdatum);
 			coll.insert(doc);
 			mongoClient.close();
 		} catch (UnknownHostException e) {
@@ -226,8 +233,52 @@ public class Registrierung extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ok(views.html.anwendung.anwendung.render(
-				"ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails));
+
+		// user_statistiken lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					username);
+			cursor = coll.find(query);
+			
+			if(cursor.count() == 0) {
+				BasicDBObject doc = new BasicDBObject("username", username).append("suchergebnisse", 0).append("meine_mfgs", 0)
+						.append("anfragen", 0);
+				coll.insert(doc);
+				
+			}
+			
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ok(views.html.anwendung.anwendung
+				.render("ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails,
+						zaehler));
 
 	}
 }

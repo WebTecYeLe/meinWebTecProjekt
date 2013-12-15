@@ -7,6 +7,7 @@ import java.util.Map;
 
 import models.AnzeigeDetails;
 import models.Orte;
+import models.Zaehler;
 import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Http.Session;
@@ -153,6 +154,40 @@ public class Benutzerlogin extends Controller {
 			e.printStackTrace();
 		}
 
+		// user_statistiken lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		if (fertig) {
 			// Falls ein Fahrer sich einloggt, soll die Zielseite
 			// dementsprechend gestaltet werden.
@@ -171,17 +206,18 @@ public class Benutzerlogin extends Controller {
 			session("connected", nutzer);
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, info, typ,
-					ortsdetails));
+					ortsdetails, zaehler));
 		} else {
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
 			return ok(views.html.anwendung.anwendung.render(
-					"ProTramp Mitfahrgelegenheit", "", info, typ, ortsdetails));
+					"ProTramp Mitfahrgelegenheit", "", info, typ, ortsdetails, zaehler));
 		}
 
 	}
 
 	public static Result logout() {
 		String info = "";
+        String nutzer = session("connected");
 		session().clear();
 
 		List<Orte> ortsdetails = new ArrayList<>();
@@ -229,8 +265,43 @@ public class Benutzerlogin extends Controller {
 			e.printStackTrace();
 		}
 
+            // user_statistiken lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
 		return ok(views.html.anwendung.anwendung.render(
-				"ProTramp Mitfahrgelegenheit", "", info, "", ortsdetails));
+				"ProTramp Mitfahrgelegenheit", "", info, "", ortsdetails, zaehler));
 
 	}
 

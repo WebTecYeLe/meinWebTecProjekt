@@ -10,6 +10,7 @@ import play.mvc.Result;
 import java.util.List;
 
 import models.Orte;
+import models.Zaehler;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -89,12 +90,44 @@ public class ExampleController extends Controller {
 			typ = "";
 		}
 
+		//user_statistiken lesen
+		
+		List<Zaehler> zaehler = new ArrayList<>();
+		
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+			
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username", user);
+			cursor = coll.find(query);
+			
+			if(cursor.count() != 0) {
+				
+				for(DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"), (int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+					
+				}
+									
+			} 
+			
+			mongoClient.close();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
 		if (user != null) {
 			return ok(views.html.anwendung.anwendung.render(
-					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails));
+					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails, zaehler));
 		} else {
 			return ok(views.html.anwendung.anwendung.render(
-					"ProTramp Mitfahrgelegenheit", "", "", typ, ortsdetails));
+					"ProTramp Mitfahrgelegenheit", "", "", typ, ortsdetails, zaehler));
 
 		}
 

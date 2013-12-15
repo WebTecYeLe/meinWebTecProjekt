@@ -1,4 +1,4 @@
-@(title: String)(message: String)(info: String)(typ: String)
+@(title: String)(message: String)(info: String)(typ: String)(zaehler: List[Zaehler])
 
 <!DOCTYPE html>
 <html>
@@ -51,7 +51,7 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Suche</a></li>
 						<li><a href="#">&Uuml;ber uns</a></li> @if(message) {
-						<li><a href="#">Konto</a></li> } else {
+						<li><a href="/konto/index">Konto</a></li> } else {
 						<li><a href="/registrierung">Registrierung</a></li> }
 
 					</ul>
@@ -378,8 +378,13 @@
 		<div class="list-group">
 			<a href="/" class="list-group-item"> MFG suchen </a> <a
 				href="/anwendung/mfg_anbieten" class="list-group-item active">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen</a>
-			<a href="#" class="list-group-item">Anfragen</a> <a href="#"
+				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen<span
+				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
+			</span></a>
+			<a href="#" class="list-group-item">Anfragen<span
+				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
+
+			</span></a> <a href="#"
 				class="list-group-item">Profil</a>
 		</div>
 	</div>
@@ -389,7 +394,12 @@
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen </a><a
 				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen</a> <a href="#"
-				class="list-group-item">Anfragen</a> <a href="#"
+				class="list-group-item">Anfragen<span
+				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
+			</span><span
+				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
+
+			</span></a> <a href="#"
 				class="list-group-item">Profil</a>
 		</div>
 	</div>

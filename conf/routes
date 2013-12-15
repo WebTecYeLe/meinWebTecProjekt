@@ -46,7 +46,9 @@ POST	/registrierung/abschicken		 controllers.Registrierung.abschicken()
 GET     /userlogin                       controllers.UserLogin.index()
 POST    /userlogin						 controllers.UserLogin.login()
 
+# Kontoeinstellungen
 
+GET		/konto/index					 controllers.Konto.kontoeinstellungen_index()
 
 # MFG Details zeigen
 

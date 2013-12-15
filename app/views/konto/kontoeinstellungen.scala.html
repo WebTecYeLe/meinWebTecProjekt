@@ -1,12 +1,10 @@
-@(title: String)(message: String)(info: String)(typ: String)(anzeige:
-List[AnzeigeDetails])(zaehler: List[Zaehler])
+@(title: String)(message: String)
 
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>@title</title>
 
+<head>
+<title>@title</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta charset="utf-8">
 
@@ -20,6 +18,10 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	rel="stylesheet" media="screen">
 <link href="/assets/stylesheets/main.css" rel="stylesheet"
 	media="screen">
+
+<link
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
 <script>
@@ -29,14 +31,19 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	document.createElement('footer');
 </script>
 
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
 <script src="../../assets/js/html5shiv.js"></script>
 <script src="../../assets/js/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
 
+<body>
 	<header>
 		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 			<div class="container">
@@ -51,9 +58,9 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 				</div>
 				<div class="collapse navbar-collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="/">Suche</a></li>
+						<li><a href="/">Suche</a></li>
 						<li><a href="#">&Uuml;ber uns</a></li> @if(message) {
-						<li><a href="/konto/index">Konto</a></li> } else {
+						<li class="active"><a href="/konto/index">Konto</a></li> } else {
 						<li><a href="/registrierung">Registrierung</a></li> }
 
 					</ul>
@@ -74,9 +81,10 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 							<button type="submit" class="btn btn-primary">Logout</button>
 						</form>
 					</div>
+
 					} else {
 					<div class="login_form">
-						<!-- Hier ist das Formular fÃƒÂ¼r den Login -->
+						<!-- Hier ist das Formular für den Login -->
 						<form class="form-inline" role="form" method="POST"
 							action="/benutzerlogin/login">
 
@@ -103,7 +111,10 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 							<button type="submit" class="btn btn-primary">Einloggen</button>
 						</form>
 					</div>
+
 					}
+
+
 
 
 
@@ -114,83 +125,8 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 			<!-- /.container -->
 		</div>
 		<!-- /.navbar -->
+
 	</header>
-
-
-	<form method="GET" action="/anwendung/mfg_anzeigen"></form>
-	@if(message) { @if(typ) {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item"> MFG suchen </a> <a
-				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen"
-				class="list-group-item active">Meine MFGs anzeigen<span
-				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
-			</span></a> <a href="#" class="list-group-item">Anfragen<span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span></a> <a href="#" class="list-group-item">Profil</a>
-		</div>
-	</div>
-
-	} else {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item"> MFG suchen </a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item active">Meine
-				MFGs anzeigen<span class="badge pull-right"> @for(q <-
-					zaehler) { @q.meine_mfgs } </span>
-			</a> <a href="#" class="list-group-item">Anfragen<span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span></a> <a href="#" class="list-group-item">Profil</a>
-		</div>
-	</div>
-
-	} }
-	</form>
-
-
-	<div class="anzeige_details">
-		@if(anzeige.isEmpty()) {
-		<p>
-		<h3>Keine MFG Eintraege gefunden.</h3>
-		</p>
-		} else {
-
-		<table class="table table-hover">
-
-			<tr>
-				<th>TestID</th>
-				<th>Start</th>
-				<th>Ziel</th>
-				<th>Datum</th>
-				<th>Uhrzeit</th>
-				<th>Abschicken</th>
-			</tr>
-			<tbody>
-				@for( i <- anzeige ){
-				<tr>
-					<td>@i.id</td>
-					<td>@i.start</td>
-					<td>@i.ziel</td>
-					<td>@i.datum</td>
-					<td>@i.uhrzeit</td>
-					<td>
-						<form method="post" action="/anwendung/@i.id/mfg_details_zeigen">
-							<button type="submit" class="btn btn-default">anzeigen</button>
-						</form>
-					</td>
-				</tr>
-				}
-			</tbody>
-		</table>
-		}
-
-
-
-	</div>
-
 
 
 

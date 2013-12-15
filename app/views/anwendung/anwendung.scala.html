@@ -1,4 +1,5 @@
-@(title: String)(message: String)(info: String)(typ: String)(listeorte: List[Orte])
+@(title: String)(message: String)(info: String)(typ: String)(listeorte:
+List[Orte])(zaehler: List[Zaehler])
 
 <!DOCTYPE html>
 <html>
@@ -31,8 +32,10 @@
 	document.createElement('footer');
 </script>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -58,7 +61,7 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Suche</a></li>
 						<li><a href="#">&Uuml;ber uns</a></li> @if(message) {
-						<li><a href="#">Konto</a></li> } else {
+						<li><a href="/konto/index">Konto</a></li> } else {
 						<li><a href="/registrierung">Registrierung</a></li> }
 
 					</ul>
@@ -135,43 +138,29 @@
 			@if(message) {
 			<div class="box_ortsuche_eingelogged">
 				<br>
-				<div><div class="ui-widget">
-					<div class="input-group">
-						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="von" list="datalist3" placeholder="Startort">
+				<div>
+					<div class="ui-widget">
+						<div class="input-group">
+							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
+								type="text" class="form-control" id="von" list="datalist3"
+								placeholder="Startort">
 							<datalist id="datalist3">
-								@if(listeorte.isEmpty()) {
-								
-								} else {
-									@for(i <- listeorte) {
-										<option value=@i.name>
-									
-									}
-								
-								}
-								
+								@if(listeorte.isEmpty()) { } else { @for(i <- listeorte) {
+								<option value=@i.name>} }
 							</datalist>
-					</div></div>
+						</div>
+					</div>
 				</div>
 				<br>
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="nach" list="datalist4" placeholder="Zielort"
-							required>
-							<datalist id="datalist4">
-								@if(listeorte.isEmpty()) {
-								
-								} else {
-									@for(x <- listeorte) {
-										<option value=@x.name>
-									
-									}
-								
-								}
-							
-								
-							</datalist>
+							type="text" class="form-control" id="nach" list="datalist4"
+							placeholder="Zielort" required>
+						<datalist id="datalist4">
+							@if(listeorte.isEmpty()) { } else { @for(x <- listeorte) {
+							<option value=@x.name>} }
+						</datalist>
 					</div>
 				</div>
 				<br> <span class="input-group-addon"><p
@@ -193,46 +182,33 @@
 				</div>
 
 				} <br>
-				<div><div class="ui-widget">
-					<div class="input-group">
-						<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="von" placeholder="Startort" list="datalist1" required>
+				<div>
+					<div class="ui-widget">
+						<div class="input-group">
+							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
+								type="text" class="form-control" id="von" placeholder="Startort"
+								list="datalist1" required>
 							<datalist id="datalist1">
-								@if(listeorte.isEmpty()) {
-								
-								} else {
-									@for(j <- listeorte) {
-										<option value=@j.name>
-									
-									}
-								
-								}
-							 
+								@if(listeorte.isEmpty()) { } else { @for(j <- listeorte) {
+								<option value=@j.name>} }
 							</datalist>
-					</div></div>
+						</div>
+					</div>
 				</div>
 				<br>
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort" list="datalist2" required>
-							
-							
-						
-							<datalist id="datalist2">
-							
-							@if(listeorte.isEmpty()) {
-								
-								} else {
-									@for(k <- listeorte) {
-										<option value=@k.name>
-									
-									}
-								
-								}
-								
-								
-							</datalist>
+							type="text" class="form-control" placeholder="Zielort"
+							list="datalist2" required>
+
+
+
+						<datalist id="datalist2">
+
+							@if(listeorte.isEmpty()) { } else { @for(k <- listeorte) {
+							<option value=@k.name>} }
+						</datalist>
 					</div>
 				</div>
 				<br> <span class="input-group-addon"><p
@@ -240,7 +216,7 @@
 					name="Tag" size="1"></select> <select id="AuswahlMonate"
 					name="Monat" size="1"></select> <select id="AuswahlJahre"
 					name="Jahr" size="1"></select></span> <br> <br>
-					
+
 
 
 
@@ -332,10 +308,10 @@
 	</script>
 
 
-	
 
 
-	
+
+
 
 
 	@if(message) { @if(typ) {
@@ -344,8 +320,15 @@
 			<a href="/" class="list-group-item active"> MFG suchen </a> <a
 				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
 				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen</a> <a href="#" class="list-group-item">Anfragen</a> <a
-				href="#" class="list-group-item">Profil</a>
+				MFGs anzeigen @if(zaehler.isEmpty()) { } else { <span
+				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
+			</span> }
+
+			</a> <a href="#" class="list-group-item">Anfragen @if(zaehler.isEmpty()) {} else {<span
+				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
+
+			</span> }
+			</a> <a href="#" class="list-group-item">Profil</a>
 		</div>
 	</div>
 
@@ -354,8 +337,12 @@
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen </a><a
 				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen</a> <a href="#" class="list-group-item">Anfragen</a> <a
-				href="#" class="list-group-item">Profil</a>
+				MFGs anzeigen<span class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(q <-
+					zaehler) { @q.meine_mfgs } </span>}
+			</a> <a href="#" class="list-group-item">Anfragen<span
+				class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(x <- zaehler) { @x.anfragen }
+
+			</span>}</a> <a href="#" class="list-group-item">Profil</a>
 		</div>
 	</div>
 
