@@ -33,6 +33,8 @@ POST	/anwendung/mfg_anbieten/anbieten controllers.Anwendung.anbieten()
 
 GET		/anwendung/mfg_anzeigen			 controllers.Anwendung.anzeigen()
 
+POST	/anwendung/mfg_suchen			 controllers.Anwendung.mfg_suchen()
+
 # Benutzerlogin
 
 POST	/benutzerlogin/login			 controllers.Benutzerlogin.login()
@@ -53,6 +55,8 @@ GET		/konto/index					 controllers.Konto.kontoeinstellungen_index()
 # MFG Details zeigen
 
 POST	/anwendung/:id/mfg_details_zeigen controllers.Anwendung.detailsAnzeigen(id: String)	
+
+POST	/anwendung/:id/mfg_suchdetails_zeigen controllers.Anwendung.suchDetailsAnzeigen(id: String)
 
 
 ##############

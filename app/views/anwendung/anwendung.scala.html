@@ -25,12 +25,15 @@ List[Orte])(zaehler: List[Zaehler])
 
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
+
 <script>
 	document.createElement('header');
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
 </script>
+
+
 
 <script type="text/javascript"
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -45,6 +48,8 @@ List[Orte])(zaehler: List[Zaehler])
 </head>
 
 <body>
+<div class="">
+
 	<header>
 		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 			<div class="container">
@@ -134,7 +139,7 @@ List[Orte])(zaehler: List[Zaehler])
 
 
 
-		<form method="GET" action="/">
+		<form method="POST" action="/anwendung/mfg_suchen">
 			@if(message) {
 			<div class="box_ortsuche_eingelogged">
 				<br>
@@ -142,8 +147,8 @@ List[Orte])(zaehler: List[Zaehler])
 					<div class="ui-widget">
 						<div class="input-group">
 							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-								type="text" class="form-control" id="von" list="datalist3"
-								placeholder="Startort">
+								type="text" class="form-control" id="von" name="exampleVon" list="datalist3"
+								placeholder="Startort" required>
 							<datalist id="datalist3">
 								@if(listeorte.isEmpty()) { } else { @for(i <- listeorte) {
 								<option value=@i.name>} }
@@ -155,7 +160,7 @@ List[Orte])(zaehler: List[Zaehler])
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="nach" list="datalist4"
+							type="text" class="form-control" id="nach" name="exampleNach" list="datalist4"
 							placeholder="Zielort" required>
 						<datalist id="datalist4">
 							@if(listeorte.isEmpty()) { } else { @for(x <- listeorte) {
@@ -186,7 +191,7 @@ List[Orte])(zaehler: List[Zaehler])
 					<div class="ui-widget">
 						<div class="input-group">
 							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-								type="text" class="form-control" id="von" placeholder="Startort"
+								type="text" class="form-control" id="von" name="exampleVon" placeholder="Startort"
 								list="datalist1" required>
 							<datalist id="datalist1">
 								@if(listeorte.isEmpty()) { } else { @for(j <- listeorte) {
@@ -199,7 +204,7 @@ List[Orte])(zaehler: List[Zaehler])
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" placeholder="Zielort"
+							type="text" class="form-control" id="nach" name="exampleNach" placeholder="Zielort"
 							list="datalist2" required>
 
 
@@ -355,7 +360,7 @@ List[Orte])(zaehler: List[Zaehler])
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
-
+	</div>
 </body>
 
 </html>
