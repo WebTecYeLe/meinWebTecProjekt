@@ -1,6 +1,6 @@
 package models;
 
-public class KontoDetails {
+public class KontoDetails extends Entity {
 
 	public KontoDetails(String registrierungsdatum, String username, String email ) {
 		this.registrierungsdatum = registrierungsdatum;

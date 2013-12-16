@@ -29,33 +29,77 @@
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
+	
+	function passwordAendern()
+	{
+		divPwNeu = document.getElementById("div_pw_neu");
+		//divPwWdh = document.getElementById("div_pw_wdh");
+		
+		var ergebnis = "";
+		
+		ergebnis += "<div class='input-group'> \n";
+		ergebnis += " <span class='input-group-addon'> \n";
+		ergebnis += " Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \n";
+		ergebnis += " <\/span> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pss' placeholder='Altes Passwort'/> \n";
+		ergebnis += "<\/div> \n";
+		ergebnis += "<br> \n";
+			
+		
+		var output = document.getElementById("div_pw_alt");
+		output.innerHTML = ergebnis;
+		
+		ergebnis = "";
+		
+		ergebnis += "<div class='input-group'> \n";
+		ergebnis += " <span class='input-group-addon'> \n";
+		ergebnis += " Neues Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
+		ergebnis += " <\/span> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssneu' placeholder='Neues Passwort'/> \n";
+		ergebnis += "<\/div> \n";
+		ergebnis += "<br> \n";
+		
+		output = document.getElementById("div_pw_neu");
+		output.innerHTML = ergebnis;
+		
+		
+		ergebnis = "";
+		
+		ergebnis += "<div class='input-group'> \n";
+		ergebnis += " <span class='input-group-addon'> \n";
+		ergebnis += " Neues Passwort(wdh): \n";
+		ergebnis += " <\/span> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_psswdh' placeholder='Neues Passwort(wdh.)'/> \n";
+		ergebnis += "<\/div> \n";
+		ergebnis += "<br> \n";
+			
+		output = document.getElementById("div_pw_wdh");
+		output.innerHTML = ergebnis;
+		
+		document.getElementById("pw_button_menue").style.visibility = "collapse";
+		
+		ergebnis = "";
+		
+		ergebnis += "<form method='POST' action='/konto/aendern'> \n";
+		ergebnis += " <button class='btn btn-primary btn-block' id='pw_button_menue'> \n";
+		ergebnis += " Neues Password abschicken \n";
+		ergebnis += " <\/button> \n";
+		ergebnis += "<\/form> \n";
+		
+		output = document.getElementById("div_pw_button");
+		output.innerHTML = ergebnis;
+		
+				
+	}
+	
+	
+	
+	
+	
 </script>
 
 
-<script type="text/javascript">
 
-	/*function password_aender(){
-		document.getElementById('kontoeinstellungen_ps_wdh').innerHTML = "<div>
-			<div class='input-group'>
-		<span class='input-group-addon'>neues Passwort:
-			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type='password'
-			class='form-control' name='kontoeinstellungen_pssneu' value=''>
-	</div>
-</div>";
-		
-		
-		
-
-		
-		
-			
-		
-		//kontoPassword.appendChild(dc);
-			
-	}*/
-
-
-</script>
 
 <script type="text/javascript"
 	src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -160,8 +204,8 @@
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">Registriert seit:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-					class="form-control" name="kontoeinstellungen"
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
+					type="text" class="form-control" name="kontoeinstellungen_rg"
 					value=@i.registrierungsdatum readonly>
 			</div>
 		</div>
@@ -169,66 +213,83 @@
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">Username:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
-					name="kontoeinstellungen" value=@i.username readonly>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+					name="kontoeinstellungen_name" value=@i.username readonly>
 			</div>
 		</div>
 		<br>
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">Email:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
-					type="text" class="form-control" name="kontoeinstellungen"
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				<input type="text" class="form-control" name="kontoeinstellungen_email"
 					value=@i.email readonly>
 			</div>
 		</div>
 		<br> <br>
+		
+		}
+		
+		<!-- 
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">Passwort:
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
-					class="form-control" name="kontoeinstellungen_pss" placeholder="Altes Passwort" value="">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
+					class="form-control" name="kontoeinstellungen_pss"
+					placeholder="Altes Passwort" value="">
 			</div>
 
 		</div>
 		<br>
+		 -->
+
+
+		<div id="div_pw_alt"></div>
+		<div id="div_pw_neu"></div>
+		<div id="div_pw_wdh"></div>
+		<div id="div_pw_button"></div>
+
+		<button class="btn btn-primary btn-block" id="pw_button_menue" onclick="passwordAendern()">Passwort ändern</button>
 
 
 
 
 
-
-
-
-
+		
+		
+		
+		<!-- 
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">neues Passwort:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
 					class="form-control" name="kontoeinstellungen_pssneu" value="">
 			</div>
 		</div>
 		<br>
 		<div>
 			<div class="input-group">
-				<span class="input-group-addon">neues Passwort wdh: </span> <input
+				<span class="input-group-addon">neues Passwort wdh:</span> <input
 					type="password" class="form-control"
 					name="kontoeinstellungen_pssneuwdh" value="">
 			</div>
 		</div>
-		}
 
-
+	-->
 	</div>
 
-
-
+	 
+	<!-- 
 	<div class="konto_button">
-		<button class="btn btn-primary">ändern</button>
+		
 	</div>
+
+	-->
+
+
 
 
 </body>

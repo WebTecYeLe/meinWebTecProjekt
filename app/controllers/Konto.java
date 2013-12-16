@@ -38,6 +38,7 @@ public class Konto extends Controller {
 						(String) s.get("username"), (String) s.get("email")));
 			}
 
+			mongoClient.close();
 
 		} catch (Exception e) {
 
@@ -46,6 +47,8 @@ public class Konto extends Controller {
 				"ProTramp Mitfahrgelegenheit", nutzer, details));
 	}
 
+	
+	
 	public static Result kontoeinstellungen_aendern() {
 		String nutzer = session("connected");
 		
@@ -54,28 +57,90 @@ public class Konto extends Controller {
 		// Parameteruebergaben werden ueberprueft
 				if (!(parameters != null
 						&& parameters.containsKey("kontoeinstellungen_pss")
-						&& parameters.containsKey("username")
-						&& parameters.containsKey("email")
+						&& parameters.containsKey("kontoeinstellungen_pssneu")
+						&& parameters.containsKey("kontoeinstellungen_psswdh")
 						)) {
 
 					Logger.warn("bad login request");
-					return redirect("/konto/index");
+					return ok("Fehler beim Senden.");
+					//return redirect("/konto/index");
 				}
 		
 		
 				String altesPasswort = parameters.get("kontoeinstellungen_pss")[0];
-				String neuesPasswort = parameters.get("username")[0];
-				String neuesPasswort_wdh = parameters.get("email")[0];
+				String neuesPasswort = parameters.get("kontoeinstellungen_pssneu")[0];
+				String neuesPasswort_wdh = parameters.get("kontoeinstellungen_psswdh")[0];
+				
+				
+				
+				boolean gueltig = false;
 				
 				if(altesPasswort == "") {
-					
+					return redirect("/konto/index");
 					
 				} else {
+					if(neuesPasswort.equals(neuesPasswort_wdh) && neuesPasswort != "" && neuesPasswort_wdh != "") {
+						
+						
+						try {
+							MongoClient mongoClient = new MongoClient("localhost", 27017);
+							DB db = mongoClient.getDB("play_basics");
+
+							// Die Collection des Nutzers finden
+							DBCollection coll = db.getCollection("user");
+							com.mongodb.DBCursor cursor = coll.find();
+							BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+									nutzer);
+							cursor = coll.find(query);
+
+						
+							
+							for (DBObject s : cursor) {
+								if(s.get("password").equals(altesPasswort)) {
+									gueltig = true;
+									
+								}
+								
+							}
+							
+							
+							
+							if(gueltig) {
+								BasicDBObject doc = new BasicDBObject();
+								
+								if (cursor.count() != 0) {
+									for (DBObject s : cursor) {
+										
+										doc.put("password", neuesPasswort);
+
+									}
+
+									
+								}
+
+								coll.update(query, doc);
+								
+								
+							}
+							
+
+							mongoClient.close();
+
+							
+						} catch(Exception e) {
+							e.printStackTrace();
+						}
+						
+						
+					} else {
+						return redirect("/konto/index");
+					}
+					
 					
 				}
 				
 
-		return ok();
+		return redirect("/");
 	}
 
 }
