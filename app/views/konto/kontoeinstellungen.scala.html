@@ -34,10 +34,25 @@
 
 <script type="text/javascript">
 
-	function password_aender(){
+	/*function password_aender(){
+		document.getElementById('kontoeinstellungen_ps_wdh').innerHTML = "<div>
+			<div class='input-group'>
+		<span class='input-group-addon'>neues Passwort:
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type='password'
+			class='form-control' name='kontoeinstellungen_pssneu' value=''>
+	</div>
+</div>";
 		
 		
-	}
+		
+
+		
+		
+			
+		
+		//kontoPassword.appendChild(dc);
+			
+	}*/
 
 
 </script>
@@ -155,9 +170,8 @@
 			<div class="input-group">
 				<span class="input-group-addon">Username:
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;</span>
-				<input type="text" class="form-control" name="kontoeinstellungen"
-					value=@i.username readonly>
+					&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+					name="kontoeinstellungen" value=@i.username readonly>
 			</div>
 		</div>
 		<br>
@@ -165,23 +179,31 @@
 			<div class="input-group">
 				<span class="input-group-addon">Email:
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				<input type="text" class="form-control" name="kontoeinstellungen"
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
+					type="text" class="form-control" name="kontoeinstellungen"
 					value=@i.email readonly>
 			</div>
 		</div>
-		<br><br>
+		<br> <br>
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">Passwort:
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
-					type="password" class="form-control" name="kontoeinstellungen_pss"
-					value=""> 
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
+					class="form-control" name="kontoeinstellungen_pss" placeholder="Altes Passwort" value="">
 			</div>
-			
+
 		</div>
 		<br>
+
+
+
+
+
+
+
+
+
 		<div>
 			<div class="input-group">
 				<span class="input-group-addon">neues Passwort:
@@ -198,9 +220,14 @@
 			</div>
 		</div>
 		}
+
+
 	</div>
+
+
+
 	<div class="konto_button">
-	<button class="btn btn-primary" onclick= "password_aender()"> ändern</button>
+		<button class="btn btn-primary">ändern</button>
 	</div>
 
 

@@ -2,8 +2,10 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import models.KontoDetails;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -45,6 +47,33 @@ public class Konto extends Controller {
 	}
 
 	public static Result kontoeinstellungen_aendern() {
+		String nutzer = session("connected");
+		
+		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
+		
+		// Parameteruebergaben werden ueberprueft
+				if (!(parameters != null
+						&& parameters.containsKey("kontoeinstellungen_pss")
+						&& parameters.containsKey("username")
+						&& parameters.containsKey("email")
+						)) {
+
+					Logger.warn("bad login request");
+					return redirect("/konto/index");
+				}
+		
+		
+				String altesPasswort = parameters.get("kontoeinstellungen_pss")[0];
+				String neuesPasswort = parameters.get("username")[0];
+				String neuesPasswort_wdh = parameters.get("email")[0];
+				
+				if(altesPasswort == "") {
+					
+					
+				} else {
+					
+				}
+				
 
 		return ok();
 	}
