@@ -55,6 +55,7 @@ public class Konto extends Controller {
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 		
 		// Parameteruebergaben werden ueberprueft
+		/*
 				if (!(parameters != null
 						&& parameters.containsKey("kontoeinstellungen_pss")
 						&& parameters.containsKey("kontoeinstellungen_pssneu")
@@ -66,7 +67,7 @@ public class Konto extends Controller {
 					//return redirect("/konto/index");
 				}
 		
-		
+		*/
 				String altesPasswort = parameters.get("kontoeinstellungen_pss")[0];
 				String neuesPasswort = parameters.get("kontoeinstellungen_pssneu")[0];
 				String neuesPasswort_wdh = parameters.get("kontoeinstellungen_psswdh")[0];
@@ -76,9 +77,13 @@ public class Konto extends Controller {
 				boolean gueltig = false;
 				
 				if(altesPasswort == "") {
+					
 					return redirect("/konto/index");
 					
 				} else {
+					
+					//return ok("altesPasswort: "+altesPasswort);
+					
 					if(neuesPasswort.equals(neuesPasswort_wdh) && neuesPasswort != "" && neuesPasswort_wdh != "") {
 						
 						
@@ -93,15 +98,42 @@ public class Konto extends Controller {
 									nutzer);
 							cursor = coll.find(query);
 
-						
+							String pw = "";
+							String email = "";
+							String titel = "";
+							String fahrertyp = "";
+							String geburtsdatum = "";
+							String alt = "";
+							String vorname = "";
+							String name = "";
+							String tel = "";
+							String registrierungsdatum = "";
 							
 							for (DBObject s : cursor) {
-								if(s.get("password").equals(altesPasswort)) {
-									gueltig = true;
-									
-								}
+								pw = s.get("password").toString();
+								email = (String) s.get("email");
+								titel = (String) s.get("titel");
+								fahrertyp = (String) s.get("fahrertyp");
+								geburtsdatum = (String) s.get("geburtsdatum");
+								alt = (String) s.get("alt");
+								vorname = (String) s.get("vorname");
+								name = (String) s.get("name");
+								tel = (String) s.get("tel");
+								registrierungsdatum = (String) s.get("registrierungsdatum");
 								
 							}
+							
+							
+							if(Integer.parseInt(altesPasswort) == Integer.parseInt(pw)) {
+								
+								gueltig = true;
+							}
+							
+							if(!gueltig) {
+								return ok("PW: "+pw +" altesPasswort: "+altesPasswort);
+							}
+							
+							
 							
 							
 							
@@ -111,7 +143,18 @@ public class Konto extends Controller {
 								if (cursor.count() != 0) {
 									for (DBObject s : cursor) {
 										
+										
+										doc.put("username", nutzer);
 										doc.put("password", neuesPasswort);
+										doc.put("email", email);
+										doc.put("titel", titel);
+										doc.put("fahrertyp", fahrertyp);
+										doc.put("geburtsdatum", geburtsdatum);
+										doc.put("alt", alt);
+										doc.put("vorname", vorname);
+										doc.put("name", name);
+										doc.put("tel", tel);
+										doc.put("registrierungsdatum", registrierungsdatum);
 
 									}
 
@@ -139,8 +182,8 @@ public class Konto extends Controller {
 					
 				}
 				
-
-		return redirect("/");
+				return redirect("/"); 
+		
 	}
 
 }

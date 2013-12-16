@@ -37,11 +37,14 @@
 		
 		var ergebnis = "";
 		
+		
+		
+		
 		ergebnis += "<div class='input-group'> \n";
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \n";
 		ergebnis += " <\/span> \n";
-		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pss' placeholder='Altes Passwort'/> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pss' placeholder='Altes Passwort'> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
 			
@@ -55,7 +58,7 @@
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Neues Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
 		ergebnis += " <\/span> \n";
-		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssneu' placeholder='Neues Passwort'/> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssneu' placeholder='Neues Passwort'> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
 		
@@ -69,7 +72,7 @@
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Neues Passwort(wdh): \n";
 		ergebnis += " <\/span> \n";
-		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_psswdh' placeholder='Neues Passwort(wdh.)'/> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_psswdh' placeholder='Neues Passwort(wdh.)'> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
 			
@@ -80,11 +83,11 @@
 		
 		ergebnis = "";
 		
-		ergebnis += "<form method='POST' action='/konto/aendern'> \n";
+		
 		ergebnis += " <button class='btn btn-primary btn-block' id='pw_button_menue'> \n";
 		ergebnis += " Neues Password abschicken \n";
 		ergebnis += " <\/button> \n";
-		ergebnis += "<\/form> \n";
+		
 		
 		output = document.getElementById("div_pw_button");
 		output.innerHTML = ergebnis;
@@ -246,11 +249,12 @@
 		<br>
 		 -->
 
-
-		<div id="div_pw_alt"></div>
-		<div id="div_pw_neu"></div>
-		<div id="div_pw_wdh"></div>
-		<div id="div_pw_button"></div>
+		<form method="POST" action="/konto/aendern" >
+			<div id="div_pw_alt"></div>
+			<div id="div_pw_neu"></div>
+			<div id="div_pw_wdh"></div>
+			<div id="div_pw_button"></div>
+		</form>
 
 		<button class="btn btn-primary btn-block" id="pw_button_menue" onclick="passwordAendern()">Passwort ändern</button>
 
