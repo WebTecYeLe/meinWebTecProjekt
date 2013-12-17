@@ -47,7 +47,7 @@ public class Konto extends Controller {
 
 		}
 		return ok(views.html.konto.kontoeinstellungen.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, details));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", details));
 	}
 
 	public static Result kontoeinstellungen_aendern() {
@@ -66,6 +66,34 @@ public class Konto extends Controller {
 			  return redirect("/konto/index"); 
 		  
 		  }
+		  
+		  
+		  List<KontoDetails> details = new ArrayList<>();
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				// Die Collection des Nutzers finden
+				DBCollection coll = db.getCollection("user");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+						nutzer);
+				cursor = coll.find(query);
+
+				for (DBObject s : cursor) {
+					details.add(new KontoDetails((String) s
+							.get("registrierungsdatum"),
+							(String) s.get("username"), (String) s.get("email")));
+				}
+
+				mongoClient.close();
+
+			} catch (Exception e) {
+
+			}  
+		  
+		  
 		 
 		String altesPasswort = parameters.get("kontoeinstellungen_pss")[0];
 		String neuesPasswort = parameters.get("kontoeinstellungen_pssneu")[0];
@@ -74,7 +102,7 @@ public class Konto extends Controller {
 		boolean gueltig = false;
 
 		if (altesPasswort == "") {
-			return redirect("/konto/index");
+			return ok(views.html.konto.kontoeinstellungen.render("ProTramp Mitfahrgelegenheit", nutzer, "Ihre Eingaben waren nicht gültig. Versuchen Sie es erneut.", details));
 
 		} else {
 
@@ -124,16 +152,16 @@ public class Konto extends Controller {
 
 				} catch (Exception e) {
 					e.printStackTrace();
-					return ok("Fehler beim Verarbeiten.");
 				}
 
 			} else {
-				return redirect("/konto/index");
+				return ok(views.html.konto.kontoeinstellungen.render(
+						"ProTramp Mitfahrgelegenheit", nutzer, "Das Passwort wurde nicht korrekt wiederholt. Versuchen Sie es erneut.", details));
 			}
 
 		}
 
-		return redirect("/");
+		return redirect("/konto/index");
 
 	}
 	
@@ -195,7 +223,34 @@ public class Konto extends Controller {
 			session().clear();
 			return redirect("/");
 		} else {
-			return redirect("/");
+			
+			List<KontoDetails> details = new ArrayList<>();
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				// Die Collection des Nutzers finden
+				DBCollection coll = db.getCollection("user");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+						nutzer);
+				cursor = coll.find(query);
+
+				for (DBObject s : cursor) {
+					details.add(new KontoDetails((String) s
+							.get("registrierungsdatum"),
+							(String) s.get("username"), (String) s.get("email")));
+				}
+
+				mongoClient.close();
+
+			} catch (Exception e) {
+
+			}
+			
+			return ok(views.html.konto.kontoeinstellungen.render(
+					"ProTramp Mitfahrgelegenheit", nutzer, "", details));
 		}
 		
 	}

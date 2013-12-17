@@ -686,7 +686,9 @@ public class Anwendung extends Controller {
 							start).append("ziel", ziel);
 					cursor = coll.find(query);
 					
-					suchergebnisse = cursor.count();
+					suchergebnisse = (int) cursor.count();
+					
+					
 					
 					for (DBObject s : cursor) {
 
@@ -731,34 +733,14 @@ public class Anwendung extends Controller {
 					cursor = coll.find(query);
 					
 					
-					BasicDBObject doc = new BasicDBObject();
 					
-					if (cursor.count() != 0) {
-						for (DBObject s : cursor) {
-							//suchergebnisse = (int) s.get("suchergebnisse");
-							
-							//meine_mfgs = (int) s.get("meine_mfgs");
-							//meine_mfgs++;
-							
-							meine_mfgs = (int) s.get("meine_mfgs");
-							//suchergebnisse = details.size();
-							anfragen = (int) s.get("anfragen");
-							
-							doc.put("username", nutzer);
-							doc.put("suchergebnisse", suchergebnisse);
-							doc.put("meine_mfgs", meine_mfgs);
-							doc.put("anfragen", anfragen);
+					BasicDBObject doc = new BasicDBObject();
+					doc.put("suchergebnisse", suchergebnisse);
+					
+					BasicDBObject account = new BasicDBObject();
+					account.put("$set", doc);
 
-						}
-
-						/*for (DBObject s : cursor) {
-							zaehler2.add(new Zaehler((int) s.get("suchergebnisse"),
-									(int) s.get("meine_mfgs"), (int) s
-											.get("anfragen")));
-
-						}*/
-
-					}
+					coll.update(query, account);
 
 					if (cursor.count() != 0) {
 

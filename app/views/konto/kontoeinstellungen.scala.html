@@ -1,4 +1,4 @@
-@(title: String)(message: String)(kontodetails: List[KontoDetails])
+@(title: String)(message: String)(info: String)(kontodetails: List[KontoDetails])
 
 <!DOCTYPE html>
 <html>
@@ -235,8 +235,18 @@
 
 	</header>
 
-
+<article>
 	<div class="box_konto">
+		@if(info) {
+
+				<div class="row">
+					<br />
+					<div class="alert alert-danger">@info</div>
+				</div>
+
+				} <br>
+	
+	
 		@for(i <- kontodetails) {
 		<div>
 			<div class="input-group">
@@ -269,20 +279,6 @@
 		
 		}
 		
-		<!-- 
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">Passwort:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
-					class="form-control" name="kontoeinstellungen_pss"
-					placeholder="Altes Passwort" value="">
-			</div>
-
-		</div>
-		<br>
-		 -->
-
 		<form method="POST" action="/konto/aendern" >
 			<div id="div_pw_alt"></div>
 			<div id="div_pw_neu"></div>
@@ -299,43 +295,9 @@
 			<div id="div_konto_button"></div>
 		</form>
 		<button class="btn btn-primary btn-block" id="konto_button_menue" onclick="kontoEntfernen()">Konto löschen ?</button>
-
-
-
-
-		
-		
-		
-		<!-- 
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">neues Passwort:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="password"
-					class="form-control" name="kontoeinstellungen_pssneu" value="">
-			</div>
-		</div>
-		<br>
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">neues Passwort wdh:</span> <input
-					type="password" class="form-control"
-					name="kontoeinstellungen_pssneuwdh" value="">
-			</div>
-		</div>
-
-	-->
-	</div>
-
-	 
-	<!-- 
-	<div class="konto_button">
 		
 	</div>
-
-	-->
-
-
-
+</article>
 
 </body>
 </html>
