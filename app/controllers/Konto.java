@@ -95,38 +95,40 @@ public class Konto extends Controller {
 					// Die Collection des Nutzers finden
 					DBCollection coll = db.getCollection("user");
 					com.mongodb.DBCursor cursor = coll.find();
-					BasicDBObject query = (BasicDBObject) new BasicDBObject("username", nutzer);
+					BasicDBObject query = new BasicDBObject();
+					query.put("username", nutzer);
 					
 					cursor = coll.find(query);
 					
 					
 					
+					
 					String pw = "";
-					String email = "";
-					String titel = "";
-					String fahrertyp = "";
-					String geburtsdatum = "";
-					int alt = 0 ;
-					String vorname = "";
-					String name = "";
-					String tel = "";
-					String registrierungsdatum = "";
+//					String email = "";
+//					String titel = "";
+//					String fahrertyp = "";
+//					String geburtsdatum = "";
+//					int alt = 0 ;
+//					String vorname = "";
+//					String name = "";
+//					String tel = "";
+//					String registrierungsdatum = "";
 					
 					
 					
 					for (DBObject s : cursor) {
 						
 						pw = s.get("password").toString();
-						email = (String) s.get("email");
-						titel = (String) s.get("titel");	
-						fahrertyp = (String) s.get("fahrertyp");
-						geburtsdatum = (String) s.get("geburtsdatum");
-						alt =  (int) s.get("alt");
-						vorname = (String) s.get("vorname");
-						name = (String) s.get("name");
-						tel = (String) s.get("tel");
-						registrierungsdatum = (String) s
-								.get("registrierungsdatum");
+//						email = (String) s.get("email");
+//						titel = (String) s.get("titel");	
+//						fahrertyp = (String) s.get("fahrertyp");
+//						geburtsdatum = (String) s.get("geburtsdatum");
+//						alt =  (int) s.get("alt");
+//						vorname = (String) s.get("vorname");
+//						name = (String) s.get("name");
+//						tel = (String) s.get("tel");
+//						registrierungsdatum = (String) s
+//								.get("registrierungsdatum");
 					}
 					
 					
@@ -145,26 +147,31 @@ public class Konto extends Controller {
 					}
 
 					if (gueltig) {
+						
+						
+						
 						BasicDBObject doc = new BasicDBObject();
+						doc.put("password", neuesPasswort);
 						
 						
-						for (DBObject s : cursor) {
 						
-						doc.put("username", nutzer);
-						doc.put("password", pw);
-						doc.put("email", email);
-						doc.put("titel", titel);
-						doc.put("fahrertyp", fahrertyp);
-						doc.put("geburtsdatum", geburtsdatum);
-						doc.put("alt", alt);
-						doc.put("vorname", vorname);
-						doc.put("name", name);
-						doc.put("tel", tel);
-						doc.put("registrierungsdatum",
-								registrierungsdatum);
-							}
+						//doc.append("username", nutzer);
+						//doc.append("email", email);
+						//doc.append("password", pw.toString());						
+//						doc.append("titel", titel);
+//						doc.append("fahrertyp", fahrertyp);
+//						doc.append("geburtsdatum", geburtsdatum);
+//						doc.append("alt", alt);
+//						doc.append("vorname", vorname);
+//						doc.append("name", name);
+//						doc.append("tel", tel);
+//						doc.append("registrierungsdatum",
+//								registrierungsdatum);
+						
+						BasicDBObject account = new BasicDBObject();
+						account.put("$set", doc);
 
-						coll.update(query, doc);
+						coll.update(query, account);
 
 					}
 
