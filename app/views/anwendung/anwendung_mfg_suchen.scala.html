@@ -174,21 +174,21 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 		<table class="table table-hover">
 
 			<tr>
-				<th>TestID</th>
-				<th>Start</th>
-				<th>Ziel</th>
-				<th>Datum</th>
-				<th>Uhrzeit</th>
-				<th>Abschicken</th>
+				<!-- <th>TestID</th> -->
+				<th>Start&nbsp;&nbsp;&nbsp;</th>
+				<th>Ziel&nbsp;&nbsp;&nbsp;</th>
+				<th>Datum&nbsp;&nbsp;&nbsp;</th>
+				<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
+				<th>Abschicken&nbsp;&nbsp;&nbsp;</th>
 			</tr>
 			<tbody>
 				@for( i <- anzeige ){
 				<tr>
-					<td>@i.id</td>
-					<td>@i.start</td>
-					<td>@i.ziel</td>
-					<td>@i.datum</td>
-					<td>@i.uhrzeit</td>
+					<!-- <td>@i.id</td> -->
+					<td>@i.start&nbsp;&nbsp;&nbsp;</td>
+					<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
+					<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
+					<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
 					<td>
 						<form method="post" action="/anwendung/@i.id/mfg_suchdetails_zeigen">
 							<button type="submit" class="btn btn-default">anzeigen</button>
