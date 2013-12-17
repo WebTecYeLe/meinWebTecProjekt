@@ -32,7 +32,7 @@
 	
 	function passwordAendern()
 	{
-		divPwNeu = document.getElementById("div_pw_neu");
+		//divPwNeu = document.getElementById("div_pw_neu");
 		//divPwWdh = document.getElementById("div_pw_wdh");
 		
 		var ergebnis = "";
@@ -93,6 +93,40 @@
 		output.innerHTML = ergebnis;
 		
 				
+	}
+	
+	
+	function kontoEntfernen() {
+		var ergebnis = "";
+		
+		ergebnis += "<p>\n";
+		ergebnis += "Geben Sie Ihr Passwort korrekt ein, um das Konto zu löschen !";
+		ergebnis += "<\/p>\n";
+		ergebnis += "<div class='input-group'> \n";
+		ergebnis += " <span class='input-group-addon'> \n";
+		ergebnis += "Passwort: \n";
+		ergebnis += " <\/span> \n";
+		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssbst' placeholder='Passwortbestätigung' required> \n";
+		ergebnis += "<\/div> \n";
+		ergebnis += "<br><br><br> \n";
+		
+		output = document.getElementById("div_pw_konto");
+		output.innerHTML = ergebnis;
+		
+		document.getElementById("konto_button_menue").style.visibility = "collapse";
+		
+		ergebnis = "";
+		
+		
+		ergebnis += " <button class='btn btn-danger btn-block' id='konto_entfernen_button_menue'> \n";
+		ergebnis += " Konto entgültig löschen ! \n";
+		ergebnis += " <\/button> \n";
+		
+		
+		output = document.getElementById("div_konto_button");
+		output.innerHTML = ergebnis;
+		
+		
 	}
 	
 	
@@ -257,7 +291,14 @@
 		</form>
 
 		<button class="btn btn-primary btn-block" id="pw_button_menue" onclick="passwordAendern()">Passwort ändern</button>
-
+		<br>
+		
+		
+		<form method="POST" action="/konto/entfernen">
+			<div id="div_pw_konto"></div>
+			<div id="div_konto_button"></div>
+		</form>
+		<button class="btn btn-primary btn-block" id="konto_button_menue" onclick="kontoEntfernen()">Konto löschen ?</button>
 
 
 

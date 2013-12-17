@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import models.KontoDetails;
 import play.Logger;
 import play.mvc.Controller;
+import play.mvc.Http.Session;
 import play.mvc.Result;
 
 import com.mongodb.BasicDBObject;
@@ -55,35 +56,27 @@ public class Konto extends Controller {
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 
 		// Parameteruebergaben werden ueberprueft
-		/*
-		 * if (!(parameters != null &&
-		 * parameters.containsKey("kontoeinstellungen_pss") &&
-		 * parameters.containsKey("kontoeinstellungen_pssneu") &&
-		 * parameters.containsKey("kontoeinstellungen_psswdh") )) {
-		 * 
-		 * Logger.warn("bad login request"); return ok("Fehler beim Senden.");
-		 * //return redirect("/konto/index"); }
-		 */
+		
+		  if (!(parameters != null &&
+		  parameters.containsKey("kontoeinstellungen_pss") &&
+		  parameters.containsKey("kontoeinstellungen_pssneu") &&
+		  parameters.containsKey("kontoeinstellungen_psswdh") )) {
+		  
+			  Logger.warn("bad login request"); 
+			  return redirect("/konto/index"); 
+		  
+		  }
+		 
 		String altesPasswort = parameters.get("kontoeinstellungen_pss")[0];
 		String neuesPasswort = parameters.get("kontoeinstellungen_pssneu")[0];
 		String neuesPasswort_wdh = parameters.get("kontoeinstellungen_psswdh")[0];
 
-//		int altesPasswortInt = Integer.parseInt(altesPasswort);
-//		int neuesPasswortInt = Integer.parseInt(neuesPasswort);
-//		int neuesPasswort_wdhInt = Integer.parseInt(neuesPasswort_wdh);
-
-//		return ok("altesPasswort:" + altesPasswortInt + "neuesPasswort:" +
-//		neuesPasswortInt + "neuesPasswort_wdh:"+neuesPasswort_wdhInt);
-
 		boolean gueltig = false;
 
 		if (altesPasswort == "") {
-
 			return redirect("/konto/index");
 
 		} else {
-
-			// return ok("altesPasswort: "+altesPasswort);
 
 			if ((neuesPasswort.equals(neuesPasswort_wdh) )) {
 
@@ -98,45 +91,14 @@ public class Konto extends Controller {
 					BasicDBObject query = new BasicDBObject();
 					query.put("username", nutzer);
 					
-					cursor = coll.find(query);
-					
-					
-					
-					
+					cursor = coll.find(query);					
 					String pw = "";
-//					String email = "";
-//					String titel = "";
-//					String fahrertyp = "";
-//					String geburtsdatum = "";
-//					int alt = 0 ;
-//					String vorname = "";
-//					String name = "";
-//					String tel = "";
-//					String registrierungsdatum = "";
 					
-					
-					
-					for (DBObject s : cursor) {
-						
+					for (DBObject s : cursor) {						
 						pw = s.get("password").toString();
-//						email = (String) s.get("email");
-//						titel = (String) s.get("titel");	
-//						fahrertyp = (String) s.get("fahrertyp");
-//						geburtsdatum = (String) s.get("geburtsdatum");
-//						alt =  (int) s.get("alt");
-//						vorname = (String) s.get("vorname");
-//						name = (String) s.get("name");
-//						tel = (String) s.get("tel");
-//						registrierungsdatum = (String) s
-//								.get("registrierungsdatum");
+
 					}
-					
-					
-					
-//					return ok("Ich war da");
-						
-								
-					
+
 					if (altesPasswort.equals(pw)) {
 						gueltig = true;
 					}
@@ -146,27 +108,10 @@ public class Konto extends Controller {
 								+ altesPasswort);
 					}
 
-					if (gueltig) {
-						
-						
+					if (gueltig) {						
 						
 						BasicDBObject doc = new BasicDBObject();
 						doc.put("password", neuesPasswort);
-						
-						
-						
-						//doc.append("username", nutzer);
-						//doc.append("email", email);
-						//doc.append("password", pw.toString());						
-//						doc.append("titel", titel);
-//						doc.append("fahrertyp", fahrertyp);
-//						doc.append("geburtsdatum", geburtsdatum);
-//						doc.append("alt", alt);
-//						doc.append("vorname", vorname);
-//						doc.append("name", name);
-//						doc.append("tel", tel);
-//						doc.append("registrierungsdatum",
-//								registrierungsdatum);
 						
 						BasicDBObject account = new BasicDBObject();
 						account.put("$set", doc);
@@ -190,6 +135,69 @@ public class Konto extends Controller {
 
 		return redirect("/");
 
+	}
+	
+	
+	public static Result kontoEntfernen() {
+		String nutzer = session("connected");
+		
+		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
+		
+		// Parameteruebergaben werden ueberprueft
+		
+		  if (!(parameters != null &&
+		  parameters.containsKey("kontoeinstellungen_pssbst") )) {
+		  
+			  Logger.warn("bad login request"); 
+			  return redirect("/konto/index"); 
+		  
+		  }
+		  
+		  String pwEingabe = parameters.get("kontoeinstellungen_pssbst")[0];
+		  String pwKonto = "";
+		  boolean fertig = false;
+		  
+		  try {
+			  MongoClient mongoClient = new MongoClient("localhost",27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				// Die Collection des Nutzers finden
+				DBCollection coll = db.getCollection("user");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = new BasicDBObject();
+				query.put("username", nutzer);
+				
+				cursor = coll.find(query);
+				
+				
+				for(DBObject s : cursor) {
+					pwKonto = (String) s.get("password");
+					
+					
+				}
+				
+				if(pwKonto.equals(pwEingabe)) {
+					
+
+					coll.remove(query);					
+					fertig = true;	
+				}
+				
+				
+				mongoClient.close();
+			  
+		  } catch(Exception e) {
+			  e.printStackTrace();
+		  }
+		
+		
+		if(fertig) {
+			session().clear();
+			return redirect("/");
+		} else {
+			return redirect("/");
+		}
+		
 	}
 
 }

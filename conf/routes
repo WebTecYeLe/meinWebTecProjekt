@@ -52,6 +52,7 @@ POST    /userlogin						 controllers.UserLogin.login()
 
 GET		/konto/index					 controllers.Konto.kontoeinstellungen_index()
 POST	/konto/aendern					 controllers.Konto.kontoeinstellungen_aendern()
+POST	/konto/entfernen				 controllers.Konto.kontoEntfernen()
 
 # MFG Details zeigen
 
