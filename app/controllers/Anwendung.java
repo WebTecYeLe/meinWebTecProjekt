@@ -13,6 +13,7 @@ import java.util.Map;
 import models.AnzeigeDetails;
 import models.Zaehler;
 
+
 import org.bson.types.ObjectId;
 
 import play.Logger;
@@ -31,46 +32,41 @@ public class Anwendung extends Controller {
 
 	public static Result mfg_anbieten_index() {
 
-        String nutzer = session("connected");
-    	String typ = session("typ");
+		String nutzer = session("connected");
+		String typ = session("typ");
 
-        // user_statistike lesen
-    
+		// user_statistike lesen
 
-            List<Zaehler> zaehler = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
 
-        	int suchergebnisse;
-		    int meine_mfgs = 0;
-		    int anfragen;
-            
-    		try {
-				MongoClient mongoClient = new MongoClient("localhost", 27017);
-				DB db = mongoClient.getDB("play_basics");
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
 
-				DBCollection coll = db.getCollection("user_statistiken");
-				com.mongodb.DBCursor cursor = coll.find();
-				BasicDBObject query = (BasicDBObject) new BasicDBObject(
-						"username", nutzer);
-				cursor = coll.find(query);
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
 
-				if (cursor.count() != 0) {
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
 
-					for (DBObject s : cursor) {
-						zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-								(int) s.get("meine_mfgs"), (int) s
-										.get("anfragen")));
+			if (cursor.count() != 0) {
 
-					}
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
 
 				}
 
-				mongoClient.close();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
-
-		
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler));
@@ -81,45 +77,40 @@ public class Anwendung extends Controller {
 
 		String nutzer = session("connected");
 		String typ = session("typ");
-        
-        // user_statistike lesen
 
+		// user_statistike lesen
 
-            List<Zaehler> zaehler = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
 
-    	    int suchergebnisse;
-		    int meine_mfgs = 0;
-		    int anfragen;
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
 
-    		try {
-				MongoClient mongoClient = new MongoClient("localhost", 27017);
-				DB db = mongoClient.getDB("play_basics");
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
 
-				DBCollection coll = db.getCollection("user_statistiken");
-				com.mongodb.DBCursor cursor = coll.find();
-				BasicDBObject query = (BasicDBObject) new BasicDBObject(
-						"username", nutzer);
-				cursor = coll.find(query);
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
 
-				if (cursor.count() != 0) {
+			if (cursor.count() != 0) {
 
-					for (DBObject s : cursor) {
-						zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-								(int) s.get("meine_mfgs"), (int) s
-										.get("anfragen")));
-
-					}
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
 
 				}
 
-				mongoClient.close();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 
-        
-        
-        
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		List<AnzeigeDetails> details = new ArrayList<>();
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
@@ -250,7 +241,6 @@ public class Anwendung extends Controller {
 		String email = "";
 		List<DBObject> feld;
 
-		
 		List<Zaehler> zaehler2 = new ArrayList<>();
 		if (datumGueltig) {
 
@@ -312,8 +302,8 @@ public class Anwendung extends Controller {
 				BasicDBObject query = (BasicDBObject) new BasicDBObject(
 						"email", email);
 				cursor = coll.find(query);
-				
-				//Verwendung der Variable meine_mfgs für user_statistiken
+
+				// Verwendung der Variable meine_mfgs für user_statistiken
 				meine_mfgs = cursor.count();
 
 				feld = coll.find(query).toArray();
@@ -344,7 +334,6 @@ public class Anwendung extends Controller {
 
 			// Hier werden user_statistiken bearbeitet und gelesen
 
-            
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
 				DB db = mongoClient.getDB("play_basics");
@@ -355,26 +344,25 @@ public class Anwendung extends Controller {
 						"username", nutzer);
 				cursor = coll.find(query);
 
-				
-				if(cursor.count() == 0) {
-					BasicDBObject doc = new BasicDBObject("username", nutzer).append("suchergebnisse", 0).append("meine_mfgs", 1)
-							.append("anfragen", 0);
+				if (cursor.count() == 0) {
+					BasicDBObject doc = new BasicDBObject("username", nutzer)
+							.append("suchergebnisse", 0)
+							.append("meine_mfgs", 1).append("anfragen", 0);
 					coll.insert(doc);
-					
+
 				}
-				
-				
+
 				BasicDBObject doc = new BasicDBObject();
-				
+
 				if (cursor.count() != 0) {
 					for (DBObject s : cursor) {
 						suchergebnisse = (int) s.get("suchergebnisse");
-						
-						//meine_mfgs = (int) s.get("meine_mfgs");
-						//meine_mfgs++;
-						
+
+						// meine_mfgs = (int) s.get("meine_mfgs");
+						// meine_mfgs++;
+
 						anfragen = (int) s.get("anfragen");
-						
+
 						doc.put("username", nutzer);
 						doc.put("suchergebnisse", suchergebnisse);
 						doc.put("meine_mfgs", meine_mfgs);
@@ -382,17 +370,18 @@ public class Anwendung extends Controller {
 
 					}
 
-					/*for (DBObject s : cursor) {
-						zaehler2.add(new Zaehler((int) s.get("suchergebnisse"),
-								(int) s.get("meine_mfgs"), (int) s
-										.get("anfragen")));
-
-					}*/
+					/*
+					 * for (DBObject s : cursor) { zaehler2.add(new
+					 * Zaehler((int) s.get("suchergebnisse"), (int)
+					 * s.get("meine_mfgs"), (int) s .get("anfragen")));
+					 * 
+					 * }
+					 */
 
 				}
 
 				coll.update(query, doc);
-				
+
 				cursor = coll.find(query);
 
 				if (cursor.count() != 0) {
@@ -405,7 +394,6 @@ public class Anwendung extends Controller {
 					}
 
 				}
-				
 
 				mongoClient.close();
 			} catch (Exception e) {
@@ -419,7 +407,7 @@ public class Anwendung extends Controller {
 		} else {
 
 			// user_statistike lesen
-           
+
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
 				DB db = mongoClient.getDB("play_basics");
@@ -523,8 +511,8 @@ public class Anwendung extends Controller {
 			return ok("Im try Block stimmt etwas nicht. Methode: anzeigen()");
 		}
 
-		//user_statistiken lesen
-		
+		// user_statistiken lesen
+
 		List<Zaehler> zaehler = new ArrayList<>();
 
 		int suchergebnisse;
@@ -586,7 +574,6 @@ public class Anwendung extends Controller {
 
 			DBObject query;
 			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
-			cursor = coll.find(query);
 
 			cursor = coll.find(query);
 			feld = coll.find(query).toArray();
@@ -605,202 +592,260 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 
 		}
-		
-		
-		//user_statistiken lesen
-		
-				List<Zaehler> zaehler = new ArrayList<>();
 
-				int suchergebnisse;
-				int meine_mfgs = 0;
-				int anfragen;
+		// user_statistiken lesen
 
-				try {
-					MongoClient mongoClient = new MongoClient("localhost", 27017);
-					DB db = mongoClient.getDB("play_basics");
+		List<Zaehler> zaehler = new ArrayList<>();
 
-					DBCollection coll = db.getCollection("user_statistiken");
-					com.mongodb.DBCursor cursor = coll.find();
-					BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-							nutzer);
-					cursor = coll.find(query);
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
 
-					if (cursor.count() != 0) {
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
 
-						for (DBObject s : cursor) {
-							zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-									(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
 
-						}
+			if (cursor.count() != 0) {
 
-					}
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
 
-					mongoClient.close();
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
 
+			}
+
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return ok(views.html.anwendung.mfg_details.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2, zaehler));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2,
+				zaehler));
 	}
-	
-	
-	
+
 	public static Result mfg_suchen() {
-		
+
 		String nutzer = session("connected");
 		String typ = session("typ");
-		
-	
+
 		/*
-		GregorianCalendar datumDB = new GregorianCalendar(Integer.parseInt(jahr),
-				Integer.parseInt(monat) - 1, Integer.parseInt(tag));*/
-		
-				
+		 * GregorianCalendar datumDB = new
+		 * GregorianCalendar(Integer.parseInt(jahr), Integer.parseInt(monat) -
+		 * 1, Integer.parseInt(tag));
+		 */
+
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 		List<AnzeigeDetails> details = new ArrayList<>();
 		// Parameteruebergaben werden ueberprueft
-				if (!(parameters != null
-						&& parameters.containsKey("exampleVon")
-						&& parameters.containsKey("exampleNach")
-						&& parameters.containsKey("Tag")
-						&& parameters.containsKey("Monat")
-						&& parameters.containsKey("Jahr")
-						)) {
+		if (!(parameters != null && parameters.containsKey("exampleVon")
+				&& parameters.containsKey("exampleNach")
+				&& parameters.containsKey("Tag")
+				&& parameters.containsKey("Monat") && parameters
+					.containsKey("Jahr"))) {
 
-					Logger.warn("bad login request");
-					return redirect("/");
-				}
-				
-				// Parameterwerte werden ausgelesen
-				String start = parameters.get("exampleVon")[0];
-				String ziel = parameters.get("exampleNach")[0];
-				String tag = parameters.get("Tag")[0];
-				String monat = parameters.get("Monat")[0];
-				String jahr = parameters.get("Jahr")[0];
-				
-				int suchergebnisse = 0;
-				
-				String datum = tag + "." + monat + "." + jahr;
-				
-				try {
-					MongoClient mongoClient = new MongoClient("localhost", 27017);
-					DB db = mongoClient.getDB("play_basics");
-					
-					DBCollection coll = db.getCollection("mfg");
-					com.mongodb.DBCursor cursor = coll.find();
-					BasicDBObject query = (BasicDBObject) new BasicDBObject("start",
-							start).append("ziel", ziel);
-					cursor = coll.find(query);
-					
-					suchergebnisse = (int) cursor.count();
-					
-					//Aktuelles Datum in Format dd.MM.yyyy holen
-					DateFormat date = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-					Date todayDate = Calendar.getInstance().getTime();
-					String reportDate = date.format(todayDate);
-					Date dateDBParsen=null;
-					
-					
-					long difference = 0;
-					
-					for (DBObject s : cursor) {
-						String dateDB = (String) s.get("datum") + " " +(String) s.get("uhrzeit");
-						//String uhrzeitDB = (String) s.get("uhrzeit");
-						
-						
-						try {
-							
-							dateDBParsen = date.parse(dateDB);
-							difference = todayDate.getTime() - dateDBParsen.getTime()-1800000;
-//							return ok(""+difference);
-							
-							
-						} catch (Exception e) {
-			
-						}
-						//solang zahl negativ, dann fahrt gültig
-						if(difference <=0 ){
-							//return ok(""+difference);
-							details.add(new AnzeigeDetails(s.get("_id").toString(),
-									(String) s.get("start"), (String) s.get("ziel"),
-									(String) s.get("strecke"), (String) s.get("uhrzeit"),
-									(String) s.get("datum"), (String) s.get("fahrer"),
-									Integer.parseInt((String) s.get("anzahl_plaetze")),
-									(String) s.get("email")));
-						
-						}
-				
-					}
-					
-					
-					
-					
+			Logger.warn("bad login request");
+			return redirect("/");
+		}
 
-					mongoClient.close();
-					
-					
-				} catch(Exception e) {
-					
-					e.printStackTrace();
-					
-				}
-		
-		
-				//user_statistiken bearbeiten und lesen
-				
-				List<Zaehler> zaehler = new ArrayList<>();
+		// Parameterwerte werden ausgelesen
+		String start = parameters.get("exampleVon")[0];
+		String ziel = parameters.get("exampleNach")[0];
+		String tag = parameters.get("Tag")[0];
+		String monat = parameters.get("Monat")[0];
+		String jahr = parameters.get("Jahr")[0];
 
-				
-				int meine_mfgs = 0;
-				int anfragen;
+		int suchergebnisse = 0;
+
+		String datum = tag + "." + monat + "." + jahr;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("start",
+					start).append("ziel", ziel);
+			cursor = coll.find(query);
+
+			//suchergebnisse = (int) cursor.count();
+
+			// Aktuelles Datum in Format dd.MM.yyyy holen
+			DateFormat date = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+			Date todayDate = Calendar.getInstance().getTime();
+			String reportDate = date.format(todayDate);
+			Date dateDBParsen = null;
+
+			long difference = 0;
+
+			for (DBObject s : cursor) {
+				String dateDB = (String) s.get("datum") + " "
+						+ (String) s.get("uhrzeit");
+				// String uhrzeitDB = (String) s.get("uhrzeit");
 
 				try {
-					MongoClient mongoClient = new MongoClient("localhost", 27017);
-					DB db = mongoClient.getDB("play_basics");
 
-					DBCollection coll = db.getCollection("user_statistiken");
-					com.mongodb.DBCursor cursor = coll.find();
-					BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-							nutzer);
-					cursor = coll.find(query);
-					
-					
-					
-					BasicDBObject doc = new BasicDBObject();
-					doc.put("suchergebnisse", suchergebnisse);
-					
-					BasicDBObject account = new BasicDBObject();
-					account.put("$set", doc);
+					dateDBParsen = date.parse(dateDB);
+					difference = todayDate.getTime() - dateDBParsen.getTime()
+							- 1800000;
+					// return ok(""+difference);
 
-					coll.update(query, account);
-
-					if (cursor.count() != 0) {
-
-						for (DBObject s : cursor) {
-							zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-									(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
-
-						}
-
-					}
-
-					mongoClient.close();
 				} catch (Exception e) {
-					e.printStackTrace();
+
 				}
-				
-				
-		return ok(views.html.anwendung.anwendung_mfg_suchen.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+				// solang zahl negativ, dann fahrt gültig
+				if (difference <= 0) {
+					
+					suchergebnisse++;
+					// return ok(""+difference);
+					details.add(new AnzeigeDetails(s.get("_id").toString(),
+							(String) s.get("start"), (String) s.get("ziel"),
+							(String) s.get("strecke"), (String) s
+									.get("uhrzeit"), (String) s.get("datum"),
+							(String) s.get("fahrer"),
+							Integer.parseInt((String) s.get("anzahl_plaetze")),
+							(String) s.get("email")));
+
+				}
+
+			}
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+
+		// user_statistiken bearbeiten und lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int meine_mfgs = 0;
+		int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+			BasicDBObject doc = new BasicDBObject();
+			doc.put("suchergebnisse", suchergebnisse);
+
+			BasicDBObject account = new BasicDBObject();
+			account.put("$set", doc);
+
+			coll.update(query, account);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ok(views.html.anwendung.anwendung_mfg_suchen.render(
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler));
 	}
-	
-	
+
 	public static Result suchDetailsAnzeigen(String id) {
-		
-		
-		
-		return ok();
+		String nutzer = session("connected");
+		String typ = session("typ");
+
+		List<AnzeigeDetails> details2 = new ArrayList<>();
+
+		if (!typ.equals("Fahrer")) {
+			typ = "";
+		}
+
+		List<DBObject> feld;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			com.mongodb.DBCursor cursor = coll.find();
+
+			DBObject query;
+			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
+
+			cursor = coll.find(query);
+			feld = coll.find(query).toArray();
+
+			for (DBObject s : feld) {
+				details2.add(new AnzeigeDetails(s.get("_id").toString(),
+						(String) s.get("start"), (String) s.get("ziel"),
+						(String) s.get("strecke"), (String) s.get("uhrzeit"),
+						(String) s.get("datum"), s.get("fahrer").toString(),
+						Integer.parseInt((String) s.get("anzahl_plaetze")),
+						(String) s.get("email")));
+			}
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		// user_statistiken lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int suchergebnisse;
+		int meine_mfgs = 0;
+		int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ok(views.html.anwendung.mfg_details_suche.render("ProTramp Mitfahrgelegenheit",nutzer, "", typ, details2,
+				zaehler));
 	}
 
 }
