@@ -4,6 +4,7 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -650,6 +651,12 @@ public class Anwendung extends Controller {
 		String nutzer = session("connected");
 		String typ = session("typ");
 		
+	
+		/*
+		GregorianCalendar datumDB = new GregorianCalendar(Integer.parseInt(jahr),
+				Integer.parseInt(monat) - 1, Integer.parseInt(tag));*/
+		
+				
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 		List<AnzeigeDetails> details = new ArrayList<>();
 		// Parameteruebergaben werden ueberprueft
@@ -688,18 +695,44 @@ public class Anwendung extends Controller {
 					
 					suchergebnisse = (int) cursor.count();
 					
+					//Aktuelles Datum in Format dd.MM.yyyy holen
+					DateFormat date = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+					Date todayDate = Calendar.getInstance().getTime();
+					String reportDate = date.format(todayDate);
+					Date dateDBParsen=null;
 					
+					
+					long difference = 0;
 					
 					for (DBObject s : cursor) {
-
-						details.add(new AnzeigeDetails(s.get("_id").toString(),
-								(String) s.get("start"), (String) s.get("ziel"),
-								(String) s.get("strecke"), (String) s.get("uhrzeit"),
-								(String) s.get("datum"), (String) s.get("fahrer"),
-								Integer.parseInt((String) s.get("anzahl_plaetze")),
-								(String) s.get("email")));
-
+						String dateDB = (String) s.get("datum") + " " +(String) s.get("uhrzeit");
+						//String uhrzeitDB = (String) s.get("uhrzeit");
+						
+						
+						try {
+							
+							dateDBParsen = date.parse(dateDB);
+							difference = todayDate.getTime() - dateDBParsen.getTime()-1800000;
+//							return ok(""+difference);
+							
+							
+						} catch (Exception e) {
+			
+						}
+						//solang zahl negativ, dann fahrt gültig
+						if(difference <=0 ){
+							//return ok(""+difference);
+							details.add(new AnzeigeDetails(s.get("_id").toString(),
+									(String) s.get("start"), (String) s.get("ziel"),
+									(String) s.get("strecke"), (String) s.get("uhrzeit"),
+									(String) s.get("datum"), (String) s.get("fahrer"),
+									Integer.parseInt((String) s.get("anzahl_plaetze")),
+									(String) s.get("email")));
+						
+						}
+				
 					}
+					
 					
 					
 					
