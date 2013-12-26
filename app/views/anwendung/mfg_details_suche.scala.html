@@ -157,7 +157,15 @@
 	} }
 	</form>
 
-	<div class="anzeige_details">
+	@if(message) {
+		<div class="anzeige_details">
+	
+	} else {
+		<div class="anzeige_details_2">
+	
+	}
+
+	
 
 		@if(anzeige.isEmpty) {
 			<p><h3>Keine Eintr&auml;ge gefunden.</h3></p>
@@ -230,6 +238,25 @@
 			</div>
 		</div>
 		<br>
+		<div>
+			@if(typ == null) {
+			
+				@if(message) {
+					<button type="submit" class="btn btn-success btn-block">Anfrage jetzt durchfuehren</button>
+				}
+				
+			} else {
+			
+					@if(typ.isEmpty()) {
+						<button type="submit" class="btn btn-success btn-block">Anfrage jetzt durchfuehren</button>
+					
+					} else {
+						<button type="submit" class="btn btn-primary btn-block">Anfragen zeigen</button>
+					}
+					
+			}
+			
+		</div>
 		
 		}
 		

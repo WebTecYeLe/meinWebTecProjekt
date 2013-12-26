@@ -226,6 +226,25 @@
 			</div>
 		</div>
 		<br>
+		<div>
+			@if(typ == null) {
+			
+				@if(message) {
+					<button type="submit" class="btn btn-success btn-block">Anfrage jetzt durchfuehren</button>
+				}
+				
+			} else {
+			
+					@if(typ.isEmpty()) {
+						<button type="submit" class="btn btn-success btn-block">Anfrage jetzt durchfuehren</button>
+					
+					} else {
+						<button type="submit" class="btn btn-primary btn-block">Anfragen zeigen</button>
+					}
+					
+			}
+			
+		</div>
 		
 		}
 		

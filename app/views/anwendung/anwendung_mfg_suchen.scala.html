@@ -161,10 +161,16 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	</form>
 
 
+	@if(message) {
+		<div class="anzeige_details">
+		
+	} else {
+		<div class="anzeige_details_2">
+	
+	}
 
 
-
-	<div class="anzeige_details">
+	
 		@if(anzeige.isEmpty()) {
 		<p>
 		<h3>Keine MFG Eintraege gefunden.</h3>

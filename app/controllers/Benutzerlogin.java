@@ -81,6 +81,17 @@ public class Benutzerlogin extends Controller {
 				query = new BasicDBObject("email", nutzer).append("password",
 						kennwort);
 				cursor = coll.find(query);
+				
+				List<DBObject> feldPerson = coll.find(query).toArray();
+				
+				if(cursor.count() != 0) {
+					for(DBObject s : feldPerson) {
+						nutzer = (String) s.get("username");
+						
+						
+					}
+				}
+				
 
 				String sucheDocumentFuerEmail = "";
 
@@ -204,9 +215,14 @@ public class Benutzerlogin extends Controller {
 			}
 
 			session("connected", nutzer);
+			
+			return redirect("/anwendung/mfg_anzeigen");
+			/*
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, info, typ,
 					ortsdetails, zaehler));
+					
+					*/
 		} else {
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
 			return ok(views.html.anwendung.anwendung.render(
