@@ -3,7 +3,7 @@ package models;
 public class AnzeigeDetails extends Entity {
 
 	public AnzeigeDetails(String id, String start, String ziel, String strecke, String uhrzeit, 
-			String datum, String fahrer, int anzahl_plaetze, String email) {
+			String datum, String fahrer, int anzahl_plaetze, String email, String menge, String status) {
 		
 		
 		this.id = id;
@@ -15,6 +15,8 @@ public class AnzeigeDetails extends Entity {
 		this.fahrer = fahrer;
 		this.anzahl_plaetze = anzahl_plaetze;
 		this.email = email;
+		this.menge = menge;
+		this.status = status;
 		
 	}
 	
@@ -27,6 +29,7 @@ public class AnzeigeDetails extends Entity {
 	public String fahrer;	
 	public int anzahl_plaetze;	
 	public String email;
-	
+	public String menge;
+	public String status;
 	
 }

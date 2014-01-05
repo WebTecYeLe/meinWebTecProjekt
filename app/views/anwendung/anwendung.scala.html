@@ -329,7 +329,7 @@ List[Orte])(zaehler: List[Zaehler])
 				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
 			</span> }
 
-			</a> <a href="#" class="list-group-item">Anfragen @if(zaehler.isEmpty()) {} else {<span
+			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen @if(zaehler.isEmpty()) {} else {<span
 				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
 
 			</span> }
@@ -344,7 +344,7 @@ List[Orte])(zaehler: List[Zaehler])
 				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
 				MFGs anzeigen<span class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(q <-
 					zaehler) { @q.meine_mfgs } </span>}
-			</a> <a href="#" class="list-group-item">Anfragen<span
+			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
 				class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(x <- zaehler) { @x.anfragen }
 
 			</span>}</a> <a href="#" class="list-group-item">Profil</a>

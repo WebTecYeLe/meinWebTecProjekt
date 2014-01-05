@@ -1,6 +1,8 @@
 @(title: String)(message: String)(info: String)(typ: String)(anzeige:
 List[AnzeigeDetails])(zaehler: List[Zaehler])
 
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -22,13 +24,24 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	media="screen">
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
+<link rel="stylesheet"
+	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+<script>
+	$(document).ready(function() {
+		$("#anfragen").accordion();
+
+	});
+</script>
+
 <script>
 	document.createElement('header');
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
 </script>
-
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -118,99 +131,133 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	</header>
 
 
+	<article>
+		<form method="GET" action="/anwendung/mfg_anzeigen"></form>
+		@if(message) { @if(typ) {
+		<div class="menue_anwendung">
+			<div class="list-group">
+				<a href="/" class="list-group-item"> MFG suchen </a> <a
+					href="/anwendung/mfg_anbieten" class="list-group-item">MFG
+					anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+					MFGs anzeigen<span class="badge pull-right">@for(q <-
+						zaehler) { @q.meine_mfgs } </span>
+				</a> <a href="/anwendung/anfragen_index" class="list-group-item active">Anfragen<span
+					class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
 
-
-
-	<form method="GET" action="/anwendung/mfg_anzeigen"></form>
-	@if(message) { @if(typ) {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen <span
-				class="badge pull-right"> @for(z <- zaehler) {@z.suchergebnisse}
-
-			</span></a> <a
-				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen<span class="badge pull-right">@for(q <-
-					zaehler) { @q.meine_mfgs } </span>
-			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span></a> <a href="#" class="list-group-item">Profil</a>
+				</span></a> <a href="#" class="list-group-item">Profil</a>
+			</div>
 		</div>
-	</div>
 
-	} else {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen <span
-				class="badge pull-right"> @for(z <- zaehler) {@z.suchergebnisse}
-
-			</span></a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen<span class="badge pull-right">@for(q <-
-					zaehler) { @q.meine_mfgs } </span>
-			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span></a> <a href="#" class="list-group-item">Profil</a>
-		</div>
-	</div>
-
-	} }
-	</form>
-
-
-	@if(message) {
-		<div class="anzeige_details">
-		
-	} else {
-		<div class="anzeige_details_2">
-	
-	}
-
-
-	
-		@if(anzeige.isEmpty()) {
-		<p>
-		<h3>Keine MFG Eintraege gefunden.</h3>
-		</p>
 		} else {
+		<div class="menue_anwendung">
+			<div class="list-group">
+				<a href="/" class="list-group-item"> MFG suchen </a><a
+					href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+					MFGs anzeigen<span class="badge pull-right"> @for(q <-
+						zaehler) { @q.meine_mfgs } </span>
+				</a> <a href="/anwendung/anfragen_index" class="list-group-item active">Anfragen<span
+					class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
 
-		<table class="table table-hover">
+				</span></a> <a href="#" class="list-group-item">Profil</a>
+			</div>
+		</div>
 
-			<tr>
-				<!-- <th>TestID</th> -->
-				<th>Start&nbsp;&nbsp;&nbsp;</th>
-				<th>Ziel&nbsp;&nbsp;&nbsp;</th>
-				<th>Datum&nbsp;&nbsp;&nbsp;</th>
-				<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
-				<th>Abschicken&nbsp;&nbsp;&nbsp;</th>
-			</tr>
-			<tbody>
-				@for( i <- anzeige ){
-				<tr>
-					<!-- <td>@i.id</td> -->
-					<td>@i.start&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<form method="post" action="/anwendung/@i.id/mfg_suchdetails_zeigen">
-							<button type="submit" class="btn btn-default">anzeigen</button>
-						</form>
-					</td>
-				</tr>
+		} }
+		</form>
+
+
+
+
+		@if(message) {
+		<div class="anzeige_details">
+
+			} else {
+			<div class="anzeige_details_2">
+
+				} @if(typ.isEmpty()) { @if(anzeige.isEmpty()) {
+				<p>
+				<h4>Keine Anfragen vorhanden.</h4>
+				</p>
+				} else {
+
+				<table class="table table-hover">
+
+					<tr>
+						<!-- <th>TestID</th> -->
+						<th>Start&nbsp;&nbsp;&nbsp;</th>
+						<th>Ziel&nbsp;&nbsp;&nbsp;</th>
+						<th>Datum&nbsp;&nbsp;&nbsp;</th>
+						<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
+						<th>Status&nbsp;&nbsp;&nbsp;</th>
+					</tr>
+					<tbody>
+						@for( i <- anzeige ){
+						<tr>
+							<!-- <td>@i.id</td> -->
+							<td>@i.start&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.status&nbsp;&nbsp;&nbsp;</td>
+						</tr>
+						}
+					</tbody>
+				</table>
+				} } else { 
+					
+					@if(anzeige.isEmpty()) {
+						<h4>Keine Anfragen vorhanden.</h4>
+					
+					} else {
+							<table class="table table-hover">
+
+					<tr>
+						<!-- <th>TestID</th> -->
+						<th>Start&nbsp;&nbsp;&nbsp;</th>
+						<th>Ziel&nbsp;&nbsp;&nbsp;</th>
+						<th>Datum&nbsp;&nbsp;&nbsp;</th>
+						<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
+						<th>Anzahl Anfragen&nbsp;&nbsp;&nbsp;</th>
+						<th>Abschicken</th>
+					</tr>
+					<tbody>
+						@for( i <- anzeige ){
+						<tr>
+							<!-- <td>@i.id</td> -->
+							<td>@i.start&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
+							<td>@i.menge</td>
+							<td>
+								<form method="post" action="/anwendung/@i.id/mfg_anfrage_details">
+									<button type="submit" class="btn btn-default">anzeigen</button>
+								</form>
+							</td>
+						</tr>
+						}
+					</tbody>
+				</table>
+					
+					}
+					
+				
+				
+				
+				
 				}
-			</tbody>
-		</table>
-		}
 
 
 
-	</div>
+
+
+
+
+			</div>
+	</article>
 
 
 
 </body>
+
 </html>

@@ -35,6 +35,10 @@ GET		/anwendung/mfg_anzeigen			 controllers.Anwendung.anzeigen()
 
 POST	/anwendung/mfg_suchen			 controllers.Anwendung.mfg_suchen()
 
+POST	/anwendung/:id/anfragen		     controllers.Anwendung.anfrageStarten(id: String)
+
+GET		/anwendung/anfragen_index		 controllers.Anwendung.anfragen_index()
+
 # Benutzerlogin
 
 POST	/benutzerlogin/login			 controllers.Benutzerlogin.login()
@@ -59,6 +63,11 @@ POST	/konto/entfernen				 controllers.Konto.kontoEntfernen()
 POST	/anwendung/:id/mfg_details_zeigen controllers.Anwendung.detailsAnzeigen(id: String)	
 
 POST	/anwendung/:id/mfg_suchdetails_zeigen controllers.Anwendung.suchDetailsAnzeigen(id: String)
+
+POST	/anwendung/:id/mfg_anfrage_details 	controllers.Anwendung.mfg_anfrage_details(id: String)
+
+POST	/anwendung/:id/:user/zustimmen		 controllers.Anwendung.zustimmen(id: String, user: String)
+POST	/anwendung/:id/:user/ablehnen		 controllers.Anwendung.ablehnen(id: String, user: String)
 
 
 ##############

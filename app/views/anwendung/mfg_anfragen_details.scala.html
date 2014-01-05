@@ -1,4 +1,4 @@
-@(title: String)(message: String)(info: String)(typ: String)(anzeige: List[AnzeigeDetails])(zaehler: List[Zaehler])
+@(title: String)(message: String)(info: String)(typ: String)(anzeige: List[AnzeigeDetails])(zaehler: List[Zaehler])(person: List[Person])(teilnehmer: List[Person])
 
 <!DOCTYPE html>
 <html>
@@ -226,27 +226,97 @@
 			</div>
 		</div>
 		<br>
+		<br>
+		
+		<h4>Anfrageliste:</h4>
+		<br>
 		<div>
-			@if(typ == null) {
-			
-				@if(message) {
-					<button type="submit" class="btn btn-default btn-block">Jetzt anfragen</button>
-				}
-				
-			} else {
-			
-					@if(typ.isEmpty()) {
-						<button type="submit" class="btn btn-default btn-block">Jetzt anfragen</button>
-					
-					} else {
-					<!--  -->
-						<form method="POST" action="/anwendung/@i.id/mfg_anfrage_details">
-							<button type="submit" class="btn btn-primary btn-block">Anfragen und Teilnehmer zeigen</button>
+			@if(person.isEmpty()) {
+		<p>
+		<h3></h3>
+		</p>
+		} else {
+
+		<table class="table table-hover">
+
+			<tr>
+				<!-- <th>TestID</th> -->
+				<th>Vorname&nbsp;&nbsp;&nbsp;</th>
+				<th>Alter&nbsp;&nbsp;&nbsp;</th>
+				<th>Email&nbsp;&nbsp;&nbsp;</th>
+				<th>Telefon&nbsp;&nbsp;&nbsp;</th>
+				<th>&nbsp;&nbsp;&nbsp;</th>
+				<th>&nbsp;&nbsp;&nbsp;</th>
+			</tr>
+			<tbody>
+				@for( p <- person ){
+				<tr>
+					<!-- td>@i.id</td> -->
+					<td>@p.vorname&nbsp;&nbsp;&nbsp;</td>
+					<td>@p.alt&nbsp;&nbsp;&nbsp;</td>
+					<td>@p.email&nbsp;&nbsp;&nbsp;</td>
+					<td>@p.tel&nbsp;&nbsp;&nbsp;</td>
+					<td>
+						<form method="post" action="/anwendung/@i.id/@p.user/zustimmen">
+							<button type="submit" class="btn btn-success">Ja&nbsp;&nbsp;&nbsp;</button>
 						</form>
-						
-					}
+					</td>
+					<td>
+						<form method="post" action="/anwendung/@i.id/@p.user/ablehnen">
+							<button type="submit" class="btn btn-default">Nein</button>
+						</form>
+					</td>
 					
-			}
+					
+					
+					
+				</tr>
+				}
+			</tbody>
+		</table>
+		}
+		
+		
+		<br><h4>Teilnehmer: </h4><br>
+		
+		@if(teilnehmer.isEmpty()) {
+		
+		} else {
+		
+		<table class="table table-hover">
+
+			<tr>
+				<!-- <th>TestID</th> -->
+				<th>Vorname&nbsp;&nbsp;&nbsp;</th>
+				<th>Alter&nbsp;&nbsp;&nbsp;</th>
+				<th>Email&nbsp;&nbsp;&nbsp;</th>
+				<th>Telefon&nbsp;&nbsp;&nbsp;</th>
+				<th>&nbsp;&nbsp;&nbsp;</th>
+				<th>&nbsp;&nbsp;&nbsp;</th>
+			</tr>
+			<tbody>
+				@for( t <- teilnehmer ){
+				<tr>
+					<!-- td>@i.id</td> -->
+					<td>@t.vorname&nbsp;&nbsp;&nbsp;</td>
+					<td>@t.alt&nbsp;&nbsp;&nbsp;</td>
+					<td>@t.email&nbsp;&nbsp;&nbsp;</td>
+					<td>@t.tel&nbsp;&nbsp;&nbsp;</td>
+					<td>
+						
+					</td>
+					<td>
+						
+					</td>
+					
+					
+					
+					
+				</tr>
+				}
+			</tbody>
+		</table>
+		}
 			
 		</div>
 		

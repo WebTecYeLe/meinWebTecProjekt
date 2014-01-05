@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.AnzeigeDetails;
+import models.Person;
 import models.Zaehler;
 
 import org.bson.types.ObjectId;
@@ -81,6 +82,16 @@ public class Anwendung extends Controller {
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
+		// In dieser Liste werden später die Personen erfasst die angefragt
+		// haben.
+		List<String> gestarteteAnfragen = new ArrayList<>();
+
+		// Personen die bei der Anfrage angenommen wurden
+		List<String> erfolgreicheAnfragen = new ArrayList<>();
+
+		List<String> abgelehnteAnfragen = new ArrayList<>();
+
+		// Hilfsvariablen
 		int suchergebnisse;
 		int meine_mfgs = 0;
 		int anfragen;
@@ -238,6 +249,7 @@ public class Anwendung extends Controller {
 		String uhrzeit = stunden + ":" + minuten;
 
 		String email = "";
+		String status = "";
 		List<DBObject> feld;
 
 		List<Zaehler> zaehler2 = new ArrayList<>();
@@ -280,7 +292,10 @@ public class Anwendung extends Controller {
 								vorname + " " + name.substring(0, 1) + ".")
 						.append("email", email).append("fahrzeug", "")
 						.append("anzahl_plaetze", plaetze).append("preis", "")
-						.append("entfernung", "");
+						.append("entfernung", "")
+						.append("gestarteteAnfragen", gestarteteAnfragen)
+						.append("erfolgreicheAnfragen", erfolgreicheAnfragen)
+						.append("abgelehnteAnfragen", abgelehnteAnfragen);
 
 				coll.insert(doc);
 
@@ -298,19 +313,17 @@ public class Anwendung extends Controller {
 
 				DBCollection coll = db.getCollection("user");
 				com.mongodb.DBCursor cursor = coll.find();
-				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-						nutzer);
+				BasicDBObject query = (BasicDBObject) new BasicDBObject(
+						"username", nutzer);
 				List<DBObject> feldEmail = coll.find(query).toArray();
-				
-				for(DBObject s : feldEmail) {
+
+				for (DBObject s : feldEmail) {
 					email = (String) s.get("email");
 				}
-				
-				
+
 				coll = db.getCollection("mfg");
 				cursor = coll.find();
-				query = (BasicDBObject) new BasicDBObject("email",
-						email);
+				query = (BasicDBObject) new BasicDBObject("email", email);
 				cursor = coll.find(query);
 
 				// suchergebnisse = (int) cursor.count();
@@ -321,8 +334,6 @@ public class Anwendung extends Controller {
 				String reportDate = date.format(todayDate);
 				Date dateDBParsen = null;
 
-				
-				
 				difference = 0;
 
 				for (DBObject s : cursor) {
@@ -333,8 +344,8 @@ public class Anwendung extends Controller {
 					try {
 
 						dateDBParsen = date.parse(dateDB);
-						difference = todayDate.getTime() - dateDBParsen.getTime()
-								- 1800000;
+						difference = todayDate.getTime()
+								- dateDBParsen.getTime() - 1800000;
 						// return ok(""+difference);
 
 					} catch (Exception e) {
@@ -343,19 +354,21 @@ public class Anwendung extends Controller {
 					// solang zahl negativ, dann fahrt gültig
 					if (difference <= 0) {
 
-						//test += " "+difference;
+						// test += " "+difference;
 						// return ok(""+difference);
 						details.add(new AnzeigeDetails(s.get("_id").toString(),
-								(String) s.get("start"), (String) s.get("ziel"),
-								(String) s.get("strecke"), (String) s
-										.get("uhrzeit"), (String) s.get("datum"),
-								(String) s.get("fahrer"),
-								Integer.parseInt((String) s.get("anzahl_plaetze")),
-								(String) s.get("email")));
-						//suchergebnisse++;
+								(String) s.get("start"),
+								(String) s.get("ziel"), (String) s
+										.get("strecke"), (String) s
+										.get("uhrzeit"), (String) s
+										.get("datum"),
+								(String) s.get("fahrer"), Integer
+										.parseInt((String) s
+												.get("anzahl_plaetze")),
+								(String) s.get("email"), "",(String) s.get("status")));
+						// suchergebnisse++;
 
 					}
-					
 
 				}
 
@@ -364,7 +377,6 @@ public class Anwendung extends Controller {
 			} catch (Exception e) {
 
 				e.printStackTrace();
-				
 
 			}
 
@@ -373,7 +385,7 @@ public class Anwendung extends Controller {
 			zaehler = new ArrayList<>();
 
 			meine_mfgs = 0;
-			//int anfragen;
+			// int anfragen;
 
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -381,8 +393,8 @@ public class Anwendung extends Controller {
 
 				DBCollection coll = db.getCollection("user_statistiken");
 				com.mongodb.DBCursor cursor = coll.find();
-				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-						nutzer);
+				BasicDBObject query = (BasicDBObject) new BasicDBObject(
+						"username", nutzer);
 				cursor = coll.find(query);
 
 				BasicDBObject doc = new BasicDBObject();
@@ -392,22 +404,23 @@ public class Anwendung extends Controller {
 				account.put("$set", doc);
 
 				coll.update(query, account);
-				
+
 				if (cursor.count() != 0) {
 
 					for (DBObject s : cursor) {
 						zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-								(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+								(int) s.get("meine_mfgs"), (int) s
+										.get("anfragen")));
 
 					}
 
 				}
-				
+
 				mongoClient.close();
-				//return ok("-> Überprüfung notwendig");
+				// return ok("-> Überprüfung notwendig");
 			} catch (Exception e) {
 				e.printStackTrace();
-				
+
 			}
 
 			return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
@@ -480,16 +493,14 @@ public class Anwendung extends Controller {
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
 					nutzer);
 			List<DBObject> feldEmail = coll.find(query).toArray();
-			
-			for(DBObject s : feldEmail) {
+
+			for (DBObject s : feldEmail) {
 				email = (String) s.get("email");
 			}
-			
-			
+
 			coll = db.getCollection("mfg");
 			cursor = coll.find();
-			query = (BasicDBObject) new BasicDBObject("email",
-					email);
+			query = (BasicDBObject) new BasicDBObject("email", email);
 			cursor = coll.find(query);
 
 			// suchergebnisse = (int) cursor.count();
@@ -500,8 +511,6 @@ public class Anwendung extends Controller {
 			String reportDate = date.format(todayDate);
 			Date dateDBParsen = null;
 
-			
-			
 			long difference = 0;
 
 			for (DBObject s : cursor) {
@@ -522,7 +531,7 @@ public class Anwendung extends Controller {
 				// solang zahl negativ, dann fahrt gültig
 				if (difference <= 0) {
 
-					//test += " "+difference;
+					// test += " "+difference;
 					// return ok(""+difference);
 					details.add(new AnzeigeDetails(s.get("_id").toString(),
 							(String) s.get("start"), (String) s.get("ziel"),
@@ -530,11 +539,10 @@ public class Anwendung extends Controller {
 									.get("uhrzeit"), (String) s.get("datum"),
 							(String) s.get("fahrer"),
 							Integer.parseInt((String) s.get("anzahl_plaetze")),
-							(String) s.get("email")));
-					//suchergebnisse++;
+							(String) s.get("email"), "", (String) s.get("status")));
+					// suchergebnisse++;
 
 				}
-				
 
 			}
 
@@ -543,7 +551,6 @@ public class Anwendung extends Controller {
 		} catch (Exception e) {
 
 			e.printStackTrace();
-			
 
 		}
 
@@ -571,7 +578,7 @@ public class Anwendung extends Controller {
 			account.put("$set", doc);
 
 			coll.update(query, account);
-			
+
 			if (cursor.count() != 0) {
 
 				for (DBObject s : cursor) {
@@ -581,16 +588,16 @@ public class Anwendung extends Controller {
 				}
 
 			}
-			
+
 			mongoClient.close();
-			//return ok("-> Überprüfung notwendig");
+			// return ok("-> Überprüfung notwendig");
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 		}
-		
-		//return ok(""+details.size());
-		
+
+		// return ok(""+details.size());
+
 		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler));
@@ -631,7 +638,7 @@ public class Anwendung extends Controller {
 						(String) s.get("strecke"), (String) s.get("uhrzeit"),
 						(String) s.get("datum"), s.get("fahrer").toString(),
 						Integer.parseInt((String) s.get("anzahl_plaetze")),
-						(String) s.get("email")));
+						(String) s.get("email"), "", ""));
 			}
 
 			mongoClient.close();
@@ -678,6 +685,7 @@ public class Anwendung extends Controller {
 				zaehler));
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Result mfg_suchen() {
 
 		String nutzer = session("connected");
@@ -761,7 +769,8 @@ public class Anwendung extends Controller {
 					e.printStackTrace();
 				}
 				// solang zahl negativ, dann fahrt gültig
-				if (difference <= 0) {
+				// und solange noch Plötze vorhanden sind
+				if (difference <= 0 && Integer.parseInt(s.get("anzahl_plaetze").toString()) >= 1) {
 
 					suchergebnisse++;
 					// return ok(""+difference);
@@ -771,9 +780,23 @@ public class Anwendung extends Controller {
 									.get("uhrzeit"), (String) s.get("datum"),
 							(String) s.get("fahrer"),
 							Integer.parseInt((String) s.get("anzahl_plaetze")),
-							(String) s.get("email")));
+							(String) s.get("email"), "", (String) s.get("status")));
 
 				}
+
+				// if(true) {
+				// List<Double> kopie = new ArrayList<>();
+				// kopie = (List<Double>) s.get("lonlat");
+				// kopie.add(3.141);
+				// //kopie.remove(1);
+				//
+				// if(kopie.contains("user2@mail.de")) {
+				// return ok("Ok");
+				// }
+				//
+				// return ok(""+kopie);
+				//
+				// }
 
 			}
 
@@ -830,11 +853,18 @@ public class Anwendung extends Controller {
 				zaehler));
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Result suchDetailsAnzeigen(String id) {
 		String nutzer = session("connected");
 		String typ = session("typ");
 
 		List<AnzeigeDetails> details2 = new ArrayList<>();
+
+		String info = "";
+		String nutzerCheck = "";
+
+		String check = null;
+
 		if (typ == null) {
 
 		} else {
@@ -868,7 +898,40 @@ public class Anwendung extends Controller {
 						(String) s.get("strecke"), (String) s.get("uhrzeit"),
 						(String) s.get("datum"), s.get("fahrer").toString(),
 						Integer.parseInt((String) s.get("anzahl_plaetze")),
-						(String) s.get("email")));
+						(String) s.get("email"), "", (String) s.get("status")));
+
+				nutzerCheck = s.get("email").toString();
+
+				List<String> anfrageListe = new ArrayList<>();
+				List<String> erfolgreicheListe = new ArrayList<>();
+				List<String> abgelehnteListe = new ArrayList<>();
+
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				erfolgreicheListe = (List<String>) s
+						.get("erfolgreicheAnfragen");
+				abgelehnteListe = (List<String>) s.get("abgelehnteAnfragen");
+
+				if (anfrageListe.contains(nutzer)
+						|| erfolgreicheListe.contains(nutzer)
+						|| abgelehnteListe.contains(nutzer)) {
+					check = "Ok";
+					
+				}
+
+			}
+
+			coll = db.getCollection("user");
+			query = new BasicDBObject("email", nutzerCheck);
+
+			feld = coll.find(query).toArray();
+
+			for (DBObject x : feld) {
+				nutzerCheck = x.get("username").toString();
+
+			}
+
+			if (nutzer.equals(nutzerCheck)) {
+				info = "Ok";
 			}
 
 			mongoClient.close();
@@ -911,8 +974,1087 @@ public class Anwendung extends Controller {
 		}
 
 		return ok(views.html.anwendung.mfg_details_suche.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2,
-				zaehler));
+				"ProTramp Mitfahrgelegenheit", nutzer, info, typ, details2,
+				zaehler, check));
 	}
+
+	@SuppressWarnings("unchecked")
+	public static Result anfrageStarten(String id) {
+
+		String nutzer = session("connected");
+		String typ = session("typ");
+
+		List<String> anfrageListe = new ArrayList<>();
+		List<String> gesamtAnfrageListe = new ArrayList<>();
+
+		List<AnzeigeDetails> details2 = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int anfrageMenge = 0;
+		boolean bereit = false;
+
+		// Benutzerüberprüfung ob Fahrer, Mitfahrer oder nicht angemeldeter User
+		if (typ == null) {
+
+		} else {
+			if (!typ.equals("Fahrer")) {
+				typ = "";
+			}
+		}
+
+		// if (!typ.equals("Fahrer")) {
+		// typ = "";
+		// }
+
+		List<DBObject> feld;
+
+		// Die eindeutige MFG aus der Datenbank holen
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			com.mongodb.DBCursor cursor = coll.find();
+
+			DBObject query;
+			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
+
+			cursor = coll.find(query);
+			feld = coll.find(query).toArray();
+
+			// Jede MFG ist eindeutig. Deshalb gibt es hier immer nur einen
+			// Dokumenten aus der Collection
+			for (DBObject s : feld) {
+				details2.add(new AnzeigeDetails(s.get("_id").toString(),
+						(String) s.get("start"), (String) s.get("ziel"),
+						(String) s.get("strecke"), (String) s.get("uhrzeit"),
+						(String) s.get("datum"), s.get("fahrer").toString(),
+						Integer.parseInt((String) s.get("anzahl_plaetze")),
+						(String) s.get("email"), "", (String) "offen"));
+			}
+
+			// Der Anfrageprozess
+			for (DBObject s : feld) {
+
+				// Überprüfung ob noch Plätze verfügbar sind
+				if (Integer.parseInt(s.get("anzahl_plaetze").toString()) >= 1) {
+					anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+					
+					
+					// if(true) {
+					// return ok(""+anfrageListe);
+					// }
+
+					// Die Collection mfg in der Datenbank muss aktualisiert
+					// werden, damit andere Benutzer stets
+					// die aktuellen Informationen sehen können. Dadurch wird
+					// einen sicheren Anfrageprozess
+					// gewährleistet
+					
+					
+					
+					if(!anfrageListe.contains(nutzer)) {
+						anfrageListe.add(nutzer);
+						
+						
+					}
+					
+					// Userstatistiken bearbeiten und lesen
+
+					
+					
+					query = new BasicDBObject("_id", new ObjectId(id));
+					BasicDBObject docMFG = new BasicDBObject();
+					docMFG.put("gestarteteAnfragen", anfrageListe);
+					BasicDBObject account = new BasicDBObject();
+					account.put("$set", docMFG);
+					coll.update(query, account);
+
+					
+					coll = db.getCollection("mfg");
+					query = new BasicDBObject();
+
+					feld = coll.find(query).toArray();
+
+					for (DBObject i : feld) {
+
+						gesamtAnfrageListe = (List<String>) i
+								.get("gestarteteAnfragen");
+
+						if (gesamtAnfrageListe.contains(nutzer)) {
+							anfrageMenge++;
+
+						}
+
+					}					
+					
+					
+					coll = db.getCollection("user_statistiken");
+					query = new BasicDBObject("username",
+							nutzer);
+					BasicDBObject doc = new BasicDBObject();
+					doc.put("anfragen", anfrageMenge);
+					account = new BasicDBObject();
+					account.put("$set", doc);
+					coll.update(query, account);
+										
+					cursor = coll.find(query);
+
+					if (cursor.count() != 0) {
+
+						for (DBObject x : cursor) {
+							zaehler.add(new Zaehler((int) x
+									.get("suchergebnisse"), (int) x
+									.get("meine_mfgs"), (int) x.get("anfragen")));
+
+						}
+
+					}
+
+					
+
+					
+					
+
+				} else {
+
+				}
+
+				
+
+			}
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		// Die Seite der Anfragen aufrufen
+		
+		return redirect("/anwendung/anfragen_index");
+		
+//		return ok(views.html.anwendung.anwendung_anfragen.render(
+//				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2,
+//				zaehler));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Result anfragen_index() {
+
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		//If Entscheidung für den Fahrer. Fahrer hat eine andere Sicht als den Mitfahrer
+		if(typ.equals("Fahrer")) {
+			List<DBObject> feld = new ArrayList<>();
+			List<DBObject> personenfeld = new ArrayList<>();
+			
+			List<AnzeigeDetails> details = new ArrayList<>();
+			
+			List<String> anfrageListe = new ArrayList<>();
+			
+			List<Person> person = new ArrayList<>();
+			
+			int anfragen = 0;
+			String email = "";
+			
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				DBCollection coll = db.getCollection("user");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+						nutzer);
+				List<DBObject> feldEmail = coll.find(query).toArray();
+
+				for (DBObject s : feldEmail) {
+					email = (String) s.get("email");
+				}
+				
+				
+				
+				coll = db.getCollection("mfg");
+				cursor = coll.find();
+				query = (BasicDBObject) new BasicDBObject("email", email);
+				cursor = coll.find(query);
+
+				feld = coll.find(query).toArray();
+
+				
+				
+				for (DBObject s : feld) {
+					
+					anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+					
+					if (anfrageListe.size() >= 1) {
+						
+						
+
+						StringBuilder sb = new StringBuilder();
+						sb.append("");
+						sb.append(anfrageListe.size());
+						
+						anfragen += anfrageListe.size();
+						
+						details.add(new AnzeigeDetails(s.get("_id").toString(),
+								(String) s.get("start"), (String) s.get("ziel"),
+								(String) s.get("strecke"), (String) s
+										.get("uhrzeit"), (String) s.get("datum"),
+								(String) s.get("fahrer"),
+								Integer.parseInt((String) s.get("anzahl_plaetze")),
+								(String) s.get("email"), sb.toString(), ""));
+						
+//						coll = db.getCollection("user");
+//						
+//						
+//						
+//						for(int i = 0; i < anfrageListe.size(); i++) {
+//							query = new BasicDBObject("username", anfrageListe.get(i));
+//							personenfeld = coll.find(query).toArray();
+//							
+//							
+//							for(DBObject p : personenfeld) {
+//								person.add(new Person(s.get("_id").toString(), p.get("vorname").toString(),
+//										(int) p.get("alt"),p.get("email").toString(),p.get("tel").toString()));
+//							}
+//							
+//							
+//						}
+						
+						
+						
+
+					}
+										
+					
+
+				}
+				
+				
+
+				mongoClient.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+			
+			// user_statistiken bearbeiten und lesen
+
+			List<Zaehler> zaehler = new ArrayList<>();
+
+			int meine_mfgs = 0;
+			//int anfragen;
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				DBCollection coll = db.getCollection("user_statistiken");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+						nutzer);
+				cursor = coll.find(query);
+
+				BasicDBObject doc = new BasicDBObject();
+				doc.put("anfragen", anfragen);
+
+				BasicDBObject account = new BasicDBObject();
+				account.put("$set", doc);
+
+				coll.update(query, account);
+
+				if (cursor.count() != 0) {
+
+					for (DBObject s : cursor) {
+						zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+								(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+					}
+
+				}
+
+				mongoClient.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			
+			//return ok("Soweit alles ok.");
+			return ok(views.html.anwendung.anwendung_anfragen.render(
+					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+					zaehler));
+			
+		} else {
+			List<DBObject> feld = new ArrayList<>();
+			List<AnzeigeDetails> details = new ArrayList<>();
+
+			String info = "";
+			String nutzerCheck = "";
+
+			if (!typ.equals("Fahrer")) {
+				typ = "";
+			}
+
+			// user_statistiken lesen
+
+			List<Zaehler> zaehler = new ArrayList<>();
+
+			int suchergebnisse;
+			int meine_mfgs = 0;
+			int anfragen;
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				DBCollection coll = db.getCollection("user_statistiken");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+						nutzer);
+				cursor = coll.find(query);
+
+				if (cursor.count() != 0) {
+
+					for (DBObject s : cursor) {
+						zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+								(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+					}
+
+				}
+
+				mongoClient.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				DBCollection coll = db.getCollection("mfg");
+				com.mongodb.DBCursor cursor = coll.find();
+				BasicDBObject query = (BasicDBObject) new BasicDBObject();
+				cursor = coll.find(query);
+
+				feld = coll.find(query).toArray();
+
+				for (DBObject s : feld) {
+					if (s.get("gestarteteAnfragen").toString().contains(nutzer)) {
+						details.add(new AnzeigeDetails(s.get("_id").toString(),
+								(String) s.get("start"), (String) s.get("ziel"),
+								(String) s.get("strecke"), (String) s
+										.get("uhrzeit"), (String) s.get("datum"),
+								(String) s.get("fahrer"),
+								Integer.parseInt((String) s.get("anzahl_plaetze")),
+								(String) s.get("email"),"" , "offen"));
+
+					}
+					
+					if(s.get("erfolgreicheAnfragen").toString().contains(nutzer)) {
+						details.add(new AnzeigeDetails(s.get("_id").toString(),
+								(String) s.get("start"), (String) s.get("ziel"),
+								(String) s.get("strecke"), (String) s
+										.get("uhrzeit"), (String) s.get("datum"),
+								(String) s.get("fahrer"),
+								Integer.parseInt((String) s.get("anzahl_plaetze")),
+								(String) s.get("email"), "", "zugesagt"));
+						
+						
+					}
+					
+					if(s.get("abgelehnteAnfragen").toString().contains(nutzer)) {
+						details.add(new AnzeigeDetails(s.get("_id").toString(),
+								(String) s.get("start"), (String) s.get("ziel"),
+								(String) s.get("strecke"), (String) s
+										.get("uhrzeit"), (String) s.get("datum"),
+								(String) s.get("fahrer"),
+								Integer.parseInt((String) s.get("anzahl_plaetze")),
+								(String) s.get("email"), "", "abgelehnt"));
+						
+						
+					}
+
+				}
+
+				mongoClient.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+			return ok(views.html.anwendung.anwendung_anfragen.render(
+					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+					zaehler));
+			
+		}
+
+		
+	}
+	
+	
+	//Diese Funktion ruft eine View auf indem der Fahrer alle angefragten Personen sehen kann.
+	//Funktion ist nur für den Fahrer zugänglich
+	public static Result mfg_anfrage_details(String id) {
+		
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		List<DBObject> feld = new ArrayList<>();
+		List<DBObject> personenfeld = new ArrayList<>();
+		List<DBObject> teilnehmerfeld = new ArrayList<>();
+		
+		List<AnzeigeDetails> details = new ArrayList<>();
+		
+		List<String> anfrageListe = new ArrayList<>();
+		List<String> erfolgreicheListe = new ArrayList<>();
+		
+		List<Person> person = new ArrayList<>();
+		List<Person> teilnehmer = new ArrayList<>();
+		
+		int anfragen = 0;
+		String email = "";
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
+					new ObjectId(id));
+			
+			
+			
+			
+
+			feld = coll.find(query).toArray();
+
+			
+			
+			for (DBObject s : feld) {
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("");
+				sb.append(anfrageListe.size());
+				
+				details.add(new AnzeigeDetails(s.get("_id").toString(),
+						(String) s.get("start"), (String) s.get("ziel"),
+						(String) s.get("strecke"), (String) s
+								.get("uhrzeit"), (String) s.get("datum"),
+						(String) s.get("fahrer"),
+						Integer.parseInt((String) s.get("anzahl_plaetze")),
+						(String) s.get("email"), sb.toString(), ""));
+				
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				
+				if (anfrageListe.size() >= 1) {
+					
+					
+
+					
+					
+					//anfragen += anfrageListe.size();
+					
+					
+					
+					coll = db.getCollection("user");
+					
+					
+					
+					for(int i = 0; i < anfrageListe.size(); i++) {
+						query = new BasicDBObject("username", anfrageListe.get(i));
+						personenfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : personenfeld) {
+							person.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+					
+					
+					
+
+				}
+				
+				erfolgreicheListe = (List<String>) s.get("erfolgreicheAnfragen");
+				
+				if(erfolgreicheListe.size() >= 1) {
+					
+//					sb.append("");
+//					sb.append(anfrageListe.size());
+					
+//					details.add(new AnzeigeDetails(s.get("_id").toString(),
+//							(String) s.get("start"), (String) s.get("ziel"),
+//							(String) s.get("strecke"), (String) s
+//									.get("uhrzeit"), (String) s.get("datum"),
+//							(String) s.get("fahrer"),
+//							Integer.parseInt((String) s.get("anzahl_plaetze")),
+//							(String) s.get("email"), sb.toString(), ""));
+					
+					coll = db.getCollection("user");
+					
+					for(int i = 0; i < erfolgreicheListe.size(); i++) {
+						query = new BasicDBObject("username", erfolgreicheListe.get(i));
+						teilnehmerfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : teilnehmerfeld) {
+							teilnehmer.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+				}
+									
+				
+
+			}
+			
+			
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
+		
+		// user_statistiken lesen
+
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		int meine_mfgs = 0;
+		//int anfragen;
+
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+//			BasicDBObject doc = new BasicDBObject();
+//			doc.put("anfragen", anfragen);
+//
+//			BasicDBObject account = new BasicDBObject();
+//			account.put("$set", doc);
+//
+//			coll.update(query, account);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		return ok(views.html.anwendung.mfg_anfragen_details.render(
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+				zaehler, person, teilnehmer));
+	}
+	
+	
+	//Funktion soll eine Anfrage mit Ja bestätigen. Anpassung der Datenbank und MFG
+	@SuppressWarnings("unchecked")
+	public static Result zustimmen(String id, String user) {
+		
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		List<DBObject> feld = new ArrayList<>();
+		
+		List<DBObject> personenfeld = new ArrayList<>();
+		List<DBObject> teilnehmerfeld = new ArrayList<>();
+		
+		List<AnzeigeDetails> details = new ArrayList<>();
+		
+		List<Zaehler> zaehler = new ArrayList<>();
+		
+		List<String> anfrageListe = new ArrayList<>();
+		List<String> erfolgreicheListe = new ArrayList<>();
+		
+		List<Person> person = new ArrayList<>();
+		List<Person> teilnehmer = new ArrayList<>();
+		
+		int anfragen = 0;
+		String email = "";
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
+					new ObjectId(id));
+			
+			feld = coll.find(query).toArray();
+			
+			for(DBObject s : feld) {
+				
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				
+				if(anfrageListe.contains(user)) {
+					anfrageListe.remove(user);
+					
+				}
+				
+				erfolgreicheListe = (List<String>) s.get("erfolgreicheAnfragen");
+				
+				if(!erfolgreicheListe.contains(user)) {
+					erfolgreicheListe.add(user);
+				}
+				
+				//Datenbank aktualisieren
+				
+				BasicDBObject doc = new BasicDBObject();
+				doc.put("gestarteteAnfragen", anfrageListe);
+				doc.put("erfolgreicheAnfragen", erfolgreicheListe);
+				
+				StringBuilder sb = new StringBuilder();
+				sb.append("");
+				
+				int zahl = Integer.parseInt(s.get("anzahl_plaetze").toString());
+				zahl -= 1;
+				
+				sb.append(zahl);
+				
+				doc.put("anzahl_plaetze", sb.toString());
+
+				BasicDBObject account = new BasicDBObject();
+				account.put("$set", doc);
+
+				coll.update(query, account);
+				
+				
+				
+				
+				
+			}
+			
+			//Daten für die View holen
+			
+			for (DBObject s : feld) {
+				
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				
+				if (anfrageListe.size() >= 1) {
+					
+					
+
+					StringBuilder sb = new StringBuilder();
+					sb.append("");
+					sb.append(anfrageListe.size());
+					
+					//anfragen += anfrageListe.size();
+					
+					details.add(new AnzeigeDetails(s.get("_id").toString(),
+							(String) s.get("start"), (String) s.get("ziel"),
+							(String) s.get("strecke"), (String) s
+									.get("uhrzeit"), (String) s.get("datum"),
+							(String) s.get("fahrer"),
+							Integer.parseInt((String) s.get("anzahl_plaetze")),
+							(String) s.get("email"), sb.toString(), ""));
+					
+					coll = db.getCollection("user");
+					
+					
+					
+					for(int i = 0; i < anfrageListe.size(); i++) {
+						query = new BasicDBObject("username", anfrageListe.get(i));
+						personenfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : personenfeld) {
+							person.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+					
+					
+					
+
+				}
+				
+				erfolgreicheListe = (List<String>) s.get("erfolgreicheAnfragen");
+				
+				if(erfolgreicheListe.size() >= 1) {
+//					StringBuilder sb = new StringBuilder();
+//					sb.append("");
+//					sb.append(anfrageListe.size());
+//					
+//					details.add(new AnzeigeDetails(s.get("_id").toString(),
+//							(String) s.get("start"), (String) s.get("ziel"),
+//							(String) s.get("strecke"), (String) s
+//									.get("uhrzeit"), (String) s.get("datum"),
+//							(String) s.get("fahrer"),
+//							Integer.parseInt((String) s.get("anzahl_plaetze")),
+//							(String) s.get("email"), sb.toString(), ""));
+//					
+//					coll = db.getCollection("user");
+					
+					for(int i = 0; i < erfolgreicheListe.size(); i++) {
+						query = new BasicDBObject("username", erfolgreicheListe.get(i));
+						teilnehmerfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : teilnehmerfeld) {
+							teilnehmer.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+				}
+									
+				
+
+			}
+			
+			//Anzahl der Anfragen zählen
+			
+			coll = db.getCollection("user");
+			com.mongodb.DBCursor cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			List<DBObject> feldEmail = coll.find(query).toArray();
+
+			for (DBObject s : feldEmail) {
+				email = (String) s.get("email");
+			}
+			
+			
+			
+			coll = db.getCollection("mfg");
+			cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("email", email);
+			cursor = coll.find(query);
+
+			feld = coll.find(query).toArray();
+			
+			for(DBObject d : feld) {
+				
+				anfrageListe = (List<String>) d.get("gestarteteAnfragen");
+				
+				if(anfrageListe.size() >= 1) {
+					anfragen += anfrageListe.size();
+					
+					
+				}
+				
+			}
+
+			
+			//Userstatistiken bearbeiten und lesen
+			
+			
+			
+			coll = db.getCollection("user_statistiken");
+			query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+			
+			BasicDBObject doc = new BasicDBObject();
+			doc.put("anfragen", anfragen);
+
+			BasicDBObject account = new BasicDBObject();
+			account.put("$set", doc);
+
+			coll.update(query, account);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+			
+			
+			
+			
+			mongoClient.close();
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		return ok(views.html.anwendung.mfg_anfragen_details.render(
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+				zaehler, person, teilnehmer));
+	}
+	
+	
+	//Funktion soll eine Anfrage mit Nein ablehnen. Anpassung der Datenbank und MFG
+	public static Result ablehnen(String id, String user) {
+		
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		List<DBObject> feld = new ArrayList<>();
+		
+		List<DBObject> personenfeld = new ArrayList<>();
+		List<DBObject> teilnehmerfeld = new ArrayList<>();
+		
+		List<AnzeigeDetails> details = new ArrayList<>();
+		
+		List<Zaehler> zaehler = new ArrayList<>();
+		
+		List<String> anfrageListe = new ArrayList<>();
+		List<String> erfolgreicheListe = new ArrayList<>();
+		List<String> abgelehnteListe = new ArrayList<>();
+		
+		List<Person> person = new ArrayList<>();
+		List<Person> teilnehmer = new ArrayList<>();
+		
+		int anfragen = 0;
+		String email = "";
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+			
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
+					new ObjectId(id));
+			
+			feld = coll.find(query).toArray();
+			
+			for(DBObject s : feld) {
+				
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				
+				if(anfrageListe.contains(user)) {
+					anfrageListe.remove(user);
+					
+				}
+				
+				abgelehnteListe = (List<String>) s.get("abgelehnteAnfragen");
+				
+				if(!abgelehnteListe.contains(user)) {
+					abgelehnteListe.add(user);
+				}
+				
+				//Datenbank aktualisieren
+				
+				BasicDBObject doc = new BasicDBObject();
+				doc.put("gestarteteAnfragen", anfrageListe);
+				doc.put("abgelehnteAnfragen", abgelehnteListe);
+
+				BasicDBObject account = new BasicDBObject();
+				account.put("$set", doc);
+
+				coll.update(query, account);
+				
+				
+				
+				
+				
+			}
+			
+			//Daten für die View holen
+			
+			for (DBObject s : feld) {
+				
+				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
+				
+				if (anfrageListe.size() >= 1) {
+					
+					
+
+					StringBuilder sb = new StringBuilder();
+					sb.append("");
+					sb.append(anfrageListe.size());
+					
+					//anfragen += anfrageListe.size();
+					
+					details.add(new AnzeigeDetails(s.get("_id").toString(),
+							(String) s.get("start"), (String) s.get("ziel"),
+							(String) s.get("strecke"), (String) s
+									.get("uhrzeit"), (String) s.get("datum"),
+							(String) s.get("fahrer"),
+							Integer.parseInt((String) s.get("anzahl_plaetze")),
+							(String) s.get("email"), sb.toString(), ""));
+					
+					coll = db.getCollection("user");
+					
+					
+					
+					for(int i = 0; i < anfrageListe.size(); i++) {
+						query = new BasicDBObject("username", anfrageListe.get(i));
+						personenfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : personenfeld) {
+							person.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+					
+					
+					
+
+				}
+				
+				erfolgreicheListe = (List<String>) s.get("erfolgreicheAnfragen");
+				
+				if(erfolgreicheListe.size() >= 1) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("");
+					sb.append(anfrageListe.size());
+					
+					details.add(new AnzeigeDetails(s.get("_id").toString(),
+							(String) s.get("start"), (String) s.get("ziel"),
+							(String) s.get("strecke"), (String) s
+									.get("uhrzeit"), (String) s.get("datum"),
+							(String) s.get("fahrer"),
+							Integer.parseInt((String) s.get("anzahl_plaetze")),
+							(String) s.get("email"), sb.toString(), ""));
+					
+					coll = db.getCollection("user");
+					
+					for(int i = 0; i < erfolgreicheListe.size(); i++) {
+						query = new BasicDBObject("username", erfolgreicheListe.get(i));
+						teilnehmerfeld = coll.find(query).toArray();
+						
+						
+						for(DBObject p : teilnehmerfeld) {
+							teilnehmer.add(new Person(s.get("_id").toString(), p.get("username").toString(), 
+									p.get("vorname").toString(), (int) p.get("alt"), p.get("email").toString(), 
+									p.get("tel").toString()));
+						}
+						
+						
+					}
+				}
+									
+				
+
+			}
+			
+			//Anzahl der Anfragen zählen
+			
+			coll = db.getCollection("user");
+			com.mongodb.DBCursor cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			List<DBObject> feldEmail = coll.find(query).toArray();
+
+			for (DBObject s : feldEmail) {
+				email = (String) s.get("email");
+			}
+			
+			
+			
+			coll = db.getCollection("mfg");
+			cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("email", email);
+			cursor = coll.find(query);
+
+			feld = coll.find(query).toArray();
+			
+			for(DBObject d : feld) {
+				
+				anfrageListe = (List<String>) d.get("gestarteteAnfragen");
+				
+				if(anfrageListe.size() >= 1) {
+					anfragen += anfrageListe.size();
+					
+					
+				}
+				
+			}
+
+			
+			//Userstatistiken bearbeiten und lesen
+			
+			
+			
+			coll = db.getCollection("user_statistiken");
+			query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+			
+			BasicDBObject doc = new BasicDBObject();
+			doc.put("anfragen", anfragen);
+
+			BasicDBObject account = new BasicDBObject();
+			account.put("$set", doc);
+
+			coll.update(query, account);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+			
+			
+			
+			
+			mongoClient.close();
+			
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		
+		return ok(views.html.anwendung.mfg_anfragen_details.render(
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
+				zaehler, person, teilnehmer));
+		
+	}
+
+	
 
 }
