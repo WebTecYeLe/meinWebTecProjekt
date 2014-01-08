@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.AnzeigeDetails;
+import models.Orte;
 import models.Person;
 import models.Zaehler;
 
@@ -30,6 +31,73 @@ import com.mongodb.QueryBuilder;
 
 public class Anwendung extends Controller {
 
+	public static Result info() {
+		
+		String nutzer = session("connected");
+		String typ = session("typ");
+		
+		List<Orte> ortsdetails = new ArrayList<>();
+		List<DBObject> feld;
+		
+		try {
+			if (typ == null) {
+				
+			} else {
+				if (!typ.equals("Fahrer")) {
+					typ = "";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = (DBCollection) db.getCollection("mfg");
+			BasicDBObject query = new BasicDBObject();
+
+			feld = coll.find(query).toArray();
+
+			String vergleich = "";
+
+			// Auflistung der unterschiedlichen Orte
+			for (DBObject s : feld) {
+
+				if (vergleich.contains(s.get("start").toString())) {
+
+				} else {
+					vergleich += s.get("start").toString();
+					ortsdetails.add(new Orte((String) s.get("start")));
+				}
+
+				if (vergleich.contains(s.get("ziel").toString())) {
+
+				} else {
+					vergleich += s.get("ziel").toString();
+					ortsdetails.add(new Orte((String) s.get("ziel")));
+				}
+
+				if (vergleich.contains(s.get("strecke").toString())) {
+
+				} else {
+					vergleich += s.get("strecke").toString();
+					ortsdetails.add(new Orte((String) s.get("strecke")));
+				}
+
+			}
+
+			mongoClient.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ok(views.html.anwendung.info.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, ortsdetails));
+	}
+	
+	
 	public static Result mfg_anbieten_index() {
 
 		String nutzer = session("connected");

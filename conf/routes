@@ -39,6 +39,8 @@ POST	/anwendung/:id/anfragen		     controllers.Anwendung.anfrageStarten(id: Stri
 
 GET		/anwendung/anfragen_index		 controllers.Anwendung.anfragen_index()
 
+GET		/info							 controllers.Anwendung.info()
+
 # Benutzerlogin
 
 POST	/benutzerlogin/login			 controllers.Benutzerlogin.login()
@@ -51,6 +53,7 @@ POST	/registrierung/abschicken		 controllers.Registrierung.abschicken()
 
 GET     /userlogin                       controllers.UserLogin.index()
 POST    /userlogin						 controllers.UserLogin.login()
+
 
 # Kontoeinstellungen
 
