@@ -607,6 +607,7 @@ public class Anwendung extends Controller {
 						String email = "";
 						List<DBObject> feld;
 						String testfeld = "";
+						int anfragen = 0;
 						int suchergebnisse = 0;
 						String test = "";
 
@@ -669,6 +670,11 @@ public class Anwendung extends Controller {
 													.get("status")));
 									// suchergebnisse++;
 									}
+									
+									if(s.get("gestarteteAnfragen").toString().contains(nutzer)) {
+										anfragen++;
+										
+									}
 								}
 
 							}
@@ -686,7 +692,7 @@ public class Anwendung extends Controller {
 						
 
 						int meine_mfgs = 0;
-						int anfragen;
+						//int anfragen;
 
 						try {
 							MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -700,6 +706,7 @@ public class Anwendung extends Controller {
 
 							BasicDBObject doc = new BasicDBObject();
 							doc.put("meine_mfgs", details.size());
+							doc.put("anfragen", anfragen);
 
 							BasicDBObject account = new BasicDBObject();
 							account.put("$set", doc);
@@ -1804,23 +1811,27 @@ public class Anwendung extends Controller {
 
 			for (DBObject s : feld) {
 
+				StringBuilder sb = new StringBuilder();
+				sb.append("");
+				sb.append(anfrageListe.size());
+
+				// anfragen += anfrageListe.size();
+
+				details.add(new AnzeigeDetails(s.get("_id").toString(),
+						(String) s.get("start"), (String) s.get("ziel"),
+						(String) s.get("strecke"), (String) s
+								.get("uhrzeit"), (String) s.get("datum"),
+						(String) s.get("fahrer"),
+						Integer.parseInt((String) s.get("anzahl_plaetze")),
+						(String) s.get("email"), sb.toString(), ""));
+				
 				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
 
+				//Personen auflisten, die noch angefragt haben
+				
 				if (anfrageListe.size() >= 1) {
 
-					StringBuilder sb = new StringBuilder();
-					sb.append("");
-					sb.append(anfrageListe.size());
-
-					// anfragen += anfrageListe.size();
-
-					details.add(new AnzeigeDetails(s.get("_id").toString(),
-							(String) s.get("start"), (String) s.get("ziel"),
-							(String) s.get("strecke"), (String) s
-									.get("uhrzeit"), (String) s.get("datum"),
-							(String) s.get("fahrer"),
-							Integer.parseInt((String) s.get("anzahl_plaetze")),
-							(String) s.get("email"), sb.toString(), ""));
+					
 
 					coll = db.getCollection("user");
 
@@ -1840,24 +1851,26 @@ public class Anwendung extends Controller {
 					}
 
 				}
+				
+				//Personen auflisten, die an der MFG teilnehmen werden
 
 				erfolgreicheListe = (List<String>) s
 						.get("erfolgreicheAnfragen");
 
 				if (erfolgreicheListe.size() >= 1) {
-					// StringBuilder sb = new StringBuilder();
-					// sb.append("");
-					// sb.append(anfrageListe.size());
-					//
-					// details.add(new AnzeigeDetails(s.get("_id").toString(),
-					// (String) s.get("start"), (String) s.get("ziel"),
-					// (String) s.get("strecke"), (String) s
-					// .get("uhrzeit"), (String) s.get("datum"),
-					// (String) s.get("fahrer"),
-					// Integer.parseInt((String) s.get("anzahl_plaetze")),
-					// (String) s.get("email"), sb.toString(), ""));
-					//
-					// coll = db.getCollection("user");
+//					 sb = new StringBuilder();
+//					 sb.append("");
+//					 sb.append(anfrageListe.size());
+//					
+//					 details.add(new AnzeigeDetails(s.get("_id").toString(),
+//					 (String) s.get("start"), (String) s.get("ziel"),
+//					 (String) s.get("strecke"), (String) s
+//					 .get("uhrzeit"), (String) s.get("datum"),
+//					 (String) s.get("fahrer"),
+//					 Integer.parseInt((String) s.get("anzahl_plaetze")),
+//					 (String) s.get("email"), sb.toString(), ""));
+					
+					 coll = db.getCollection("user");
 
 					for (int i = 0; i < erfolgreicheListe.size(); i++) {
 						query = new BasicDBObject("username",
@@ -1944,6 +1957,7 @@ public class Anwendung extends Controller {
 
 	// Funktion soll eine Anfrage mit Nein ablehnen. Anpassung der Datenbank und
 	// MFG
+	@SuppressWarnings("unchecked")
 	public static Result ablehnen(String id, String user) {
 
 		String nutzer = session("connected");
@@ -2011,23 +2025,27 @@ public class Anwendung extends Controller {
 
 			for (DBObject s : feld) {
 
+				StringBuilder sb = new StringBuilder();
+				sb.append("");
+				sb.append(anfrageListe.size());
+
+				// anfragen += anfrageListe.size();
+
+				details.add(new AnzeigeDetails(s.get("_id").toString(),
+						(String) s.get("start"), (String) s.get("ziel"),
+						(String) s.get("strecke"), (String) s
+								.get("uhrzeit"), (String) s.get("datum"),
+						(String) s.get("fahrer"),
+						Integer.parseInt((String) s.get("anzahl_plaetze")),
+						(String) s.get("email"), sb.toString(), ""));
+				
 				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
 
+				// Personen auflisten, die noch angefragt haben
+				
 				if (anfrageListe.size() >= 1) {
 
-					StringBuilder sb = new StringBuilder();
-					sb.append("");
-					sb.append(anfrageListe.size());
-
-					// anfragen += anfrageListe.size();
-
-					details.add(new AnzeigeDetails(s.get("_id").toString(),
-							(String) s.get("start"), (String) s.get("ziel"),
-							(String) s.get("strecke"), (String) s
-									.get("uhrzeit"), (String) s.get("datum"),
-							(String) s.get("fahrer"),
-							Integer.parseInt((String) s.get("anzahl_plaetze")),
-							(String) s.get("email"), sb.toString(), ""));
+					
 
 					coll = db.getCollection("user");
 
@@ -2051,18 +2069,20 @@ public class Anwendung extends Controller {
 				erfolgreicheListe = (List<String>) s
 						.get("erfolgreicheAnfragen");
 
+				//Personen auflisten, die an der MFG teilnehmen werden
+				
 				if (erfolgreicheListe.size() >= 1) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("");
-					sb.append(anfrageListe.size());
-
-					details.add(new AnzeigeDetails(s.get("_id").toString(),
-							(String) s.get("start"), (String) s.get("ziel"),
-							(String) s.get("strecke"), (String) s
-									.get("uhrzeit"), (String) s.get("datum"),
-							(String) s.get("fahrer"),
-							Integer.parseInt((String) s.get("anzahl_plaetze")),
-							(String) s.get("email"), sb.toString(), ""));
+//					sb = new StringBuilder();
+//					sb.append("");
+//					sb.append(anfrageListe.size());
+//
+//					details.add(new AnzeigeDetails(s.get("_id").toString(),
+//							(String) s.get("start"), (String) s.get("ziel"),
+//							(String) s.get("strecke"), (String) s
+//									.get("uhrzeit"), (String) s.get("datum"),
+//							(String) s.get("fahrer"),
+//							Integer.parseInt((String) s.get("anzahl_plaetze")),
+//							(String) s.get("email"), sb.toString(), ""));
 
 					coll = db.getCollection("user");
 
