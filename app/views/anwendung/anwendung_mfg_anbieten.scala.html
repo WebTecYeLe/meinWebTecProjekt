@@ -1,4 +1,5 @@
-@(title: String)(message: String)(info: String)(typ: String)(zaehler: List[Zaehler])
+@(title: String)(message: String)(info: String)(typ: String)(zaehler:
+List[Zaehler])
 
 <!DOCTYPE html>
 <html>
@@ -20,12 +21,57 @@
 	media="screen">
 <link href="/assets/stylesheets/own.css" rel="stylesheet" media="screen">
 
+<link
+	href="https://developers.google.com/maps/documentation/javascript/examples/default.css"
+	rel="stylesheet">
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
 <script>
 	document.createElement('header');
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
 </script>
+
+<script>
+      var geocoder;
+      var map;
+      var mapOptions = {
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      var marker;
+ 
+      function initialize() {
+        geocoder = new google.maps.Geocoder();
+        map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        codeAddress();
+      }
+ 
+      function codeAddress() {
+        var address = document.getElementById('address').value;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            map.setCenter(results[0].geometry.location);
+            if(marker)
+              marker.setMap(null);
+            marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location,
+                draggable: true
+            });
+            google.maps.event.addListener(marker, "dragend", function() {
+              document.getElementById('lat').value = marker.getPosition().lat();
+              document.getElementById('lng').value = marker.getPosition().lng();
+            });
+            document.getElementById('lat').value = marker.getPosition().lat();
+            document.getElementById('lng').value = marker.getPosition().lng();
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+    </script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 <!--[if lt IE 9]>
@@ -34,7 +80,7 @@
 <![endif]-->
 </head>
 
-<body>
+<body onload="initialize()">
 	<header>
 		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 			<div class="container">
@@ -141,7 +187,8 @@
 					<div class="input-group">
 						<span class="input-group-addon">Start:
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" name="mfg_anbieten_start"
+							class="form-control" id="address" type="textbox" value="rua tabapuã - vila olimpia - são paulo" 
+							name="mfg_anbieten_start"
 							placeholder="Start-Haltestelle" required>
 					</div>
 				</div>
@@ -168,9 +215,7 @@
 						class="position_links">Datum:</p> <select id="AuswahlTage"
 					name="Tag" size="1"></select> <select id="AuswahlMonate"
 					name="Monat" size="1"></select> <select id="AuswahlJahre"
-					name="Jahr" size="1"></select></span> 
-					
-					<br> <span
+					name="Jahr" size="1"></select></span> <br> <span
 					class="input-group-addon"><p class="position_links">Uhrzeit:</p>
 					<select id="AuswahlStunden" name="Stunden" size="1"></select><span>
 						:</span> <select id="AuswahlMinuten" name="Minuten" size="1"></select></span><br>
@@ -193,8 +238,7 @@
 					</div>
 				</div>
 
-				<br>
-				<br>
+				<br> <br>
 				<button type="submit" class="btn btn-primary">MFG anbieten</button>
 
 			</div>
@@ -220,6 +264,20 @@
 
 
 		</form>
+
+		<div class="map_canvas_seitenposition">
+			<div id="map_canvas" style="height: 60%; top: 30px"></div>
+		</div>
+
+		<div class="eingabe_map_canvas">
+			 <!-- <input id="address" type="textbox" style="width: 60%" value="rua tabapuã - vila olimpia - são paulo"> -->
+			 <input type="button" value="Geocode" onclick="codeAddress()"> 
+			 <input type="text" id="lat" /> 
+			 <input type="text" id="lng" />
+
+		</div>
+
+
 	</article>
 
 
@@ -369,7 +427,7 @@
 	</script>
 
 
-	
+
 
 
 
@@ -378,14 +436,13 @@
 		<div class="list-group">
 			<a href="/" class="list-group-item"> MFG suchen </a> <a
 				href="/anwendung/mfg_anbieten" class="list-group-item active">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen<span
-				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
-			</span></a>
-			<a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
+				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+				MFGs anzeigen<span class="badge pull-right">@for(q <-
+					zaehler) { @q.meine_mfgs } </span>
+			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
 				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
 
-			</span></a> <a href="/konto/index"
-				class="list-group-item">Mein Konto</a>
+			</span></a> <a href="/konto/index" class="list-group-item">Mein Konto</a>
 		</div>
 	</div>
 
@@ -393,15 +450,19 @@
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen </a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine MFGs anzeigen</a> <a href="/anwendung/anfragen_index"
-				class="list-group-item">Anfragen<span
-				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
-			</span><span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span></a> <a href="/konto/index"
+				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+				MFGs anzeigen</a> <a href="/anwendung/anfragen_index"
+				class="list-group-item">Anfragen<span class="badge pull-right">@for(q
+					<- zaehler) { @q.meine_mfgs } </span><span class="badge pull-right">
+					@for(x <- zaehler) { @x.anfragen } </span></a> <a href="/konto/index"
 				class="list-group-item">Mein Konto</a>
 		</div>
 	</div>
 
 	} }
+	
+	
+	
+</body>
+
+</html>	
