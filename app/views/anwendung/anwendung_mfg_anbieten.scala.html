@@ -24,7 +24,8 @@ List[Zaehler])
 <link
 	href="https://developers.google.com/maps/documentation/javascript/examples/default.css"
 	rel="stylesheet">
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ <!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDAkVJtVVsZ3iRV6hazgva-Z41o95PlVMg&sensor=false"></script> -->
 
 <script>
 	document.createElement('header');
@@ -40,6 +41,8 @@ List[Zaehler])
 	var lngziel;
 	var latstrecke;
 	var lngstrecke;
+	
+	
 
 	var geocoder;
 	var map;
@@ -53,10 +56,15 @@ List[Zaehler])
 		geocoder = new google.maps.Geocoder();
 		map = new google.maps.Map(document.getElementById('map_canvas'),
 				mapOptions);
+		
+		
 		codeAddressStart();
 	}
 
 	function codeAddressStart() {
+		document.getElementById('latstart').value = "";
+		document.getElementById('lngstart').value = "";
+		
 		var address = document.getElementById('address_start').value;
 		geocoder.geocode({
 			'address' : address
@@ -90,6 +98,9 @@ List[Zaehler])
 	}
 
 	function codeAddressZiel() {
+		document.getElementById('latziel').value = "";
+		document.getElementById('lngziel').value = "";
+		
 		var address = document.getElementById('address_ziel').value;
 		geocoder.geocode({
 			'address' : address
@@ -123,6 +134,9 @@ List[Zaehler])
 	}
 
 	function codeAddressStrecke() {
+		document.getElementById('latstrecke').value = "";
+		document.getElementById('lngstrecke').value = "";
+		
 		var address = document.getElementById('address_strecke').value;
 		geocoder.geocode({
 			'address' : address
@@ -169,11 +183,13 @@ List[Zaehler])
 					if (lngziel > 0.0) {
 						if (latstrecke > 0.0) {
 							if (lngstrecke > 0.0) {
+							
 								calcRoute();
+								
 							}
-						}
+						} 
 					}
-				}
+				}  
 			}
 
 		} else {
@@ -214,6 +230,9 @@ List[Zaehler])
 						+ result);
 			}
 		});
+		
+		
+		
 	}
 </script>
 
