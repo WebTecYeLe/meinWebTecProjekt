@@ -45,11 +45,11 @@ List[Zaehler])
       function initialize() {
         geocoder = new google.maps.Geocoder();
         map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-        codeAddress();
+        codeAddressStart();
       }
  
-      function codeAddress() {
-        var address = document.getElementById('address').value;
+      function codeAddressStart() {
+        var address = document.getElementById('address_start').value;
         geocoder.geocode( { 'address': address}, function(results, status) {
           if (status == google.maps.GeocoderStatus.OK) {
             map.setCenter(results[0].geometry.location);
@@ -61,16 +61,64 @@ List[Zaehler])
                 draggable: true
             });
             google.maps.event.addListener(marker, "dragend", function() {
-              document.getElementById('lat').value = marker.getPosition().lat();
-              document.getElementById('lng').value = marker.getPosition().lng();
+              document.getElementById('latstart').value = marker.getPosition().lat();
+              document.getElementById('lngstart').value = marker.getPosition().lng();
             });
-            document.getElementById('lat').value = marker.getPosition().lat();
-            document.getElementById('lng').value = marker.getPosition().lng();
+            document.getElementById('latstart').value = marker.getPosition().lat();
+            document.getElementById('lngstart').value = marker.getPosition().lng();
           } else {
-            alert('Geocode was not successful for the following reason: ' + status);
+            //alert('Geocode was not successful for the following reason: ' + status);
           }
         });
       }
+      
+      function codeAddressZiel() {
+          var address = document.getElementById('address_ziel').value;
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.setCenter(results[0].geometry.location);
+              if(marker)
+                marker.setMap(null);
+              marker = new google.maps.Marker({
+                  map: map,
+                  position: results[0].geometry.location,
+                  draggable: true
+              });
+              google.maps.event.addListener(marker, "dragend", function() {
+                document.getElementById('latziel').value = marker.getPosition().lat();
+                document.getElementById('lngziel').value = marker.getPosition().lng();
+              });
+              document.getElementById('latziel').value = marker.getPosition().lat();
+              document.getElementById('lngziel').value = marker.getPosition().lng();
+            } else {
+              //alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+      
+      function codeAddressStrecke() {
+          var address = document.getElementById('address_strecke').value;
+          geocoder.geocode( { 'address': address}, function(results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              map.setCenter(results[0].geometry.location);
+              if(marker)
+                marker.setMap(null);
+              marker = new google.maps.Marker({
+                  map: map,
+                  position: results[0].geometry.location,
+                  draggable: true
+              });
+              google.maps.event.addListener(marker, "dragend", function() {
+                document.getElementById('latstrecke').value = marker.getPosition().lat();
+                document.getElementById('lngstrecke').value = marker.getPosition().lng();
+              });
+              document.getElementById('latstrecke').value = marker.getPosition().lat();
+              document.getElementById('lngstrecke').value = marker.getPosition().lng();
+            } else {
+              //alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
     </script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -187,8 +235,8 @@ List[Zaehler])
 					<div class="input-group">
 						<span class="input-group-addon">Start:
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text"
-							class="form-control" id="address" type="textbox" value="rua tabapuã - vila olimpia - são paulo" 
-							name="mfg_anbieten_start"
+							class="form-control" id="address_start" type="textbox"
+							name="mfg_anbieten_start" onblur="codeAddressStart()"
 							placeholder="Start-Haltestelle" required>
 					</div>
 				</div>
@@ -197,7 +245,8 @@ List[Zaehler])
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Ziel:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-						<input type="text" class="form-control" name="mfg_anbieten_ziel"
+						<input type="text" class="form-control" id="address_ziel"
+							name="mfg_anbieten_ziel" onblur="codeAddressZiel()"
 							placeholder="Ziel-Haltestelle" required>
 					</div>
 				</div>
@@ -206,7 +255,8 @@ List[Zaehler])
 				<div>
 					<div class="input-group">
 						<span class="input-group-addon">Strecke:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" name="mfg_anbieten_strecke"
+							type="text" class="form-control" id="address_strecke"
+							name="mfg_anbieten_strecke" onblur="codeAddressStrecke()"
 							placeholder="Zwischenhaltestelle" required>
 					</div>
 				</div>
@@ -259,7 +309,17 @@ List[Zaehler])
 			}
 
 
+			<div class="eingabe_map_canvas">
+				<!-- <input id="address" type="textbox" style="width: 60%" value="rua tabapuã - vila olimpia - são paulo"> -->
+				<!-- <input type="button" value="Geocode" onclick="codeAddress()"> -->
+				<br> <input type="hidden" id="latstart" name="latstart" value="" />
+				<input type="hidden" id="lngstart" name="lngstart" value="" /> <input
+					type="hidden" id="latziel" name="latziel" value="" /> <input
+					type="hidden" id="lngziel" name="lngziel" value="" /> <input
+					type="hidden" id="latstrecke" name="latstrecke" value="" /> <input
+					type="hidden" id="lngstrecke" name="lngstrecke" value="" />
 
+			</div>
 
 
 
@@ -269,13 +329,7 @@ List[Zaehler])
 			<div id="map_canvas" style="height: 60%; top: 30px"></div>
 		</div>
 
-		<div class="eingabe_map_canvas">
-			 <!-- <input id="address" type="textbox" style="width: 60%" value="rua tabapuã - vila olimpia - são paulo"> -->
-			 <input type="button" value="Geocode" onclick="codeAddress()"> 
-			 <input type="text" id="lat" /> 
-			 <input type="text" id="lng" />
 
-		</div>
 
 
 	</article>
@@ -460,9 +514,9 @@ List[Zaehler])
 	</div>
 
 	} }
-	
-	
-	
+
+
+
 </body>
 
-</html>	
+</html>

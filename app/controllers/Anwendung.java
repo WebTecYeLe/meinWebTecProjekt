@@ -202,8 +202,16 @@ public class Anwendung extends Controller {
 				&& parameters.containsKey("Monat")
 				&& parameters.containsKey("Jahr")
 				&& parameters.containsKey("Stunden")
-				&& parameters.containsKey("Minuten") && parameters
-					.containsKey("mfg_anbieten_plaetze"))) {
+				&& parameters.containsKey("Minuten")
+				&& parameters.containsKey("mfg_anbieten_plaetze")
+				&& parameters.containsKey("latstart")
+				&& parameters.containsKey("lngstart")
+				&& parameters.containsKey("latziel")
+				&& parameters.containsKey("lngziel")
+				&& parameters.containsKey("latstrecke")
+				&& parameters.containsKey("lngstrecke")
+				
+				)) {
 
 			Logger.warn("bad login request");
 			return ok("Versuchen Sie es erneut.");
@@ -219,6 +227,14 @@ public class Anwendung extends Controller {
 		String stunden = parameters.get("Stunden")[0];
 		String minuten = parameters.get("Minuten")[0];
 		String plaetze = parameters.get("mfg_anbieten_plaetze")[0];
+		
+		double latstart = Double.parseDouble(parameters.get("latstart")[0]);
+		double lngstart = Double.parseDouble(parameters.get("lngstart")[0]);
+		double latziel = Double.parseDouble(parameters.get("latziel")[0]);
+		double lngziel = Double.parseDouble(parameters.get("lngziel")[0]);
+		double latstrecke = Double.parseDouble(parameters.get("latstrecke")[0]);
+		double lngstrecke = Double.parseDouble(parameters.get("lngstrecke")[0]);
+				
 
 		if (Integer.parseInt(tag) < 10) {
 			tag = "0" + tag;
@@ -348,7 +364,18 @@ public class Anwendung extends Controller {
 
 					}
 				}
-
+				
+				List<Double> startkoordinaten = new ArrayList<>();
+				List<Double> zielkoordinaten = new ArrayList<>();
+				List<Double> streckenkoordinaten = new ArrayList<>();
+				
+				startkoordinaten.add(latstart);
+				startkoordinaten.add(lngstart);
+				zielkoordinaten.add(latziel);
+				zielkoordinaten.add(lngziel);
+				streckenkoordinaten.add(latstrecke);
+				streckenkoordinaten.add(lngstrecke);
+				
 				coll = db.getCollection("mfg");
 
 				BasicDBObject doc = new BasicDBObject("start", start)
@@ -363,7 +390,10 @@ public class Anwendung extends Controller {
 						.append("entfernung", "")
 						.append("gestarteteAnfragen", gestarteteAnfragen)
 						.append("erfolgreicheAnfragen", erfolgreicheAnfragen)
-						.append("abgelehnteAnfragen", abgelehnteAnfragen);
+						.append("abgelehnteAnfragen", abgelehnteAnfragen)
+						.append("startkoordinaten", startkoordinaten)
+						.append("zielkoordinaten", zielkoordinaten)
+						.append("streckenkoordinaten", streckenkoordinaten);
 
 				coll.insert(doc);
 
