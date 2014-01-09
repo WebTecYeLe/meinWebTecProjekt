@@ -34,15 +34,6 @@ List[Zaehler])
 </script>
 
 <script>
-
-
-	  var latstart;
-	  var lngstart;
-	  var latziel;
-	  var lngziel;
-	  var latstrecke;
-	  var lngstrecke;
-
       var geocoder;
       var map;
       var mapOptions = {
@@ -52,21 +43,8 @@ List[Zaehler])
       var marker;
  
       function initialize() {
-    	
-    	/*
-    	latstart = parseFloat(0.0);
-    	lngstart = parseFloat(0.0);
-    	latziel = parseFloat(0.0);
-    	lngziel = parseFloat(0.0);
-    	latstrecke = parseFloat(0.0);
-    	lngstrecke = parseFloat(0.0);
-    	*/
-    	  
         geocoder = new google.maps.Geocoder();
         map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-        
-        
-        
         codeAddressStart();
       }
  
@@ -85,18 +63,9 @@ List[Zaehler])
             google.maps.event.addListener(marker, "dragend", function() {
               document.getElementById('latstart').value = marker.getPosition().lat();
               document.getElementById('lngstart').value = marker.getPosition().lng();
-                            
-            });          
-            
+            });
             document.getElementById('latstart').value = marker.getPosition().lat();
             document.getElementById('lngstart').value = marker.getPosition().lng();
-            
-            /*
-            latstart = Double.parse(document.getElementById('latstart').value);
-            lngstart = Double.parse(document.getElementById('lngstart').value);
-            */
-            bereit();
-            
           } else {
             //alert('Geocode was not successful for the following reason: ' + status);
           }
@@ -121,13 +90,6 @@ List[Zaehler])
               });
               document.getElementById('latziel').value = marker.getPosition().lat();
               document.getElementById('lngziel').value = marker.getPosition().lng();
-              
-              /*
-              latziel = Double.parse(document.getElementById('latziel').value);
-              lngziel = Double.parse(document.getElementById('lngziel').value);
-              */
-              bereit();
-              
             } else {
               //alert('Geocode was not successful for the following reason: ' + status);
             }
@@ -152,93 +114,11 @@ List[Zaehler])
               });
               document.getElementById('latstrecke').value = marker.getPosition().lat();
               document.getElementById('lngstrecke').value = marker.getPosition().lng();
-              /*
-              latstrecke = Double.parse(document.getElementById('latstrecke').value);
-              lngstrecke = Dobule.parse(document.getElementById('lngstrecke').value);
-              */
-              
-              bereit();
-              
             } else {
               //alert('Geocode was not successful for the following reason: ' + status);
             }
           });
         }
-      
-      function calcRoute() {
-    	  var directionsDisplay;
-          var directionsService = new google.maps.DirectionsService();
-          
-          directionsDisplay = new google.maps.DirectionsRenderer();
-          directionsDisplay.setMap(map);
-    	  
-    	  
-    	  var start = new google.maps.LatLng(latstart, lngstart); //document.getElementById("start").value;
-    	  var end = new google.maps.LatLng(latziel, lngziel); //document.getElementById("end").value;
-    	  var request = {
-    	    origin:start,
-    	    destination:end,
-    	    waypoints: [
-    	      { location: new google.maps.LatLng(latstrecke, lngstrecke), stopover:true },
-    	    ],
-			
-    	    travelMode: google.maps.TravelMode.DRIVING
-    	  };
-    	  
-    	  alert("OK");
-    	  directionsService.route(request, function(result, status) {
-    		 
-    	    if (status == google.maps.DirectionsStatus.OK) {
-    	    	
-    	    	
-    	      console.log("route. " +result);
-    	      directionsDisplay.setDirections(result);
-    	    }else{
-    	    	
-    	       console.log("route failed. status:" +status +" result:" +result);
-    	    }
-    	  });
-    	}
-      
-      function bereit() {
-    	  latstart = parseFloat(document.getElementById('latstart').value);
-    	  lngstart = parseFloat(document.getElementById('lngstart').value);
-    	  latziel = parseFloat(document.getElementById('latziel').value);
-    	  lngziel = parseFloat(document.getElementById('lngziel').value);
-    	  latstrecke = parseFloat(document.getElementById('latstrecke').value);
-    	  lngstrecke = parseFloat(document.getElementById('lngstrecke').value);
-		  
-    	  if(latstart > 0.0) {
-    		  if(lngstart > 0.0) {
-    			  if(latziel > 0.0) {
-    				  if(lngziel > 0.0) {
-    					  if(latstrecke > 0.0) {
-    						  if(lngstrecke > 0.0) {
-    							  calcRoute();
-    						  }
-    					  }
-    				  }
-    			  }
-    		  }	  
-    		  
-    		  
-    	  } else {
-    		  initialize();
-    	  }
-    	  
-      }
-      
-      var addHaltestelle = function(title, lat, lon ){
-
-    	    var position = new google.maps.LatLng(lat, lon);
-    	    var marker = new google.maps.Marker({ 
-    	    	position: position,  
-    	    	map: map, 
-    	    	title: title
-    	    });
-
-    	};
-    	
     </script>
 
 <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
