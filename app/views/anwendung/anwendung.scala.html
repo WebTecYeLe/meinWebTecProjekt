@@ -48,269 +48,342 @@ List[Orte])(zaehler: List[Zaehler])
 </head>
 
 <body>
-<div class="">
+	<div class="">
 
-	<header>
-		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle" data-toggle="collapse"
-						data-target=".navbar-collapse">
-						<span class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
+		<header>
+			<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+				<div class="container">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target=".navbar-collapse">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
 
-					<a class="navbar-brand" href="/">ProTramp Mitfahrgelegenheit</a>
+						<a class="navbar-brand" href="/">ProTramp Mitfahrgelegenheit</a>
+					</div>
+					<div class="collapse navbar-collapse">
+						<ul class="nav navbar-nav">
+							<li class="active"><a href="/">Suche</a></li>
+							<li><a href="/info">&Uuml;ber uns</a></li> @if(message) {
+							<li><a href="/konto/index">Konto</a></li> } else {
+							<li><a href="/registrierung">Registrierung</a></li> }	
+						</ul>
+
+						@if(message) {
+						<div class="login_form">
+							<!-- <span>Sie sind angemeldet als @message</span> -->
+							<form class="form-inline" method="POST"
+								action="/benutzerlogin/logout">
+
+								<div class="form-group">
+									<label class="sr-only" for="exampleInputEmail2"></label> <a
+										class="active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Willkommen,
+										@message</a>&nbsp;&nbsp;&nbsp;&nbsp;
+								</div>
+
+								<button type="submit" class="btn btn-primary">Logout</button>
+							</form>
+						</div>
+
+						} else {
+						<div class="login_form">
+							<!-- Hier ist das Formular für den Login -->
+							<form class="form-inline" role="form" method="POST"
+								action="/benutzerlogin/login">
+
+								<div class="form-group">
+									<label class="sr-only" for="exampleInputEmail2">E-Mail
+										address</label> <input type="text" class="form-control"
+										id="exampleInputEmail2" name="nutzer"
+										placeholder="Email oder Username" required>
+								</div>
+
+								<div class="form-group">
+									<label class="sr-only" for="exampleInputPassword2">Password</label>
+									<input type="password" class="form-control"
+										id="exampleInputPassword2" name="kennwort"
+										placeholder="Password">
+								</div>
+
+								<div class="checkbox">
+									<label class="checkbox_login" for="checkbox_login_name">
+										<input type="checkbox" name="checkbox_login_name">Speichern&nbsp;&nbsp;
+									</label>
+								</div>
+
+								<button type="submit" class="btn btn-primary">Einloggen</button>
+							</form>
+						</div>
+
+						}
+
+
+
+
+
+
+					</div>
+					<!-- /.nav-collapse -->
 				</div>
-				<div class="collapse navbar-collapse">
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="/">Suche</a></li>
-						<li><a href="/info">&Uuml;ber uns</a></li> @if(message) {
-						<li><a href="/konto/index">Konto</a></li> } else {
-						<li><a href="/registrierung">Registrierung</a></li> }
+				<!-- /.container -->
+			</div>
+			<!-- /.navbar -->
 
-					</ul>
+		</header>
+		<div class="fb_login">
+			<fb:login-button show-faces="true" width="200" max-rows="1" scope="email"></fb:login-button>
+			<a href="#" onclick="getUserInfo()">Get Facebook UserInfo</a>
+			<a href="/" onclick="FB.logout()">Logout</a>				
+		</div>
+		
+		<article>
 
-					@if(message) {
-					<div class="login_form">
-						<!-- <span>Sie sind angemeldet als @message</span> -->
-						<form class="form-inline" method="POST"
-							action="/benutzerlogin/logout">
 
-							<div class="form-group">
-								<label class="sr-only" for="exampleInputEmail2"></label> <a
-									class="active">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-									&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;Willkommen,
-									@message</a>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+			<form method="POST" action="/anwendung/mfg_suchen">
+				@if(message) {
+				<div class="box_ortsuche_eingelogged">
+					<br>
+					<div>
+						<div class="ui-widget">
+							<div class="input-group">
+								<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
+									type="text" class="form-control" id="von" name="exampleVon"
+									list="datalist3" placeholder="Startort" required>
+								<datalist id="datalist3">
+									@if(listeorte.isEmpty()) { } else { @for(i <- listeorte) {
+									<option value=@i.name>} }
+								</datalist>
 							</div>
+						</div>
+					</div>
+					<br>
+					<div>
+						<div class="input-group">
+							<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
+								type="text" class="form-control" id="nach" name="exampleNach"
+								list="datalist4" placeholder="Zielort" required>
+							<datalist id="datalist4">
+								@if(listeorte.isEmpty()) { } else { @for(x <- listeorte) {
+								<option value=@x.name>} }
+							</datalist>
+						</div>
+					</div>
+					<br> <span class="input-group-addon"><p
+							class="position_links">Datum ab:</p> <select id="AuswahlTage"
+						name="Tag" size="1"></select> <select id="AuswahlMonate"
+						name="Monat" size="1"></select> <select id="AuswahlJahre"
+						name="Jahr" size="1"></select></span> <br> <br>
 
-							<button type="submit" class="btn btn-primary">Logout</button>
-						</form>
+					<button type="submit" class="btn btn-primary">Suchen</button>
+				</div>
+
+				} else {
+				<div class="box_ortsuche">
+					@if(info) {
+
+					<div class="row">
+						<br />
+						<div class="alert alert-danger">@info</div>
 					</div>
 
+					} <br>
+					<div>
+						<div class="ui-widget">
+							<div class="input-group">
+								<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
+									type="text" class="form-control" id="von" name="exampleVon"
+									placeholder="Startort" list="datalist1" required>
+								<datalist id="datalist1">
+									@if(listeorte.isEmpty()) { } else { @for(j <- listeorte) {
+									<option value=@j.name>} }
+								</datalist>
+							</div>
+						</div>
+					</div>
+					<br>
+					<div>
+						<div class="input-group">
+							<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
+								type="text" class="form-control" id="nach" name="exampleNach"
+								placeholder="Zielort" list="datalist2" required>
+
+
+
+							<datalist id="datalist2">
+
+								@if(listeorte.isEmpty()) { } else { @for(k <- listeorte) {
+								<option value=@k.name>} }
+							</datalist>
+						</div>
+					</div>
+					<br> <span class="input-group-addon"><p
+							class="position_links">Datum:</p> <select id="AuswahlTage"
+						name="Tag" size="1"></select> <select id="AuswahlMonate"
+						name="Monat" size="1"></select> <select id="AuswahlJahre"
+						name="Jahr" size="1"></select></span> <br> <br>
+
+
+
+
+
+
+
+					<button type="submit" class="btn btn-primary">Suchen</button>
+				</div>
+
+				}
+
+				
+			<div id="fb-root" class="fb_position"></div>
+			<script>
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId : '1385512941707215',
+					status : true,
+					cookie : true,
+					xfbml : true,
+					oauth : true
+				
+
+				FB.Event.subscribe('auth.authResponseChange',
+						function(response) {
+
+							if (response.status === 'connected') {
+
+								testAPI();
+							} else if (response.status === 'not_authorized') {
+
+								FB.login(function(response) {
+									   // handle the response
+									 }, {scope: 'emails','id','first_name','last_name','birthday','gender'});
+							} else {
+
+								FB.login(function(response) {
+									   // handle the response
+									 }, {scope: 'emails','id','first_name','last_name','birthday','gender'});
+								
+							} else{
+								FB.logout(function(response) {
+									  FB.Auth.setAuthResponse(null, 'unknown');
+									 
+									});
+							}
+						});
+				});
+				
+			};
+
+			(function(d) {
+				var js, id = 'facebook-jssdk', ref = d
+						.getElementsByTagName('script')[0];
+				if (d.getElementById(id)) {
+					return;
+				}
+				js = d.createElement('script');
+				js.id = id;
+				js.async = true;
+				js.src = "//connect.facebook.net/en_US/all.js";
+				ref.parentNode.insertBefore(js, ref);
+			}(document));
+
+			function testAPI() {
+				console.log('Welcome!  Fetching your information.... ');
+				FB.api('/me', function(response) {
+					console.log('Good to see you, ' + response.name + '.');
+				});			
+			}
+			function getUserInfo() {
+		        console.log('Welcome!  Fetching your information.... ');
+		    FB.api('/me', function(response) {
+		      console.log('Good to see you, ' + response.name + '.');
+
+		      $("#fb-userinfo").html("<b>Facebook User Info:</b><br/> "  +JSON.stringify(response));
+		    });
+		  }
+			
+		</script>
+
+
+
+
+
+			</form>
+		</article>
+
+
+		<script>
+			(function() {
+
+				//Datum einstellen
+				var elJahr = document.getElementById('AuswahlJahre'), dc = document
+						.createDocumentFragment();
+
+				var jetzt = new Date();
+				var jahr = jetzt.getFullYear();
+				var bis = jahr + 1;
+
+				//Nur Datum in der Gegenwart und Zukunft werden angenommen
+				for (var i = jahr; i <= bis; i++) {
+					var option = document.createElement('option');
+					option.value = i;
+					option.appendChild(document.createTextNode(i));
+					dc.appendChild(option);
+				}
+				elJahr.appendChild(dc);
+
+				var elMonat = document.getElementById('AuswahlMonate'), dc = document
+						.createDocumentFragment();
+
+				for (var i = 1; i <= 12; i++) {
+					var option = document.createElement('option');
+					option.value = i;
+					if (i < 10) {
+						option.appendChild(document.createTextNode("0" + i));
 					} else {
-					<div class="login_form">
-						<!-- Hier ist das Formular für den Login -->
-						<form class="form-inline" role="form" method="POST"
-							action="/benutzerlogin/login">
-
-							<div class="form-group">
-								<label class="sr-only" for="exampleInputEmail2">E-Mail
-									address</label> <input type="text" class="form-control"
-									id="exampleInputEmail2" name="nutzer"
-									placeholder="Email oder Username" required>
-							</div>
-
-							<div class="form-group">
-								<label class="sr-only" for="exampleInputPassword2">Password</label>
-								<input type="password" class="form-control"
-									id="exampleInputPassword2" name="kennwort"
-									placeholder="Password">
-							</div>
-
-							<div class="checkbox">
-								<label class="checkbox_login" for="checkbox_login_name">
-									<input type="checkbox" name="checkbox_login_name">Speichern&nbsp;&nbsp;
-								</label>
-							</div>
-
-							<button type="submit" class="btn btn-primary">Einloggen</button>
-						</form>
-					</div>
-
+						option.appendChild(document.createTextNode(i));
 					}
 
+					dc.appendChild(option);
+				}
+				elMonat.appendChild(dc);
 
+				var elTag = document.getElementById('AuswahlTage'), dc = document
+						.createDocumentFragment();
 
+				for (var i = 1; i <= 31; i++) {
+					var option = document.createElement('option');
+					option.value = i;
+					if (i < 10) {
+						option.appendChild(document.createTextNode("0" + i));
+					} else {
+						option.appendChild(document.createTextNode(i));
+					}
 
+					dc.appendChild(option);
+				}
+				elTag.appendChild(dc);
 
+				elJahr.value = jahr;
 
-				</div>
-				<!-- /.nav-collapse -->
-			</div>
-			<!-- /.container -->
-		</div>
-		<!-- /.navbar -->
+				var akt_monat = jetzt.getMonth() + 1;
 
-	</header>
+				if (akt_monat < 10) {
+					elMonat.value = "0" + akt_monat;
 
-	<article>
-
-
-
-
-		<form method="POST" action="/anwendung/mfg_suchen">
-			@if(message) {
-			<div class="box_ortsuche_eingelogged">
-				<br>
-				<div>
-					<div class="ui-widget">
-						<div class="input-group">
-							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-								type="text" class="form-control" id="von" name="exampleVon" list="datalist3"
-								placeholder="Startort" required>
-							<datalist id="datalist3">
-								@if(listeorte.isEmpty()) { } else { @for(i <- listeorte) {
-								<option value=@i.name>} }
-							</datalist>
-						</div>
-					</div>
-				</div>
-				<br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="nach" name="exampleNach" list="datalist4"
-							placeholder="Zielort" required>
-						<datalist id="datalist4">
-							@if(listeorte.isEmpty()) { } else { @for(x <- listeorte) {
-							<option value=@x.name>} }
-						</datalist>
-					</div>
-				</div>
-				<br> <span class="input-group-addon"><p
-						class="position_links">Datum ab:</p> <select id="AuswahlTage"
-					name="Tag" size="1"></select> <select id="AuswahlMonate"
-					name="Monat" size="1"></select> <select id="AuswahlJahre"
-					name="Jahr" size="1"></select></span> <br> <br>
-
-				<button type="submit" class="btn btn-primary">Suchen</button>
-			</div>
-
-			} else {
-			<div class="box_ortsuche">
-				@if(info) {
-
-				<div class="row">
-					<br />
-					<div class="alert alert-danger">@info</div>
-				</div>
-
-				} <br>
-				<div>
-					<div class="ui-widget">
-						<div class="input-group">
-							<span class="input-group-addon">Von: &nbsp;&nbsp;&nbsp;</span> <input
-								type="text" class="form-control" id="von" name="exampleVon" placeholder="Startort"
-								list="datalist1" required>
-							<datalist id="datalist1">
-								@if(listeorte.isEmpty()) { } else { @for(j <- listeorte) {
-								<option value=@j.name>} }
-							</datalist>
-						</div>
-					</div>
-				</div>
-				<br>
-				<div>
-					<div class="input-group">
-						<span class="input-group-addon">Nach:&nbsp;&nbsp;</span> <input
-							type="text" class="form-control" id="nach" name="exampleNach" placeholder="Zielort"
-							list="datalist2" required>
-
-
-
-						<datalist id="datalist2">
-
-							@if(listeorte.isEmpty()) { } else { @for(k <- listeorte) {
-							<option value=@k.name>} }
-						</datalist>
-					</div>
-				</div>
-				<br> <span class="input-group-addon"><p
-						class="position_links">Datum:</p> <select id="AuswahlTage"
-					name="Tag" size="1"></select> <select id="AuswahlMonate"
-					name="Monat" size="1"></select> <select id="AuswahlJahre"
-					name="Jahr" size="1"></select></span> <br> <br>
-
-
-
-
-
-
-
-				<button type="submit" class="btn btn-primary">Suchen</button>
-			</div>
-
-			}
-
-
-
-
-
-
-		</form>
-	</article>
-
-
-	<script>
-		(function() {
-
-			//Datum einstellen
-			var elJahr = document.getElementById('AuswahlJahre'), dc = document
-					.createDocumentFragment();
-
-			var jetzt = new Date();
-			var jahr = jetzt.getFullYear();
-			var bis = jahr + 1;
-
-			//Nur Datum in der Gegenwart und Zukunft werden angenommen
-			for (var i = jahr; i <= bis; i++) {
-				var option = document.createElement('option');
-				option.value = i;
-				option.appendChild(document.createTextNode(i));
-				dc.appendChild(option);
-			}
-			elJahr.appendChild(dc);
-
-			var elMonat = document.getElementById('AuswahlMonate'), dc = document
-					.createDocumentFragment();
-
-			for (var i = 1; i <= 12; i++) {
-				var option = document.createElement('option');
-				option.value = i;
-				if (i < 10) {
-					option.appendChild(document.createTextNode("0" + i));
 				} else {
-					option.appendChild(document.createTextNode(i));
+					elMonat.value = akt_monat;
 				}
 
-				dc.appendChild(option);
-			}
-			elMonat.appendChild(dc);
+				var d = new Date();
+				var q = d.getDate();
+				document.getElementById("AuswahlTage").value = q;
 
-			var elTag = document.getElementById('AuswahlTage'), dc = document
-					.createDocumentFragment();
-
-			for (var i = 1; i <= 31; i++) {
-				var option = document.createElement('option');
-				option.value = i;
-				if (i < 10) {
-					option.appendChild(document.createTextNode("0" + i));
-				} else {
-					option.appendChild(document.createTextNode(i));
-				}
-
-				dc.appendChild(option);
-			}
-			elTag.appendChild(dc);
-
-			elJahr.value = jahr;
-
-			var akt_monat = jetzt.getMonth() + 1;
-
-			if (akt_monat < 10) {
-				elMonat.value = "0" + akt_monat;
-
-			} else {
-				elMonat.value = akt_monat;
-			}
-
-			var d = new Date();
-			var q = d.getDate();
-			document.getElementById("AuswahlTage").value = q;
-
-		}());
-	</script>
+			}());
+		</script>
 
 
 
@@ -319,47 +392,47 @@ List[Orte])(zaehler: List[Zaehler])
 
 
 
-	@if(message) { @if(typ) {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen </a> <a
-				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen @if(zaehler.isEmpty()) { } else { <span
-				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
-			</span> }
+		@if(message) { @if(typ) {
+		<div class="menue_anwendung">
+			<div class="list-group">
+				<a href="/" class="list-group-item active"> MFG suchen </a> <a
+					href="/anwendung/mfg_anbieten" class="list-group-item">MFG
+					anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+					MFGs anzeigen @if(zaehler.isEmpty()) { } else { <span
+					class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs
+						} </span> }
 
-			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen @if(zaehler.isEmpty()) {} else {<span
-				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
-
-			</span> }
-			</a> <a href="/konto/index" class="list-group-item">Mein Konto</a>
+				</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen
+					@if(zaehler.isEmpty()) {} else {<span class="badge pull-right">
+						@for(x <- zaehler) { @x.anfragen } </span> }
+				</a> <a href="/konto/index" class="list-group-item">Mein Konto</a>
+			</div>
 		</div>
-	</div>
 
-	} else {
-	<div class="menue_anwendung">
-		<div class="list-group">
-			<a href="/" class="list-group-item active"> MFG suchen </a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen<span class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(q <-
-					zaehler) { @q.meine_mfgs } </span>}
-			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
-				class="badge pull-right"> @if(zaehler.isEmpty()) {} else { @for(x <- zaehler) { @x.anfragen }
-
-			</span>}</a> <a href="/konto/index" class="list-group-item">Mein Konto</a>
+		} else {
+		<div class="menue_anwendung">
+			<div class="list-group">
+				<a href="/" class="list-group-item active"> MFG suchen </a><a
+					href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+					MFGs anzeigen<span class="badge pull-right">
+						@if(zaehler.isEmpty()) {} else { @for(q <- zaehler) {
+						@q.meine_mfgs } </span>}
+				</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
+					class="badge pull-right"> @if(zaehler.isEmpty()) {} else {
+						@for(x <- zaehler) { @x.anfragen } </span>}
+				</a> <a href="/konto/index" class="list-group-item">Mein Konto</a>
+			</div>
 		</div>
-	</div>
 
-	} }
-
+		} }
 
 
 
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 
-	<!-- Include all compiled plugins (below), or include individual files as needed -->
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+
+		<!-- Include all compiled plugins (below), or include individual files as needed -->
 	</div>
 </body>
 
