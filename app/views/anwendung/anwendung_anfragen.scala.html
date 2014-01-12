@@ -193,8 +193,7 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
 							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
 							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.status&nbsp;&nbsp;&nbsp;</td> @if(i.nachricht == "") { }
-							else {
+							<td>@i.status&nbsp;&nbsp;&nbsp;</td> @if(i.nachricht == "") { }	else {
 							<td>@i.nachricht</td> }
 						</tr>
 						}
