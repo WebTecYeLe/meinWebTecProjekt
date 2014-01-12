@@ -1,4 +1,5 @@
-@(title: String)(message: String)(info: String)(kontodetails: List[KontoDetails])
+@(title: String)(message: String)(info: String)(kontodetails:
+List[KontoDetails])
 
 <!DOCTYPE html>
 <html>
@@ -29,17 +30,13 @@
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
-	
-	function passwordAendern()
-	{
+
+	function passwordAendern() {
 		//divPwNeu = document.getElementById("div_pw_neu");
 		//divPwWdh = document.getElementById("div_pw_wdh");
-		
+
 		var ergebnis = "";
-		
-		
-		
-		
+
 		ergebnis += "<div class='input-group'> \n";
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \n";
@@ -47,13 +44,12 @@
 		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pss' placeholder='Altes Passwort'> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
-	
-		
+
 		var output = document.getElementById("div_pw_alt");
 		output.innerHTML = ergebnis;
-		
+
 		ergebnis = "";
-		
+
 		ergebnis += "<div class='input-group'> \n";
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Neues Passwort: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n";
@@ -61,13 +57,12 @@
 		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssneu' placeholder='Neues Passwort' required> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
-		
+
 		output = document.getElementById("div_pw_neu");
 		output.innerHTML = ergebnis;
-		
-		
+
 		ergebnis = "";
-		
+
 		ergebnis += "<div class='input-group'> \n";
 		ergebnis += " <span class='input-group-addon'> \n";
 		ergebnis += " Neues Passwort(wdh): \n";
@@ -75,30 +70,26 @@
 		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_psswdh' placeholder='Neues Passwort(wdh.)' required> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br> \n";
-			
+
 		output = document.getElementById("div_pw_wdh");
 		output.innerHTML = ergebnis;
-		
+
 		document.getElementById("pw_button_menue").style.visibility = "collapse";
-		
+
 		ergebnis = "";
-		
-		
+
 		ergebnis += " <button class='btn btn-primary btn-block' id='pw_button_menue'> \n";
 		ergebnis += " Neues Password abschicken \n";
 		ergebnis += " <\/button> \n";
-		
-		
+
 		output = document.getElementById("div_pw_button");
 		output.innerHTML = ergebnis;
-		
-				
+
 	}
-	
-	
+
 	function kontoEntfernen() {
 		var ergebnis = "";
-		
+
 		ergebnis += "<p>\n";
 		ergebnis += "Geben Sie Ihr Passwort korrekt ein, um das Konto zu löschen !";
 		ergebnis += "<\/p>\n";
@@ -109,30 +100,22 @@
 		ergebnis += " <input type='password' class='form-control' name='kontoeinstellungen_pssbst' placeholder='Passwortbestätigung' required> \n";
 		ergebnis += "<\/div> \n";
 		ergebnis += "<br><br><br> \n";
-		
+
 		output = document.getElementById("div_pw_konto");
 		output.innerHTML = ergebnis;
-		
+
 		document.getElementById("konto_button_menue").style.visibility = "collapse";
-		
+
 		ergebnis = "";
-		
-		
+
 		ergebnis += " <button class='btn btn-danger btn-block' id='konto_entfernen_button_menue'> \n";
 		ergebnis += " Konto entgültig löschen ! \n";
 		ergebnis += " <\/button> \n";
-		
-		
+
 		output = document.getElementById("div_konto_button");
 		output.innerHTML = ergebnis;
-		
-		
+
 	}
-	
-	
-	
-	
-	
 </script>
 
 
@@ -235,69 +218,66 @@
 
 	</header>
 
-<article>
-	<div class="box_konto">
-		@if(info) {
+	<article>
+		<div class="box_konto">
+			@if(info) {
 
-				<div class="row">
-					<br />
-					<div class="alert alert-danger">@info</div>
+			<div class="row">
+				<br />
+				<div class="alert alert-danger">@info</div>
+			</div>
+
+			} <br> @for(i <- kontodetails) {
+			<div>
+				<div class="input-group">
+					<span class="input-group-addon">Registriert seit:
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="text" class="form-control"
+						name="kontoeinstellungen_rg" value=@i.registrierungsdatum readonly>
 				</div>
+			</div>
+			<br>
+			<div>
+				<div class="input-group">
+					<span class="input-group-addon">Username:
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
+						name="kontoeinstellungen_name" value=@i.username readonly>
+				</div>
+			</div>
+			<br>
+			<div>
+				<div class="input-group">
+					<span class="input-group-addon">Email:
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+					<input type="text" class="form-control"
+						name="kontoeinstellungen_email" value=@i.email readonly>
+				</div>
+			</div>
+			<br> <br> }
 
-				} <br>
-	
-	
-		@for(i <- kontodetails) {
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">Registriert seit:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> <input
-					type="text" class="form-control" name="kontoeinstellungen_rg"
-					value=@i.registrierungsdatum readonly>
-			</div>
-		</div>
-		<br>
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">Username:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;</span> <input type="text" class="form-control"
-					name="kontoeinstellungen_name" value=@i.username readonly>
-			</div>
-		</div>
-		<br>
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">Email:
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				<input type="text" class="form-control" name="kontoeinstellungen_email"
-					value=@i.email readonly>
-			</div>
-		</div>
-		<br> <br>
-		
-		}
-		
-		<form method="POST" action="/konto/aendern" >
-			<div id="div_pw_alt"></div>
-			<div id="div_pw_neu"></div>
-			<div id="div_pw_wdh"></div>
-			<div id="div_pw_button"></div>
-		</form>
+			<form method="POST" action="/konto/aendern">
+				<div id="div_pw_alt"></div>
+				<div id="div_pw_neu"></div>
+				<div id="div_pw_wdh"></div>
+				<div id="div_pw_button"></div>
+			</form>
 
-		<button class="btn btn-primary btn-block" id="pw_button_menue" onclick="passwordAendern()">Passwort ändern</button>
-		<br>
-		
-		
-		<form method="POST" action="/konto/entfernen">
-			<div id="div_pw_konto"></div>
-			<div id="div_konto_button"></div>
-		</form>
-		<button class="btn btn-primary btn-block" id="konto_button_menue" onclick="kontoEntfernen()">Konto löschen ?</button>
-		
-	</div>
-</article>
+			<button class="btn btn-primary btn-block" id="pw_button_menue"
+				onclick="passwordAendern()">Passwort ändern</button>
+			<br>
+
+
+			<form method="POST" action="/konto/entfernen">
+				<div id="div_pw_konto"></div>
+				<div id="div_konto_button"></div>
+			</form>
+			<button class="btn btn-primary btn-block" id="konto_button_menue"
+				onclick="kontoEntfernen()">Konto löschen ?</button>
+
+		</div>
+	</article>
 
 </body>
 </html>

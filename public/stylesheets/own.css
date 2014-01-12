@@ -21,4 +21,6 @@ a:hover {text-decoration: none}
 .info_text {position: absolute; width: 20%; height: 10%; left: 20%; top: 12%}
 .map_canvas_seitenposition {position: absolute; width: 400px; height: 590px; left: 68%; top: 15.5%}
 .eingabe_map_canvas {position: absolute; width: 400px; height: 250px; left: 68%; top: 90%}
-.fb_login{position: absolute; width: 88px; height: 40px; left: 80%; top: 15%}
+.fb_login {position: absolute; width: 88px; height: 40px; left: 80%; top: 15%}
+
+.fblog_position {position: absolute; width: 88px; height: 40px; left: 80%; top: 15%}

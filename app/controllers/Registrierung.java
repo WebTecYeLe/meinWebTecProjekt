@@ -22,11 +22,10 @@ import com.mongodb.MongoClient;
 public class Registrierung extends Controller {
 
 	public static Result registrieren() {
-		// return redirect("/assets/html/registrierung.html");
+
 		return ok(views.html.registrierung.pr.render("Registrierung", ""));
 	}
 
-	@SuppressWarnings("deprecation")
 	public static Result abschicken() {
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
@@ -238,10 +237,6 @@ public class Registrierung extends Controller {
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
-		int suchergebnisse;
-		int meine_mfgs = 0;
-		int anfragen;
-
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -251,14 +246,14 @@ public class Registrierung extends Controller {
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
 					username);
 			cursor = coll.find(query);
-			
-			if(cursor.count() == 0) {
-				BasicDBObject doc = new BasicDBObject("username", username).append("suchergebnisse", 0).append("meine_mfgs", 0)
+
+			if (cursor.count() == 0) {
+				BasicDBObject doc = new BasicDBObject("username", username)
+						.append("suchergebnisse", 0).append("meine_mfgs", 0)
 						.append("anfragen", 0);
 				coll.insert(doc);
-				
+
 			}
-			
 
 			if (cursor.count() != 0) {
 

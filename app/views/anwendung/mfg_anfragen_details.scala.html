@@ -34,6 +34,21 @@ List[Person])(teilnehmer: List[Person])
 	document.createElement('article');
 	document.createElement('footer');
 </script>
+
+<script type="text/javascript">
+	
+	function benachrichtigen() {
+		
+		document.getElementById("nachricht_zustimmen").value = document.getElementById("nachricht").value;
+		document.getElementById("nachricht_ablehnen").value = document.getElementById("nachricht").value;
+		
+	}
+	
+
+
+
+</script>
+
 <script>
 	var latstart;
 	var lngstart;
@@ -410,8 +425,23 @@ List[Person])(teilnehmer: List[Person])
 					value=@i.anzahl_plaetze readonly>
 			</div>
 		</div>
-		<br> <br>
+		<br> <br> @if(person.isEmpty()) { } else {
+		<h4>
+			Nachrichtenfeld f&uuml;r Anfragende:
+			<div class="input-group">
+				<span class="input-group-addon"> <input type="text"
+					class="form-control" id="nachricht" type="textbox" name="nachricht"
+					onblur="benachrichtigen()"
+					placeholder="Nachricht an den Mitfahrer schreiben">
+			</div>
+		</h4>
+		}
 
+		<!--  <input class="nachricht_pos" type="textbox" id="nachricht" name="nachricht" onblur="benachrichtigen()">-->
+
+
+
+		<br>
 		<h4>Anfrageliste:</h4>
 		<br>
 		<div>
@@ -428,9 +458,11 @@ List[Person])(teilnehmer: List[Person])
 					<th>Vorname&nbsp;&nbsp;&nbsp;</th>
 					<th>Alter&nbsp;&nbsp;&nbsp;</th>
 					<th>Email&nbsp;&nbsp;&nbsp;</th>
-					<th>Telefon&nbsp;&nbsp;&nbsp;</th>
+					<th>Tel.&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;</th>
 					<th>&nbsp;&nbsp;&nbsp;</th>
+					<th>&nbsp;&nbsp;&nbsp;</th>
+
 				</tr>
 				<tbody>
 					@for( p <- person ){
@@ -442,14 +474,20 @@ List[Person])(teilnehmer: List[Person])
 						<td>@p.tel&nbsp;&nbsp;&nbsp;</td>
 						<td>
 							<form method="post" action="/anwendung/@i.id/@p.user/zustimmen">
+								<span><input type="hidden" id="nachricht_zustimmen"
+									name="nachricht_zustimmen" /></span>
 								<button type="submit" class="btn btn-success">Ja&nbsp;&nbsp;&nbsp;</button>
 							</form>
 						</td>
 						<td>
 							<form method="post" action="/anwendung/@i.id/@p.user/ablehnen">
+								<span><input type="hidden" id="nachricht_ablehnen"
+									name="nachricht_ablehnen" /></span>
 								<button type="submit" class="btn btn-default">Nein</button>
 							</form>
 						</td>
+
+						<td></td>
 
 
 

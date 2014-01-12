@@ -1,18 +1,17 @@
 package controllers;
 
 import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import play.mvc.Controller;
-import play.mvc.Http.Cookie;
 import play.mvc.Result;
 
 import java.util.List;
 
-import models.AnzeigeDetails;
 import models.Orte;
 import models.Zaehler;
 
@@ -24,11 +23,6 @@ import com.mongodb.MongoClient;
 
 public class ExampleController extends Controller {
 
-	/**
-	 * weiterleitung zu statischer Seite
-	 * 
-	 * @return
-	 */
 	@SuppressWarnings("unchecked")
 	public static Result index() {
 
@@ -90,8 +84,6 @@ public class ExampleController extends Controller {
 
 			}
 
-			// typ = "Fahrer";
-
 		} else {
 			typ = "";
 		}
@@ -100,7 +92,7 @@ public class ExampleController extends Controller {
 		long difference = 0;
 		DateFormat date = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		Date todayDate = Calendar.getInstance().getTime();
-		String reportDate = date.format(todayDate);
+
 		Date dateDBParsen = null;
 
 		List<String> anfrageListe = new ArrayList<>();
@@ -113,7 +105,7 @@ public class ExampleController extends Controller {
 			DB db = mongoClient.getDB("play_basics");
 
 			DBCollection coll = db.getCollection("user");
-			com.mongodb.DBCursor cursor = coll.find();
+
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
 					user);
 			List<DBObject> feldEmail = coll.find(query).toArray();
@@ -123,23 +115,20 @@ public class ExampleController extends Controller {
 			}
 
 			coll = db.getCollection("mfg");
-			cursor = coll.find();
+
 			query = (BasicDBObject) new BasicDBObject("email", email);
-			cursor = coll.find(query);
 
 			feld = coll.find(query).toArray();
 
 			for (DBObject s : feld) {
 				String dateDB = (String) s.get("datum") + " "
 						+ (String) s.get("uhrzeit");
-				// String uhrzeitDB = (String) s.get("uhrzeit");
 
 				try {
 
 					dateDBParsen = date.parse(dateDB);
 					difference = todayDate.getTime() - dateDBParsen.getTime()
 							- 1800000;
-					// return ok(""+difference);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -164,44 +153,40 @@ public class ExampleController extends Controller {
 
 		// user_statistiken bearbeiten und lesen
 
-					List<Zaehler> zaehler = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
 
-					int meine_mfgs = 0;
-					// int anfragen;
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
 
-					try {
-						MongoClient mongoClient = new MongoClient("localhost", 27017);
-						DB db = mongoClient.getDB("play_basics");
+			DBCollection coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
+					user);
+			cursor = coll.find(query);
 
-						DBCollection coll = db.getCollection("user_statistiken");
-						com.mongodb.DBCursor cursor = coll.find();
-						BasicDBObject query = (BasicDBObject) new BasicDBObject(
-								"username", user);
-						cursor = coll.find(query);
+			BasicDBObject doc = new BasicDBObject();
+			doc.put("anfragen", anfragen);
 
-						BasicDBObject doc = new BasicDBObject();
-						doc.put("anfragen", anfragen);
+			BasicDBObject account = new BasicDBObject();
+			account.put("$set", doc);
 
-						BasicDBObject account = new BasicDBObject();
-						account.put("$set", doc);
+			coll.update(query, account);
 
-						coll.update(query, account);
+			if (cursor.count() != 0) {
 
-						if (cursor.count() != 0) {
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
 
-							for (DBObject s : cursor) {
-								zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-										(int) s.get("meine_mfgs"), (int) s
-												.get("anfragen")));
+				}
 
-							}
+			}
 
-						}
-
-						mongoClient.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			mongoClient.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (user != null) {
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails,
@@ -215,46 +200,4 @@ public class ExampleController extends Controller {
 
 	}
 
-	/**
-	 * Einfache Ausgabe in Response
-	 * 
-	 * @return
-	 */
-	public static Result output() {
-
-		// testen:
-		// response().setContentType("text/html");
-		// return ok("<h1>Hello World!</h1>").as("text/html");
-		return ok("Hallo");
-	}
-
-	/**
-	 * Besuch-Zähler mit Cookie
-	 * 
-	 * @return
-	 */
-	public static Result cookiecounter() {
-		Cookie counter = request().cookie("counter");
-		int count;
-		if (null == counter) {
-			count = 0;
-		} else {
-			count = Integer.valueOf(counter.value());
-		}
-		count++;
-		response().setCookie("counter", "" + count);
-		return ok("Hallo. Dein Besuch Nummer " + count);
-	}
-
-	/**
-	 * einfaches scala template mit dynamischem Inhalt
-	 * 
-	 * @return
-	 */
-	public static Result simpletemplate() {
-		String message = "Auf dem Server ist es diese Zeit";
-		Date date = new Date();
-		return ok(views.html.example.simpletemplate.render("Beispiel", message,
-				date));
-	}
 }

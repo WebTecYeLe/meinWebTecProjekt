@@ -2,43 +2,18 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-##################
-# Basic exmaples
-##################
 
 # Home page
 GET     /                                controllers.ExampleController.index
 
 
-# Controller Beispiele
-GET     /example/output                  controllers.ExampleController.output
-GET     /example/counter                 controllers.ExampleController.cookiecounter
-GET     /example/simpletemplate          controllers.ExampleController.simpletemplate
-
-
-# Beispiel ShopLIst
-GET     /shoplist/                       controllers.ShopListController.list
-POST    /shoplist/                       controllers.ShopListController.addItem
-POST    /shoplist/:itemname/delete       controllers.ShopListController.deleteItem(itemname: String)
-
-
-# Formulare
-GET      /login                          controllers.Login.showLoginForm()
-# POST     /login                        controllers.Login.login3()
-POST 	/login							 controllers.TestLogin.test()
-
 # Anwendung
 GET		/anwendung/mfg_anbieten			 controllers.Anwendung.mfg_anbieten_index()
 POST	/anwendung/mfg_anbieten/anbieten controllers.Anwendung.anbieten()
-
 GET		/anwendung/mfg_anzeigen			 controllers.Anwendung.anzeigen()
-
 POST	/anwendung/mfg_suchen			 controllers.Anwendung.mfg_suchen()
-
 POST	/anwendung/:id/anfragen		     controllers.Anwendung.anfrageStarten(id: String)
-
 GET		/anwendung/anfragen_index		 controllers.Anwendung.anfragen_index()
-
 GET		/info							 controllers.Anwendung.info()
 
 # Benutzerlogin
@@ -50,11 +25,6 @@ POST	/benutzerlogin/logout			 controllers.Benutzerlogin.logout()
 GET 	/registrierung					 controllers.Registrierung.registrieren()
 POST	/registrierung/abschicken		 controllers.Registrierung.abschicken()
 
-
-GET     /userlogin                       controllers.UserLogin.index()
-POST    /userlogin						 controllers.UserLogin.login()
-
-
 # Kontoeinstellungen
 
 GET		/konto/index					 controllers.Konto.kontoeinstellungen_index()
@@ -64,41 +34,10 @@ POST	/konto/entfernen				 controllers.Konto.kontoEntfernen()
 # MFG Details zeigen
 
 POST	/anwendung/:id/mfg_details_zeigen controllers.Anwendung.detailsAnzeigen(id: String)	
-
 POST	/anwendung/:id/mfg_suchdetails_zeigen controllers.Anwendung.suchDetailsAnzeigen(id: String)
-
 POST	/anwendung/:id/mfg_anfrage_details 	controllers.Anwendung.mfg_anfrage_details(id: String)
-
 POST	/anwendung/:id/:user/zustimmen		 controllers.Anwendung.zustimmen(id: String, user: String)
 POST	/anwendung/:id/:user/ablehnen		 controllers.Anwendung.ablehnen(id: String, user: String)
-
-
-##############
-# THINGS - CRUD example using forms, contraints, MongoDB, twitter bootstrap
-##############
-
-# Things in Nähe suchen.( Vorsicht: die Default-Werte führen dazu, dass der Aufruf-URL nichts übergeben wird - also nicht inrequest parametern)
-
-GET /things/near controllers.Things.near(distance: Integer ?= 2000, longitude: Double ?= 8.96, latitude: Double ?= 47.6  )  
-
-
-# Things Liste anzeigen 
-GET /things      controllers.Things.list()      
-
-# neues Thing anlegen - Formular 
-GET /things/new  controllers.Things.showNew()   
-
-# neues Thing speichern
-POST /things     controllers.Things.create()     
-
-# Thing anzeigen
-GET /things/:id  controllers.Things.show(id: String)    
-
-# Thing ändern (speichern)
-POST /things/:id controllers.Things.save(id: String)     
-
-# Thing löschen (action=delete)
-POST /things/delete/:id controllers.Things.delete(id: String)   
 
 
 # Map static resources from the /public folder to the /assets URL path

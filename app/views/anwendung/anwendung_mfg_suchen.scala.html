@@ -126,11 +126,9 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen <span
-				class="badge pull-right"> @for(z <- zaehler) {@z.suchergebnisse}
-
-			</span></a> <a
-				href="/anwendung/mfg_anbieten" class="list-group-item">MFG
-				anbieten</a> <a href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
+				class="badge pull-right"> @for(z <- zaehler){@z.suchergebnisse} </span></a> <a href="/anwendung/mfg_anbieten"
+				class="list-group-item">MFG anbieten</a> <a
+				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
 				MFGs anzeigen<span class="badge pull-right">@for(q <-
 					zaehler) { @q.meine_mfgs } </span>
 			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
@@ -144,12 +142,10 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	<div class="menue_anwendung">
 		<div class="list-group">
 			<a href="/" class="list-group-item active"> MFG suchen <span
-				class="badge pull-right"> @for(z <- zaehler) {@z.suchergebnisse}
-
-			</span></a><a
-				href="/anwendung/mfg_anzeigen" class="list-group-item">Meine
-				MFGs anzeigen<span class="badge pull-right">@for(q <-
-					zaehler) { @q.meine_mfgs } </span>
+				class="badge pull-right"> @for(z <- zaehler){@z.suchergebnisse} </span></a><a href="/anwendung/mfg_anzeigen"
+				class="list-group-item">Meine MFGs anzeigen<span
+				class="badge pull-right">@for(q <- zaehler) { @q.meine_mfgs }
+			</span>
 			</a> <a href="/anwendung/anfragen_index" class="list-group-item">Anfragen<span
 				class="badge pull-right"> @for(x <- zaehler) { @x.anfragen }
 
@@ -162,55 +158,49 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 
 
 	@if(message) {
-		<div class="anzeige_details">
-		
-	} else {
-		<div class="anzeige_details_2">
-	
-	}
+	<div class="anzeige_details">
 
-
-	
-		@if(anzeige.isEmpty()) {
-		<p>
-		<h3>Keine MFG Eintr&auml;ge gefunden.</h3>
-		</p>
 		} else {
+		<div class="anzeige_details_2">
 
-		<table class="table table-hover">
+			} @if(anzeige.isEmpty()) {
+			<p>
+			<h3>Keine MFG Eintr&auml;ge gefunden.</h3>
+			</p>
+			} else {
 
-			<tr>
-				<!-- <th>TestID</th> -->
-				<th>Start&nbsp;&nbsp;&nbsp;</th>
-				<th>Ziel&nbsp;&nbsp;&nbsp;</th>
-				<th>Datum&nbsp;&nbsp;&nbsp;</th>
-				<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
-				<th>Abschicken&nbsp;&nbsp;&nbsp;</th>
-			</tr>
-			<tbody>
-				@for( i <- anzeige ){
+			<table class="table table-hover">
+
 				<tr>
-					<!-- <td>@i.id</td> -->
-					<td>@i.start&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
-					<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-					<td>
-						<form method="post" action="/anwendung/@i.id/mfg_suchdetails_zeigen">
-							<button type="submit" class="btn btn-default">anzeigen</button>
-						</form>
-					</td>
+					<!-- <th>TestID</th> -->
+					<th>Start&nbsp;&nbsp;&nbsp;</th>
+					<th>Ziel&nbsp;&nbsp;&nbsp;</th>
+					<th>Datum&nbsp;&nbsp;&nbsp;</th>
+					<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
+					<th>Abschicken&nbsp;&nbsp;&nbsp;</th>
 				</tr>
-				}
-			</tbody>
-		</table>
-		}
+				<tbody>
+					@for( i <- anzeige ){
+					<tr>
+						<!-- <td>@i.id</td> -->
+						<td>@i.start&nbsp;&nbsp;&nbsp;</td>
+						<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
+						<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
+						<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
+						<td>
+							<form method="post"
+								action="/anwendung/@i.id/mfg_suchdetails_zeigen">
+								<button type="submit" class="btn btn-default">anzeigen</button>
+							</form>
+						</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+			}
 
 
 
-	</div>
-
-
-
+		</div>
 </body>
 </html>

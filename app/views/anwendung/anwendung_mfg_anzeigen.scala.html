@@ -118,7 +118,7 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 
 
 	<form method="GET" action="/anwendung/mfg_anzeigen"></form>
-	
+
 	@if(message) { @if(typ) {
 	<div class="menue_anwendung">
 		<div class="list-group">
@@ -149,11 +149,11 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	</div>
 
 	} }
-	
+
 
 
 	<div class="anzeige_details">
-		@if(anzeige.isEmpty()) { 
+		@if(anzeige.isEmpty()) {
 		<p>
 		<h3>Keine MFG Eintr&auml;ge gefunden.</h3>
 		</p>
