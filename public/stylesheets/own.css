@@ -6,7 +6,7 @@
 .box_ortsuche_eingelogged {position: absolute; width: 16%; height: 25%; left: 42%; top: 18%}
 .box_registrierung {position: absolute; width: 20%; height: 85%; left: 40%; top: 14%}
 .checkbox_login {color:#FFFFFF}
-.login_form {position: absolute; width: 30%; height: 10px; left: 50%; top: 15%}
+.login_form {position: absolute; width: 34%; height: 10px; left: 49%; top: 15%}
 .menue_anwendung {position: absolute; width: 15%; height:20%; left: 20%; top: 20%}
 .position_links {left: 0%}
 header, nav, footer, article {display: block} 
