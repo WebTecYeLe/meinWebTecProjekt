@@ -31,13 +31,14 @@ GET		/konto/index					 controllers.Konto.kontoeinstellungen_index()
 POST	/konto/aendern					 controllers.Konto.kontoeinstellungen_aendern()
 POST	/konto/entfernen				 controllers.Konto.kontoEntfernen()
 
-# MFG Details zeigen
+# MFG Details und Anfragen
 
 POST	/anwendung/:id/mfg_details_zeigen controllers.Anwendung.detailsAnzeigen(id: String)	
 POST	/anwendung/:id/mfg_suchdetails_zeigen controllers.Anwendung.suchDetailsAnzeigen(id: String)
 POST	/anwendung/:id/mfg_anfrage_details 	controllers.Anwendung.mfg_anfrage_details(id: String)
 POST	/anwendung/:id/:user/zustimmen		 controllers.Anwendung.zustimmen(id: String, user: String)
 POST	/anwendung/:id/:user/ablehnen		 controllers.Anwendung.ablehnen(id: String, user: String)
+POST	/anwendung/:id/nachricht_lesen		 controllers.Anwendung.nachricht_lesen(id: String)
 
 
 # Map static resources from the /public folder to the /assets URL path

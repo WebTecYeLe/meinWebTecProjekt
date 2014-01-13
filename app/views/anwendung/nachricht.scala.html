@@ -1,6 +1,5 @@
-@(title: String)(message: String)(info: String)(typ: String)(anzeige:
-List[AnzeigeDetails])(zaehler: List[Zaehler])
-
+@(title: String)(message: String)(info: String)(typ: String)(zaehler:
+List[Zaehler])(nachricht: String)
 
 
 <!DOCTYPE html>
@@ -30,28 +29,16 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 <script>
-	$(document).ready(function() {
-		$("#anfragen").accordion();
-
-	});
-</script>
-
-<script>
 	document.createElement('header');
 	document.createElement('nav');
 	document.createElement('article');
 	document.createElement('footer');
 </script>
 
-<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-<script src="../../assets/js/html5shiv.js"></script>
-<script src="../../assets/js/respond.min.js"></script>
-<![endif]-->
 </head>
 <body>
 
-	<header>
+<header>
 		<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
 			<div class="container">
 				<div class="navbar-header">
@@ -129,8 +116,7 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 		</div>
 		<!-- /.navbar -->
 	</header>
-
-
+	
 	<article>
 		<form method="GET" action="/anwendung/mfg_anzeigen"></form>
 		@if(message) { @if(typ) {
@@ -162,84 +148,17 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 			</div>
 		</div>
 
-		} } @if(message) {
-		<div class="anzeige_details">
-
-			} else {
-			<div class="anzeige_details_2">
-
-				} @if(typ.isEmpty()) { @if(anzeige.isEmpty()) {
-				<p>
-				<h3>Keine Anfragen vorhanden.</h3>
-				</p>
-				} else {
-
-				<table class="table table-hover">
-
-					<tr>
-						<!-- <th>TestID</th> -->
-						<th>Start&nbsp;&nbsp;&nbsp;</th>
-						<th>Ziel&nbsp;&nbsp;&nbsp;</th>
-						<th>Datum&nbsp;&nbsp;&nbsp;</th>
-						<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
-						<th>Status&nbsp;&nbsp;&nbsp;</th>
-						<th>Nachricht</th>
-					</tr>
-					<tbody>
-						@for( i <- anzeige ){
-						<tr>
-							<!-- <td>@i.id</td> -->
-							<td>@i.start&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.status&nbsp;&nbsp;&nbsp;</td> @if(i.nachricht == "") { }	else {
-							<td>
-								<form method="post" action="/anwendung/@i.id/nachricht_lesen">
-									<button type="submit" class="btn btn-default">lesen</button>
-								</form>
-							
-							</td> }
-						</tr>
-						}
-					</tbody>
-				</table>
-				} } else { @if(anzeige.isEmpty()) {
-				<h3>Keine Anfragen vorhanden.</h3>
-
-				} else {
-				<table class="table table-hover">
-
-					<tr>
-						<!-- <th>TestID</th> -->
-						<th>Start&nbsp;&nbsp;&nbsp;</th>
-						<th>Ziel&nbsp;&nbsp;&nbsp;</th>
-						<th>Datum&nbsp;&nbsp;&nbsp;</th>
-						<th>Uhrzeit&nbsp;&nbsp;&nbsp;</th>
-						<th>Anzahl Anfragen&nbsp;&nbsp;&nbsp;</th>
-						<th>Abschicken</th>
-					</tr>
-					<tbody>
-						@for( i <- anzeige ){
-						<tr>
-							<!-- <td>@i.id</td> -->
-							<td>@i.start&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.menge</td>
-							<td>
-								<form method="post"
-									action="/anwendung/@i.id/mfg_anfrage_details">
-									<button type="submit" class="btn btn-default">anzeigen</button>
-								</form>
-							</td>
-						</tr>
-						}
-					</tbody>
-				</table>
-
-				} }
+		} }  
+		
+		
+		<div class="nachrichten_box">
+			@if(nachricht) {
+				<p><h4>Nachrichten: </h4></p>
+				<textarea class="form-control" rows="4">@nachricht</textarea>
+			}
+			
+		
+		</div>
 
 
 
@@ -251,7 +170,5 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 	</article>
 
 
-
 </body>
-
 </html>

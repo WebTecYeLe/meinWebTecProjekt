@@ -21,6 +21,22 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
+/*
+ * HTWG Konstanz
+ * Webtechnologien im 7. Semester
+ * 
+ * Abschlussdatum: 13.01.2014 
+ * Team: Dominique Lebert, Erkan Yediok
+ * 
+ *  
+ * Github: WebTecYeLe
+ * 
+ * */
+
+
+//Diese Klasse kümmert sich darum, wenn Benutzer die Seite zum ersten Mal aufrufen.
+//Anhand Sessions wird überprüft ob der Benutzer eingeloggt ist oder nicht
+
 public class ExampleController extends Controller {
 
 	@SuppressWarnings("unchecked")
@@ -100,6 +116,8 @@ public class ExampleController extends Controller {
 		int anfragen = 0;
 		String email = "";
 
+		//Datenbankverbindung aufbauen
+		//Hier werden gestartete Anfragen aufgelistet, die vom Datum her 30min in der Vergangenheit bzw. in der Zukunft liegen
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -124,6 +142,7 @@ public class ExampleController extends Controller {
 				String dateDB = (String) s.get("datum") + " "
 						+ (String) s.get("uhrzeit");
 
+				//1800000 sind angegeben in ms. Dies entspricht 30min.
 				try {
 
 					dateDBParsen = date.parse(dateDB);
@@ -134,6 +153,7 @@ public class ExampleController extends Controller {
 					e.printStackTrace();
 				}
 
+				//Falls es Anfragen gibt die gestartet wurden und vom Datum gültig sind werden übernommen
 				if (difference <= 0) {
 					anfrageListe = (List<String>) s.get("gestarteteAnfragen");
 
@@ -187,6 +207,9 @@ public class ExampleController extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		//Falls hier der Benutzer vorher noch nicht eingeloggt ist, wird er auf die Standardseite weitergeleitet
+		
 		if (user != null) {
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails,

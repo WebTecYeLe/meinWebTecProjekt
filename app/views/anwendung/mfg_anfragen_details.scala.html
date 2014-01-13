@@ -429,10 +429,14 @@ List[Person])(teilnehmer: List[Person])
 		<h4>
 			Nachrichtenfeld f&uuml;r Anfragende:
 			<div class="input-group">
-				<span class="input-group-addon"> <input type="text"
-					class="form-control" id="nachricht" type="textbox" name="nachricht"
+			<!-- 
+				<input type="textarea"
+					class="form-control" id="nachricht" type="text" name="nachricht"
 					onblur="benachrichtigen()"
 					placeholder="Nachricht an den Mitfahrer schreiben">
+					 -->
+					<textarea class="form-control" id="nachricht" name="nachricht" onblur="benachrichtigen()" rows="2" placeholder="Nachricht an den Mitfahrer schreiben">
+					</textarea>
 			</div>
 		</h4>
 		}

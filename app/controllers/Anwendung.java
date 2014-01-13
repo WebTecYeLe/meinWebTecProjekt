@@ -28,8 +28,27 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+/*
+ * HTWG Konstanz
+ * Webtechnologien im 7. Semester 
+ *  
+ * Abschlussdatum: 13.01.2014 
+ * Team: Dominique Lebert, Erkan Yediok
+ * 
+ *  
+ * Github: WebTecYeLe
+ * 
+ * */
+
+
+//Das ist die Hauptklasse der MFG
+//Sie kümmert sich um Funktionen wie MFG Anbieten, MFG anzeigen, MFG Suchen, MFG Details anzeigen, MFG Anfrage  starten, MFG Nachricht lesen, 
+//MFG Fahrtfunktionen wie zustimmen oder ablehnen für Fahrer ermöglichen
+
 public class Anwendung extends Controller {
 
+	//
+	
 	public static Result info() {
 
 		String nutzer = session("connected");
@@ -136,6 +155,9 @@ public class Anwendung extends Controller {
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler));
 
 	}
+	
+	//Funktion ermöglicht es, dass Fahrer eine MFG anbieten dürfen
+	//Nur Fahrer können dies, nicht Mitfahrer
 
 	@SuppressWarnings("rawtypes")
 	public static Result anbieten() {
@@ -146,7 +168,7 @@ public class Anwendung extends Controller {
 		@SuppressWarnings("unchecked")
 		Map<String, String> nachrichtenfeld = new HashMap();
 
-		// user_statistike lesen
+		
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
@@ -159,7 +181,7 @@ public class Anwendung extends Controller {
 
 		List<String> abgelehnteAnfragen = new ArrayList<>();
 
-		// Hilfsvariablen
+		//user_statistiken lesen
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -225,6 +247,8 @@ public class Anwendung extends Controller {
 		String minuten = parameters.get("Minuten")[0];
 		String plaetze = parameters.get("mfg_anbieten_plaetze")[0];
 
+		//Es soll interaktiv eine Map mit Route erstellt werden. Dafür werden Koordinaten benötigt
+		
 		double latstart = Double.parseDouble(parameters.get("latstart")[0]);
 		double lngstart = Double.parseDouble(parameters.get("lngstart")[0]);
 		double latziel = Double.parseDouble(parameters.get("latziel")[0]);
@@ -305,6 +329,8 @@ public class Anwendung extends Controller {
 							typ, zaehler));
 		}
 
+		//Hier wird überprüft dass der Fahrer nicht absichtlich Start und Ziel bzw. Streckenort gleich benannt
+		
 		if (start.equals(ziel) || start.equals(strecke) || ziel.equals(strecke)) {
 			return ok(views.html.anwendung.anwendung_mfg_anbieten
 					.render("ProTramp Mitfahrgelegenheit",
@@ -371,6 +397,9 @@ public class Anwendung extends Controller {
 
 				coll = db.getCollection("mfg");
 
+				//Daten werden in die Datenbank geschrieben
+				//Dadurch können Mitfahrer MFGs in der Datenbank suchen
+				
 				BasicDBObject doc = new BasicDBObject("start", start)
 						.append("ziel", ziel)
 						.append("strecke", strecke)
@@ -474,8 +503,6 @@ public class Anwendung extends Controller {
 
 			zaehler = new ArrayList<>();
 
-			// int anfragen;
-
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
 				DB db = mongoClient.getDB("play_basics");
@@ -517,7 +544,7 @@ public class Anwendung extends Controller {
 					zaehler));
 		} else {
 
-			// user_statistike lesen
+			// user_statistiken lesen
 
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -554,7 +581,7 @@ public class Anwendung extends Controller {
 
 	}
 
-	/*********************************/
+	//MFGs die gesucht wurden sollen anhand eine Liste dargestellt werden
 
 	public static Result anzeigen() {
 		String nutzer = session("connected");
@@ -603,23 +630,24 @@ public class Anwendung extends Controller {
 				for (DBObject s : cursor) {
 					String dateDB = (String) s.get("datum") + " "
 							+ (String) s.get("uhrzeit");
-					// String uhrzeitDB = (String) s.get("uhrzeit");
+					
 
 					try {
 
 						dateDBParsen = date.parse(dateDB);
 						difference = todayDate.getTime()
 								- dateDBParsen.getTime() - 1800000;
-						// return ok(""+difference);
+						
 
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					
 					// solang zahl negativ, dann fahrt gültig
+					// -> nur MFGs die maximal 30min in der Vergangenheit bzw. in der Zukunft liegen werden aufgelistet
 					if (difference <= 0) {
 
-						// test += " "+difference;
-						// return ok(""+difference);
+						
 						details.add(new AnzeigeDetails(s.get("_id").toString(),
 								(String) s.get("start"),
 								(String) s.get("ziel"), (String) s
@@ -631,7 +659,7 @@ public class Anwendung extends Controller {
 												.get("anzahl_plaetze")),
 								(String) s.get("email"), "", (String) s
 										.get("status"), ""));
-						// suchergebnisse++;
+						
 
 					}
 
@@ -677,7 +705,7 @@ public class Anwendung extends Controller {
 				}
 
 				mongoClient.close();
-				// return ok("-> Überprüfung notwendig");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -788,7 +816,7 @@ public class Anwendung extends Controller {
 				}
 
 				mongoClient.close();
-				// return ok("-> Überprüfung notwendig");
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -796,14 +824,12 @@ public class Anwendung extends Controller {
 
 		}
 
-		// return ok(""+details.size());
-
 		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler));
 	}
 
-	/*********************************/
+	//MFGs werden mit der Funktion detailsAnzeigen(String id) detailliert aufgelistet 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Result detailsAnzeigen(String id) {
@@ -829,6 +855,8 @@ public class Anwendung extends Controller {
 			DBCollection coll = db.getCollection("mfg");
 
 			DBObject query;
+			
+			//Da die _id in der Datenbank immer eindeutig ist, gibt es hier immer genau einen Documenten aus der Collection der Datenbank
 			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
 
 			feld = coll.find(query).toArray();
@@ -890,6 +918,7 @@ public class Anwendung extends Controller {
 				zaehler));
 	}
 
+	//Die Funktion soll MFGs suchen die den Eingabekriterien der Suchfelder Start und Ziel entsprechen
 	public static Result mfg_suchen() {
 
 		String nutzer = session("connected");
@@ -932,6 +961,8 @@ public class Anwendung extends Controller {
 
 			DBCollection coll = db.getCollection("mfg");
 			com.mongodb.DBCursor cursor = coll.find();
+			
+			//Durch start und ziel wird die Anzahl der Documente aus der mfg Collection auf ein bestimmtes Maß reduziert
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("start",
 					start).append("ziel", ziel);
 			cursor = coll.find(query);
@@ -959,6 +990,7 @@ public class Anwendung extends Controller {
 				}
 				// solang zahl negativ, dann fahrt gültig
 				// und solange noch Plötze vorhanden sind
+				//-> nur MFGs die 30min in der Vergangenheit bzw. in der Zukunft liegen werden berücksichtigt
 				if (difference <= 0
 						&& Integer.parseInt(s.get("anzahl_plaetze").toString()) >= 1) {
 
@@ -1027,6 +1059,8 @@ public class Anwendung extends Controller {
 				zaehler));
 	}
 
+	//MFGs Details werden angezeigt, die zuvor über das Suchformular gesucht wurden
+	
 	@SuppressWarnings("unchecked")
 	public static Result suchDetailsAnzeigen(String id) {
 		String nutzer = session("connected");
@@ -1143,6 +1177,8 @@ public class Anwendung extends Controller {
 				zaehler, check));
 	}
 
+	//Mit dieser Funktion haben die Mitfahrer die Möglichkeit eine Anfrage zu einer MFG zu starten
+	
 	@SuppressWarnings("unchecked")
 	public static Result anfrageStarten(String id) {
 
@@ -1276,6 +1312,8 @@ public class Anwendung extends Controller {
 
 	}
 
+	//Diese Funktion hilft den Benutzern eine grobe Übersicht über ihre Anfragen zu gewinnen
+	
 	@SuppressWarnings("unchecked")
 	public static Result anfragen_index() {
 
@@ -1708,6 +1746,92 @@ public class Anwendung extends Controller {
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler, person, teilnehmer));
 	}
+	
+	
+	
+	//Mit dieser Funktion können die Benutzer(Mitfahrer) Nachrichten lesen, die vom
+	//Fahrer verschickt wurden.
+	@SuppressWarnings("unchecked")
+	public static Result nachricht_lesen(String id) { 
+		
+		String nutzer = session("connected");
+		String typ = session("typ");
+
+		try {
+			if (typ == null) {
+
+			} else {
+				if (!typ.equals("Fahrer")) {
+					typ = "";
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		@SuppressWarnings("rawtypes")
+		Map<String, String> nachrichtenfeld = new HashMap();
+		
+		String nachricht = "";
+		
+		List<DBObject> feld = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
+		
+		try {
+			MongoClient mongoClient = new MongoClient("localhost", 27017);
+			DB db = mongoClient.getDB("play_basics");
+
+			DBCollection coll = db.getCollection("mfg");
+
+			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
+					new ObjectId(id));
+			
+			feld = coll.find(query).toArray();
+			
+			for(DBObject s : feld) {
+				
+				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
+				
+				if(nachrichtenfeld.containsKey(nutzer)) {
+					nachricht = nachrichtenfeld.get(nutzer);
+					
+				}
+				
+			}
+			
+			
+			//user_statistiken lesen
+			
+			coll = db.getCollection("user_statistiken");
+			com.mongodb.DBCursor cursor = coll.find();
+			query = (BasicDBObject) new BasicDBObject("username",
+					nutzer);
+			cursor = coll.find(query);
+
+			if (cursor.count() != 0) {
+
+				for (DBObject s : cursor) {
+					zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
+							(int) s.get("meine_mfgs"), (int) s.get("anfragen")));
+
+				}
+
+			}
+
+			
+			mongoClient.close();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+		return ok(views.html.anwendung.nachricht.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler, nachricht));
+	}
+	
+	
 
 	// Funktion soll eine Anfrage mit Ja bestätigen. Anpassung der Datenbank und
 	// MFG

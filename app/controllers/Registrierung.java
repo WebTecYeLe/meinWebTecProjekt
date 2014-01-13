@@ -19,13 +19,30 @@ import com.mongodb.DBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
+/*
+ * HTWG Konstanz
+ * Webtechnologien im 7. Semester 
+ *  
+ * Abschlussdatum: 13.01.2014 
+ * Team: Dominique Lebert, Erkan Yediok
+ * 
+ *  
+ * Github: WebTecYeLe
+ * 
+ * */
+
+
+//Diese Klasse ermöglicht es neue Benutzer anzulegen
+
 public class Registrierung extends Controller {
 
+	//Funktion leitet nicht registrierte Benutzer auf die Registrierungsseite
 	public static Result registrieren() {
 
 		return ok(views.html.registrierung.pr.render("Registrierung", ""));
 	}
 
+	//Funktion abschicken() sendet die Daten aus den ausgefüllten Formularen an die Datenbank
 	public static Result abschicken() {
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
@@ -174,6 +191,8 @@ public class Registrierung extends Controller {
 						.render("Registrierung",
 								"Diese Email Adresse wird schon bereits verwendet. Verwenden Sie bitte eine andere Email Adresse."));
 			}
+			
+			//Daten werden in die Datenbank geschrieben
 
 			BasicDBObject doc = new BasicDBObject("username", username)
 					.append("email", email).append("password", password)
@@ -191,6 +210,8 @@ public class Registrierung extends Controller {
 		List<Orte> ortsdetails = new ArrayList<>();
 		List<DBObject> feld;
 
+		//Hier wird eine Liste mit Orten angelegt
+		//Dadurch wird auf der Suchseite die Suche vereinfacht indem Suchvorschläge angeboten werden
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -204,6 +225,7 @@ public class Registrierung extends Controller {
 
 			for (DBObject s : feld) {
 
+				//Die Vergleiche sorgen dafür dass die Orte nicht doppelt gezählt werden
 				if (vergleich.contains(s.get("start").toString())) {
 
 				} else {
@@ -271,6 +293,7 @@ public class Registrierung extends Controller {
 			e.printStackTrace();
 		}
 
+		//Standardseite wird aufgerufen
 		return ok(views.html.anwendung.anwendung
 				.render("ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails,
 						zaehler));

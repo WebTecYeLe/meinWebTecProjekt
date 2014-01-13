@@ -19,8 +19,24 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+/*
+ * HTWG Konstanz
+ * Webtechnologien im 7. Semester 
+ *  
+ * Abschlussdatum: 13.01.2014 
+ * Team: Dominique Lebert, Erkan Yediok
+ * 
+ *  
+ * Github: WebTecYeLe
+ * 
+ * */
+
+//Die Klasse Konto ermöglicht dem Benutzer, seine Kontodaten zu ändern wie Kennwort oder das Löschen des Benutzerkontos
+
 public class Konto extends Controller {
 
+	//Die Funktion liefert dem Benutzer eine geordnete Übersicht über sein eigenes Konto
+	
 	public static Result kontoeinstellungen_index() {
 		String nutzer = session("connected");
 		List<KontoDetails> details = new ArrayList<>();
@@ -51,6 +67,9 @@ public class Konto extends Controller {
 				"ProTramp Mitfahrgelegenheit", nutzer, "", details));
 	}
 
+
+	//Falls sich der Benutzer dazu entscheiden sollte, sein Kennwort zu ändern dann wird diese Funktion aufgerufen
+	
 	public static Result kontoeinstellungen_aendern() {
 		String nutzer = session("connected");
 
@@ -71,6 +90,7 @@ public class Konto extends Controller {
 		  
 		  List<KontoDetails> details = new ArrayList<>();
 
+		  //Hier wird die Liste ergänzt, die dem Benutzer gehört
 			try {
 				MongoClient mongoClient = new MongoClient("localhost", 27017);
 				DB db = mongoClient.getDB("play_basics");
@@ -102,11 +122,13 @@ public class Konto extends Controller {
 
 		boolean gueltig = false;
 
+		//Hier wird überprüft ob das Kennwort richtig eingegeben wurde
 		if (altesPasswort == "") {
 			return ok(views.html.konto.kontoeinstellungen.render("ProTramp Mitfahrgelegenheit", nutzer, "Ihre Eingaben waren nicht gültig. Versuchen Sie es erneut.", details));
 
 		} else {
 
+			//Hier wird überprüft ob das Kennwort korrekt wiederholt wurde
 			if ((neuesPasswort.equals(neuesPasswort_wdh) )) {
 
 
@@ -139,6 +161,7 @@ public class Konto extends Controller {
 
 					if (gueltig) {						
 						
+						// falls der Änderungsprozess bisher korrekt lief, wird das Kennwort in der Datenbank geändert
 						BasicDBObject doc = new BasicDBObject();
 						doc.put("password", neuesPasswort);
 						
@@ -156,6 +179,9 @@ public class Konto extends Controller {
 				}
 
 			} else {
+				
+				//falls der Benutzer das Kennwort nicht korrekt eingegeben hat wird er darauf mit einem Hinweis benachrichtigt
+				
 				return ok(views.html.konto.kontoeinstellungen.render(
 						"ProTramp Mitfahrgelegenheit", nutzer, "Das Passwort wurde nicht korrekt wiederholt. Versuchen Sie es erneut.", details));
 			}
@@ -166,6 +192,8 @@ public class Konto extends Controller {
 
 	}
 	
+	//Diese Funktion entfernt das Konto des Benutzers
+	//Die Durchführung erfolgt wenn der Benutzer sein Kennwort korrekt eingibt
 	
 	public static Result kontoEntfernen() {
 		String nutzer = session("connected");
@@ -221,6 +249,8 @@ public class Konto extends Controller {
 		
 		
 		if(fertig) {
+			
+			//falls das Entfernen des Kontos funktioniert hat, wird der Benutzer ausgeloggt und auf die Standardhauptseite geladen
 			session().clear();
 			return redirect("/");
 		} else {

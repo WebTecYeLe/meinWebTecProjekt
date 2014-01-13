@@ -21,6 +21,20 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
+/*
+ * HTWG Konstanz
+ * Webtechnologien im 7. Semester
+ * 
+ * Abschlussdatum: 13.01.2014 
+ * Team: Dominique Lebert, Erkan Yediok
+ * 
+ *  
+ * Github: WebTecYeLe
+ * 
+ * */
+
+//Klasse Benutzerlogin loggt den Benutzer mit seinen Benutzernamen bzw. Email und Kennwort in die MFG ein.
+
 public class Benutzerlogin extends Controller {
 
 	@SuppressWarnings("unchecked")
@@ -124,6 +138,8 @@ public class Benutzerlogin extends Controller {
 		List<Orte> ortsdetails = new ArrayList<>();
 		List<DBObject> feld;
 
+		//Hier wird eine Liste von verfügbaren Orten, die sich in der Datenbank befinden, erstellt
+		
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -235,7 +251,7 @@ public class Benutzerlogin extends Controller {
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
-		// int anfragen;
+		
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -270,44 +286,11 @@ public class Benutzerlogin extends Controller {
 			e.printStackTrace();
 		}
 
-		//
-		// // user_statistiken lesen
-		//
-		// List<Zaehler> zaehler = new ArrayList<>();
-		//
-		// int suchergebnisse;
-		// int meine_mfgs = 0;
-		// int anfragen;
-		//
-		// try {
-		// MongoClient mongoClient = new MongoClient("localhost", 27017);
-		// DB db = mongoClient.getDB("play_basics");
-		//
-		// DBCollection coll = db.getCollection("user_statistiken");
-		// com.mongodb.DBCursor cursor = coll.find();
-		// BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-		// nutzer);
-		// cursor = coll.find(query);
-		//
-		// if (cursor.count() != 0) {
-		//
-		// for (DBObject s : cursor) {
-		// zaehler.add(new Zaehler((int) s.get("suchergebnisse"),
-		// (int) s.get("meine_mfgs"), (int) s.get("anfragen")));
-		//
-		// }
-		//
-		// }
-		//
-		// mongoClient.close();
-		//
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 
 		if (fertig) {
 			// Falls ein Fahrer sich einloggt, soll die Zielseite
 			// dementsprechend gestaltet werden.
+			
 			if (testeFahrer) {
 				session("typ", "Mitfahrer");
 			} else {
@@ -320,15 +303,16 @@ public class Benutzerlogin extends Controller {
 				typ = "";
 			}
 
+			//Hier wird die Session für den Benutzer angelegt, damit später bei der Nutzung der MFG Seite immer festgestellt werden
+			//kann welcher Benutzer gerade aktiv ist.
 			session("connected", nutzer);
 
+			//Der Benutzer wird bei erfolgreicher Anmeldung auf die Zielseite weitergeleitet
 			return redirect("/anwendung/mfg_anzeigen");
-			/*
-			 * return ok(views.html.anwendung.anwendung.render(
-			 * "ProTramp Mitfahrgelegenheit", nutzer, info, typ, ortsdetails,
-			 * zaehler));
-			 */
+			
 		} else {
+			
+			//Falls die Daten bei der Anmeldung nicht korrekt bzw. falsch waren, bekommt der Benutzer ein Hinweis angezeigt
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", "", info, typ, ortsdetails,
@@ -337,14 +321,22 @@ public class Benutzerlogin extends Controller {
 
 	}
 
+	
+	//Diese Funktion loggt der Benutzer aus der MFG
 	public static Result logout() {
 		String info = "";
 		String nutzer = session("connected");
+		
+		//Session wird gelöscht. Somit ist der Benutzer nicht mehr im eingeloggten Zustand.
 		session().clear();
 
 		List<Orte> ortsdetails = new ArrayList<>();
 		List<DBObject> feld;
 
+		//Die Startseite im uneingeloggten Zustand benötigt eine Liste von Ortsangaben
+		//damit soll die Ortssuche komfortabel gestaltet werden 
+		//Wie bei Google Suche erscheinen auch hier Suchvorschläge
+		
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
