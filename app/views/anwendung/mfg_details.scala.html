@@ -415,15 +415,7 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 					value=@i.anzahl_plaetze readonly>
 			</div>
 		</div>
-		<br> @if(i.nachricht == "") { } else {
-		<div>
-			<div class="input-group">
-				<span class="input-group-addon">Info:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-				<input type="text" class="form-control"
-					name="mfg_anbieten_nachricht" value=@i.nachricht readonly>
-			</div>
-		</div>
-		} <br>
+		<br> 
 		<div>
 			@if(typ == null) { @if(message) {
 			<button type="submit" class="btn btn-default btn-block">Jetzt
