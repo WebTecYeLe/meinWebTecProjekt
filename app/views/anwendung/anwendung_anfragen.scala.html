@@ -198,7 +198,7 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])(facebook: String)
 							<td>@i.ziel&nbsp;&nbsp;&nbsp;</td>
 							<td>@i.datum&nbsp;&nbsp;&nbsp;</td>
 							<td>@i.uhrzeit&nbsp;&nbsp;&nbsp;</td>
-							<td>@i.status&nbsp;&nbsp;&nbsp;</td> @if(i.nachricht == "") { }	else {
+							<td>@i.status&nbsp;&nbsp;&nbsp;</td> @if(i.nachricht.isEmpty()) { }	else {
 							<td>
 								<form method="post" action="/anwendung/@i.id/nachricht_lesen">
 									<button type="submit" class="btn btn-default">lesen</button>

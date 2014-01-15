@@ -115,13 +115,14 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.info.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, ortsdetails, facebook));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, ortsdetails,
+				facebook));
 	}
 
 	public static Result mfg_anbieten_index() {
@@ -159,13 +160,14 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler, facebook));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler,
+				facebook));
 
 	}
 
@@ -177,15 +179,14 @@ public class Anwendung extends Controller {
 
 		String nutzer = session("connected");
 		String typ = session("typ");
-		
+
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
 
-		@SuppressWarnings("unchecked")
-		Map<String, String> nachrichtenfeld = new HashMap();
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
@@ -839,10 +840,10 @@ public class Anwendung extends Controller {
 			}
 
 		}
-		
+
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
 
@@ -860,9 +861,13 @@ public class Anwendung extends Controller {
 		String nutzer = session("connected");
 		String typ = session("typ");
 
+		String[] splitResult;
+		String usr = "";
+		String msg = "";
+
 		List<AnzeigeDetails> details2 = new ArrayList<>();
 
-		Map<String, String> nachrichtenfeld = new HashMap();
+		List<String> nachrichtenfeld = new ArrayList<>();
 		String nachricht = "";
 
 		if (!typ.equals("Fahrer")) {
@@ -887,10 +892,19 @@ public class Anwendung extends Controller {
 
 			for (DBObject s : feld) {
 
-				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
+				nachrichtenfeld = (List<String>) s.get("nachrichten");
 
-				if (nachrichtenfeld.containsKey(nutzer)) {
-					nachricht = nachrichtenfeld.get(nutzer).toString();
+				for (int i = 0; i < nachrichtenfeld.size(); i++) {
+
+					if (nachrichtenfeld.toString().contains(nutzer)) {
+						nachricht = nachrichtenfeld.get(i);
+						splitResult = nachricht.split(" _ ");
+						usr = splitResult[0];
+						msg = splitResult[1];
+
+					}
+					
+					
 
 				}
 
@@ -899,7 +913,7 @@ public class Anwendung extends Controller {
 						(String) s.get("strecke"), (String) s.get("uhrzeit"),
 						(String) s.get("datum"), s.get("fahrer").toString(),
 						Integer.parseInt((String) s.get("anzahl_plaetze")),
-						(String) s.get("email"), "", "", nachricht));
+						(String) s.get("email"), "", "", msg));
 			}
 
 			mongoClient.close();
@@ -908,6 +922,9 @@ public class Anwendung extends Controller {
 
 		}
 
+		
+		
+		
 		// user_statistiken lesen
 
 		List<Zaehler> zaehler = new ArrayList<>();
@@ -938,11 +955,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.mfg_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2,
 				zaehler, facebook));
@@ -1088,11 +1105,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.anwendung_mfg_suchen.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler, facebook));
@@ -1213,11 +1230,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.mfg_details_suche.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, info, typ, details2,
 				zaehler, check, facebook));
@@ -1365,11 +1382,16 @@ public class Anwendung extends Controller {
 	@SuppressWarnings("unchecked")
 	public static Result anfragen_index() {
 
+		String test = "";
+		
 		String nutzer = session("connected");
 		String typ = session("typ");
 
-		@SuppressWarnings("rawtypes")
-		Map<String, String> nachrichtenfeld = new HashMap();
+		String[] splitResult;
+		String usr = "";
+		String msg = "";
+
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		// Aktuelles Datum in Format dd.MM.yyyy holen
 		long difference = 0;
@@ -1502,11 +1524,11 @@ public class Anwendung extends Controller {
 			}
 
 			String facebook = "";
-			
-			if(session("facebook_logged") != null) {
+
+			if (session("facebook_logged") != null) {
 				facebook = "Ja";
 			}
-			
+
 			return ok(views.html.anwendung.anwendung_anfragen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 					zaehler, facebook));
@@ -1533,6 +1555,8 @@ public class Anwendung extends Controller {
 
 				String nachricht = "";
 
+				
+				
 				for (DBObject s : feld) {
 
 					String dateDB = (String) s.get("datum") + " "
@@ -1548,15 +1572,14 @@ public class Anwendung extends Controller {
 						e.printStackTrace();
 					}
 
+					
+					
+					
 					if (difference <= 0) {
 
-						nachrichtenfeld = (Map<String, String>) s
-								.get("nachrichten");
+						nachrichtenfeld = (List<String>) s.get("nachrichten");
 
-						if (nachrichtenfeld.containsKey(nutzer)) {
-							nachricht = nachrichtenfeld.get(nutzer).toString();
-
-						}
+						
 
 						if (s.get("gestarteteAnfragen").toString()
 								.contains(nutzer)) {
@@ -1578,6 +1601,27 @@ public class Anwendung extends Controller {
 
 						if (s.get("erfolgreicheAnfragen").toString()
 								.contains(nutzer)) {
+							
+							for (int i = 0; i < nachrichtenfeld.size(); i++) {
+
+
+								nachricht = nachrichtenfeld.get(i).toString();
+								
+								
+								if (nachricht.contains(nutzer)) {
+									
+									
+									
+									
+									splitResult = nachricht.split(" _ ");
+									usr = splitResult[0];
+									msg = splitResult[1];
+									test += msg;
+								}
+
+							}
+							
+							
 							details.add(new AnzeigeDetails(s.get("_id")
 									.toString(), (String) s.get("start"),
 									(String) s.get("ziel"), (String) s
@@ -1588,12 +1632,32 @@ public class Anwendung extends Controller {
 											.parseInt((String) s
 													.get("anzahl_plaetze")),
 									(String) s.get("email"), "", "zugesagt",
-									nachricht));
+									msg));
 
 						}
 
 						if (s.get("abgelehnteAnfragen").toString()
 								.contains(nutzer)) {
+							
+							for (int i = 0; i < nachrichtenfeld.size(); i++) {
+
+
+								nachricht = nachrichtenfeld.get(i).toString();
+								
+								
+								if (nachricht.contains(nutzer)) {
+									
+									
+									
+									
+									splitResult = nachricht.split(" _ ");
+									usr = splitResult[0];
+									msg = splitResult[1];
+									test += msg;
+								}
+
+							}
+							
 							details.add(new AnzeigeDetails(s.get("_id")
 									.toString(), (String) s.get("start"),
 									(String) s.get("ziel"), (String) s
@@ -1604,7 +1668,7 @@ public class Anwendung extends Controller {
 											.parseInt((String) s
 													.get("anzahl_plaetze")),
 									(String) s.get("email"), "", "abgelehnt",
-									nachricht));
+									msg));
 
 						}
 					}
@@ -1619,6 +1683,10 @@ public class Anwendung extends Controller {
 
 			}
 
+//			if(true) {
+//				return ok(""+test);
+//			}
+			
 			// user_statistiken bearbeiten und lesen
 
 			List<Zaehler> zaehler = new ArrayList<>();
@@ -1658,11 +1726,11 @@ public class Anwendung extends Controller {
 			}
 
 			String facebook = "";
-			
-			if(session("facebook_logged") != null) {
+
+			if (session("facebook_logged") != null) {
 				facebook = "Ja";
 			}
-			
+
 			return ok(views.html.anwendung.anwendung_anfragen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 					zaehler, facebook));
@@ -1803,11 +1871,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler, person, teilnehmer, facebook));
@@ -1834,10 +1902,13 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
-		@SuppressWarnings("rawtypes")
-		Map<String, String> nachrichtenfeld = new HashMap();
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		String nachricht = "";
+
+		String[] splitResult;
+		String usr = "";
+		String msg = "";
 
 		List<DBObject> feld = new ArrayList<>();
 		List<Zaehler> zaehler = new ArrayList<>();
@@ -1855,10 +1926,17 @@ public class Anwendung extends Controller {
 
 			for (DBObject s : feld) {
 
-				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
+				nachrichtenfeld = (List<String>) s.get("nachrichten");
 
-				if (nachrichtenfeld.containsKey(nutzer)) {
-					nachricht = nachrichtenfeld.get(nutzer);
+				for (int i = 0; i < nachrichtenfeld.size(); i++) {
+
+					if (nachrichtenfeld.toString().contains(nutzer)) {
+						nachricht = nachrichtenfeld.get(i);
+						splitResult = nachricht.split(" _ ");
+						usr = splitResult[0];
+						msg = splitResult[1];
+
+					}
 
 				}
 
@@ -1888,14 +1966,14 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.nachricht.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler,
-				nachricht, facebook));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler, msg,
+				facebook));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -2027,10 +2105,8 @@ public class Anwendung extends Controller {
 							.append("vorname", vorname)
 							.append("name", nachname)
 							.append("registrierungsdatum", registrierungsdatum)
-							.append("alt", alt)
-							.append("tel", "")
-							.append("password", "")
-							.append("username", email);
+							.append("alt", alt).append("tel", "")
+							.append("password", "").append("username", email);
 
 					coll.insert(doc);
 
@@ -2058,7 +2134,7 @@ public class Anwendung extends Controller {
 
 				} else {
 					coll = db.getCollection("user_statistiken");
-					
+
 					// Hier muss Email und Username beachtet werden
 					query = (BasicDBObject) new BasicDBObject("username", email);
 					cursor = coll.find();
@@ -2073,8 +2149,7 @@ public class Anwendung extends Controller {
 						}
 
 					}
-					
-					
+
 				}
 
 			} catch (Exception e) {
@@ -2089,12 +2164,12 @@ public class Anwendung extends Controller {
 			session("typ", "Mitfahrer");
 
 			return redirect("/anwendung/mfg_anzeigen");
-			
+
 			/*
-			return ok(views.html.anwendung.anwendung.render(
-					"ProTramp Mitfahrgelegenheit", email, "", "", ortsdetails,
-					zaehler, "Ok"));
-			*/
+			 * return ok(views.html.anwendung.anwendung.render(
+			 * "ProTramp Mitfahrgelegenheit", email, "", "", ortsdetails,
+			 * zaehler, "Ok"));
+			 */
 
 		} else {
 			return ok(views.html.anwendung.anwendung.render(
@@ -2104,23 +2179,18 @@ public class Anwendung extends Controller {
 		}
 
 	}
-	
-	
+
 	public static Result FBLogout() {
-		
-		
+
 		session().clear();
-		
+
 		return redirect("/");
 	}
-	
 
 	// Funktion soll eine Anfrage mit Ja bestätigen. Anpassung der Datenbank und
 	// MFG
 	@SuppressWarnings("unchecked")
 	public static Result zustimmen(String id, String user) {
-		
-	
 
 		String nutzer = session("connected");
 		String typ = session("typ");
@@ -2128,8 +2198,8 @@ public class Anwendung extends Controller {
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 
 		String nachricht = parameters.get("nachricht_zustimmen")[0];
-		@SuppressWarnings("rawtypes")
-		Map<String, String> nachrichtenfeld = new HashMap();
+
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		List<DBObject> feld = new ArrayList<>();
 
@@ -2157,15 +2227,17 @@ public class Anwendung extends Controller {
 
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
 					new ObjectId(id));
+			com.mongodb.DBCursor cursor = coll.find(query);
 
 			feld = coll.find(query).toArray();
 
 			for (DBObject s : feld) {
 
-				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
+				nachrichtenfeld = (List<String>) s.get("nachrichten");
 
 				if (!nachricht.isEmpty()) {
-					nachrichtenfeld.put(user, nachricht);
+					nachrichtenfeld.add(user + " _ " + nachricht);
+
 				}
 
 				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
@@ -2277,7 +2349,7 @@ public class Anwendung extends Controller {
 			// Anzahl der Anfragen zählen
 
 			coll = db.getCollection("user");
-			com.mongodb.DBCursor cursor = coll.find();
+			cursor = coll.find();
 			query = (BasicDBObject) new BasicDBObject("username", nutzer);
 			List<DBObject> feldEmail = coll.find(query).toArray();
 
@@ -2334,11 +2406,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler, person, teilnehmer, facebook));
@@ -2351,12 +2423,15 @@ public class Anwendung extends Controller {
 
 		String nutzer = session("connected");
 		String typ = session("typ");
+		
+		String[] splitResult;
+		String usr = "";
+		String msg = "";
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 
 		String nachricht = parameters.get("nachricht_ablehnen")[0];
-		@SuppressWarnings("rawtypes")
-		Map<String, String> nachrichtenfeld = new HashMap();
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		List<DBObject> feld = new ArrayList<>();
 
@@ -2390,10 +2465,12 @@ public class Anwendung extends Controller {
 
 			for (DBObject s : feld) {
 
-				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
+				nachrichtenfeld = (List<String>) s.get("nachrichten");
+
 
 				if (!nachricht.isEmpty()) {
-					nachrichtenfeld.put(user, nachricht);
+					nachrichtenfeld.add(user + " _ " + nachricht);
+
 				}
 
 				anfrageListe = (List<String>) s.get("gestarteteAnfragen");
@@ -2553,11 +2630,11 @@ public class Anwendung extends Controller {
 		}
 
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
 				zaehler, person, teilnehmer, facebook));
