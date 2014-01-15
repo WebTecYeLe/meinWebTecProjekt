@@ -1,5 +1,5 @@
 @(title: String)(message: String)(info: String)(typ: String)(anzeige:
-List[AnzeigeDetails])(zaehler: List[Zaehler])
+List[AnzeigeDetails])(zaehler: List[Zaehler])(facebook: String)
 
 <!DOCTYPE html>
 <html>
@@ -270,7 +270,12 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 									@message</a>&nbsp;&nbsp;&nbsp;&nbsp;
 							</div>
 
-							<button type="submit" class="btn btn-primary">Logout</button>
+							@if(facebook.isEmpty()) {
+									<button type="submit" class="btn btn-primary">Logout</button>
+								} else {
+								
+								
+								}
 						</form>
 					</div>
 					} else {
@@ -471,6 +476,124 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])
 		var strecke = document.getElementById("address_strecke").value;
 		initialize();
 	</script>
+
+<!-- Facebook Login -->
+
+	<div id="fb-root"></div>
+	<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script>
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId : '1385512941707215',
+					status : true,
+					cookie : true,
+					xfbml : true,
+					oauth : true
+				});
+				
+				FB.Event.subscribe("auth.logout", function() {window.location = '/anwendung/FBLogout'})
+				
+				FB.Event.subscribe('auth.authResponseChange',
+						function(response) {
+
+							if (response.status === 'connected') {
+
+								testAPI();
+							} else if (response.status === 'not_authorized') {
+
+								FB.login(function(response) {
+									  
+									   // handle the response
+									 }, {scope: 'email'});
+							} else {
+
+								FB.login(function(response) {
+									
+									   // handle the response
+									 }, {scope: 'email'});
+								
+							}
+						});
+				
+				FB.logout(function(response) {
+			        // Person is now logged out
+					window.load.href = "/anwendung/FBLogout"
+			    });
+				
+				
+			};
+			
+			
+
+			(function(d) {
+				var js, id = 'facebook-jssdk', ref = d
+						.getElementsByTagName('script')[0];
+				if (d.getElementById(id)) {
+					return;
+				}
+				js = d.createElement('script');
+				js.id = id;
+				js.async = true;
+				js.src = "//connect.facebook.net/en_US/all.js";
+				ref.parentNode.insertBefore(js, ref);
+			}(document));
+
+			function testAPI() {
+				console.log('Welcome!  Fetching your information.... ');
+				FB.api('/me', function(response) {
+					document.getElementById("fb_name").value = response.name;
+					document.getElementById("fb_emailAdresse").value = response.email;
+					document.getElementById("fb_idNr").value = response.id;
+					document.getElementById("fb_geschlecht").value = response.gender;
+					document.getElementById("fb_birthday").value = response.birthday;
+					console.log('Good to see you, ' + response.name + " " + response.birthday + '.');
+					
+					if(document.getElementById('fb_emailAdresse').value==''){
+						
+					} else {
+						
+						document.fb_abschicken.submit();
+					}
+					
+					
+					
+				});
+			}
+			
+		</script>
+
+	<!--
+  Below we include the Login Button social plugin. This button uses the JavaScript SDK to
+  present a graphical Login button that triggers the FB.login() function when clicked. -->
+
+	@if(message) {
+		@if(facebook.isEmpty()) {
+			
+		} else {
+			<div class="fblog_position">
+		<fb:login-button show-faces="true" autologoutlink="true" width="200" max-rows="1"
+			scope='email, user_birthday'></fb:login-button></div>
+		}
+	} else {
+			<div class="fblog_position">
+				<fb:login-button show-faces="true" autologoutlink="true" width="200" max-rows="1"
+				scope='email, user_birthday'></fb:login-button></div>
+	}
+
+
+
+	@if(facebook.isEmpty()) {
+	<form name="fb_abschicken" method="POST" action="/anwendung/FB">
+		<div class="fb_feld">
+			<input type="hidden" id="fb_name" name="fb_name" value="" /> <input
+				type="hidden" id="fb_emailAdresse" name="fb_emailAdresse" value="" />
+			<input type="hidden" id="fb_idNr" name="fb_idNr" value="" /> <input
+				type="hidden" id="fb_geschlecht" name="fb_geschlecht" value="" /> <input
+				type="hidden" id="fb_birthday" name="fb_birthday" value="" />
+		</div>
+	</form>
+	} else { }
 
 
 </body>

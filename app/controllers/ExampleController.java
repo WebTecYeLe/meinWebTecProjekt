@@ -1,7 +1,6 @@
 package controllers;
 
 import java.text.DateFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -210,14 +209,20 @@ public class ExampleController extends Controller {
 		
 		//Falls hier der Benutzer vorher noch nicht eingeloggt ist, wird er auf die Standardseite weitergeleitet
 		
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		if (user != null) {
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails,
-					zaehler));
+					zaehler, facebook));
 		} else {
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", "", "", typ, ortsdetails,
-					zaehler));
+					zaehler, facebook));
 
 		}
 

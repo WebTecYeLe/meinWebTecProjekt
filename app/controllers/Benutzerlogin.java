@@ -316,7 +316,7 @@ public class Benutzerlogin extends Controller {
 			info = "Einloggen nicht erfolgreich. Versuchen Sie es erneut.";
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", "", info, typ, ortsdetails,
-					zaehler));
+					zaehler, ""));
 		}
 
 	}
@@ -324,6 +324,9 @@ public class Benutzerlogin extends Controller {
 	
 	//Diese Funktion loggt der Benutzer aus der MFG
 	public static Result logout() {
+		
+		
+		
 		String info = "";
 		String nutzer = session("connected");
 		
@@ -411,7 +414,7 @@ public class Benutzerlogin extends Controller {
 
 		return ok(views.html.anwendung.anwendung.render(
 				"ProTramp Mitfahrgelegenheit", "", info, "", ortsdetails,
-				zaehler));
+				zaehler, ""));
 
 	}
 

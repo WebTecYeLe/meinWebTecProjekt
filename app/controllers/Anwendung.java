@@ -19,6 +19,8 @@ import models.Zaehler;
 import org.bson.types.ObjectId;
 
 import play.Logger;
+import play.data.DynamicForm;
+import play.data.Form;
 import play.mvc.Controller;
 import play.mvc.Result;
 
@@ -40,7 +42,6 @@ import com.mongodb.MongoClient;
  * 
  * */
 
-
 //Das ist die Hauptklasse der MFG
 //Sie kümmert sich um Funktionen wie MFG Anbieten, MFG anzeigen, MFG Suchen, MFG Details anzeigen, MFG Anfrage  starten, MFG Nachricht lesen, 
 //MFG Fahrtfunktionen wie zustimmen oder ablehnen für Fahrer ermöglichen
@@ -48,7 +49,7 @@ import com.mongodb.MongoClient;
 public class Anwendung extends Controller {
 
 	//
-	
+
 	public static Result info() {
 
 		String nutzer = session("connected");
@@ -113,8 +114,14 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.info.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, ortsdetails));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, ortsdetails, facebook));
 	}
 
 	public static Result mfg_anbieten_index() {
@@ -151,24 +158,34 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler, facebook));
 
 	}
-	
-	//Funktion ermöglicht es, dass Fahrer eine MFG anbieten dürfen
-	//Nur Fahrer können dies, nicht Mitfahrer
+
+	// Funktion ermöglicht es, dass Fahrer eine MFG anbieten dürfen
+	// Nur Fahrer können dies, nicht Mitfahrer
 
 	@SuppressWarnings("rawtypes")
 	public static Result anbieten() {
 
 		String nutzer = session("connected");
 		String typ = session("typ");
+		
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
 
 		@SuppressWarnings("unchecked")
 		Map<String, String> nachrichtenfeld = new HashMap();
-
-		
 
 		List<Zaehler> zaehler = new ArrayList<>();
 
@@ -181,7 +198,7 @@ public class Anwendung extends Controller {
 
 		List<String> abgelehnteAnfragen = new ArrayList<>();
 
-		//user_statistiken lesen
+		// user_statistiken lesen
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -247,8 +264,9 @@ public class Anwendung extends Controller {
 		String minuten = parameters.get("Minuten")[0];
 		String plaetze = parameters.get("mfg_anbieten_plaetze")[0];
 
-		//Es soll interaktiv eine Map mit Route erstellt werden. Dafür werden Koordinaten benötigt
-		
+		// Es soll interaktiv eine Map mit Route erstellt werden. Dafür werden
+		// Koordinaten benötigt
+
 		double latstart = Double.parseDouble(parameters.get("latstart")[0]);
 		double lngstart = Double.parseDouble(parameters.get("lngstart")[0]);
 		double latziel = Double.parseDouble(parameters.get("latziel")[0]);
@@ -319,25 +337,26 @@ public class Anwendung extends Controller {
 				return ok(views.html.anwendung.anwendung_mfg_anbieten.render(
 						"ProTramp Mitfahrgelegenheit", nutzer,
 						"Die Anzahl der Plätze muss zwischen 1"
-								+ " und 10 liegen.", typ, zaehler));
+								+ " und 10 liegen.", typ, zaehler, facebook));
 			}
 		} catch (NumberFormatException e) {
 			return ok(views.html.anwendung.anwendung_mfg_anbieten
 					.render("ProTramp Mitfahrgelegenheit",
 							nutzer,
 							"Ihre Eingaben waren nicht korrekt. Versuchen Sie bitte erneut.",
-							typ, zaehler));
+							typ, zaehler, facebook));
 		}
 
-		//Hier wird überprüft dass der Fahrer nicht absichtlich Start und Ziel bzw. Streckenort gleich benannt
-		
+		// Hier wird überprüft dass der Fahrer nicht absichtlich Start und Ziel
+		// bzw. Streckenort gleich benannt
+
 		if (start.equals(ziel) || start.equals(strecke) || ziel.equals(strecke)) {
 			return ok(views.html.anwendung.anwendung_mfg_anbieten
 					.render("ProTramp Mitfahrgelegenheit",
 							nutzer,
 							"Start-Haltestelle und Ziel-Haltestelle bzw. Zwischenhaltestelle"
 									+ "\n dürfen nicht gleich sein. Geben Sie korrekte Daten ein.",
-							typ, zaehler));
+							typ, zaehler, facebook));
 		} else {
 
 		}
@@ -397,9 +416,9 @@ public class Anwendung extends Controller {
 
 				coll = db.getCollection("mfg");
 
-				//Daten werden in die Datenbank geschrieben
-				//Dadurch können Mitfahrer MFGs in der Datenbank suchen
-				
+				// Daten werden in die Datenbank geschrieben
+				// Dadurch können Mitfahrer MFGs in der Datenbank suchen
+
 				BasicDBObject doc = new BasicDBObject("start", start)
 						.append("ziel", ziel)
 						.append("strecke", strecke)
@@ -541,7 +560,7 @@ public class Anwendung extends Controller {
 
 			return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-					zaehler));
+					zaehler, facebook));
 		} else {
 
 			// user_statistiken lesen
@@ -576,12 +595,12 @@ public class Anwendung extends Controller {
 					.render("ProTramp Mitfahrgelegenheit",
 							nutzer,
 							"Das Datum muss in der Zukunft liegen. Versuchen Sie es bitte erneut.",
-							typ, zaehler2));
+							typ, zaehler2, facebook));
 		}
 
 	}
 
-	//MFGs die gesucht wurden sollen anhand eine Liste dargestellt werden
+	// MFGs die gesucht wurden sollen anhand eine Liste dargestellt werden
 
 	public static Result anzeigen() {
 		String nutzer = session("connected");
@@ -630,24 +649,22 @@ public class Anwendung extends Controller {
 				for (DBObject s : cursor) {
 					String dateDB = (String) s.get("datum") + " "
 							+ (String) s.get("uhrzeit");
-					
 
 					try {
 
 						dateDBParsen = date.parse(dateDB);
 						difference = todayDate.getTime()
 								- dateDBParsen.getTime() - 1800000;
-						
 
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
+
 					// solang zahl negativ, dann fahrt gültig
-					// -> nur MFGs die maximal 30min in der Vergangenheit bzw. in der Zukunft liegen werden aufgelistet
+					// -> nur MFGs die maximal 30min in der Vergangenheit bzw.
+					// in der Zukunft liegen werden aufgelistet
 					if (difference <= 0) {
 
-						
 						details.add(new AnzeigeDetails(s.get("_id").toString(),
 								(String) s.get("start"),
 								(String) s.get("ziel"), (String) s
@@ -659,7 +676,6 @@ public class Anwendung extends Controller {
 												.get("anzahl_plaetze")),
 								(String) s.get("email"), "", (String) s
 										.get("status"), ""));
-						
 
 					}
 
@@ -705,7 +721,7 @@ public class Anwendung extends Controller {
 				}
 
 				mongoClient.close();
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -816,20 +832,27 @@ public class Anwendung extends Controller {
 				}
 
 				mongoClient.close();
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 
 			}
 
 		}
+		
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
 
 		return ok(views.html.anwendung.anwendung_mfg_anzeigen.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-				zaehler));
+				zaehler, facebook));
 	}
 
-	//MFGs werden mit der Funktion detailsAnzeigen(String id) detailliert aufgelistet 
+	// MFGs werden mit der Funktion detailsAnzeigen(String id) detailliert
+	// aufgelistet
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Result detailsAnzeigen(String id) {
@@ -855,8 +878,9 @@ public class Anwendung extends Controller {
 			DBCollection coll = db.getCollection("mfg");
 
 			DBObject query;
-			
-			//Da die _id in der Datenbank immer eindeutig ist, gibt es hier immer genau einen Documenten aus der Collection der Datenbank
+
+			// Da die _id in der Datenbank immer eindeutig ist, gibt es hier
+			// immer genau einen Documenten aus der Collection der Datenbank
 			query = (BasicDBObject) new BasicDBObject("_id", new ObjectId(id));
 
 			feld = coll.find(query).toArray();
@@ -913,12 +937,19 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.mfg_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details2,
-				zaehler));
+				zaehler, facebook));
 	}
 
-	//Die Funktion soll MFGs suchen die den Eingabekriterien der Suchfelder Start und Ziel entsprechen
+	// Die Funktion soll MFGs suchen die den Eingabekriterien der Suchfelder
+	// Start und Ziel entsprechen
 	public static Result mfg_suchen() {
 
 		String nutzer = session("connected");
@@ -961,8 +992,9 @@ public class Anwendung extends Controller {
 
 			DBCollection coll = db.getCollection("mfg");
 			com.mongodb.DBCursor cursor = coll.find();
-			
-			//Durch start und ziel wird die Anzahl der Documente aus der mfg Collection auf ein bestimmtes Maß reduziert
+
+			// Durch start und ziel wird die Anzahl der Documente aus der mfg
+			// Collection auf ein bestimmtes Maß reduziert
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("start",
 					start).append("ziel", ziel);
 			cursor = coll.find(query);
@@ -990,7 +1022,8 @@ public class Anwendung extends Controller {
 				}
 				// solang zahl negativ, dann fahrt gültig
 				// und solange noch Plötze vorhanden sind
-				//-> nur MFGs die 30min in der Vergangenheit bzw. in der Zukunft liegen werden berücksichtigt
+				// -> nur MFGs die 30min in der Vergangenheit bzw. in der
+				// Zukunft liegen werden berücksichtigt
 				if (difference <= 0
 						&& Integer.parseInt(s.get("anzahl_plaetze").toString()) >= 1) {
 
@@ -1054,13 +1087,20 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.anwendung_mfg_suchen.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-				zaehler));
+				zaehler, facebook));
 	}
 
-	//MFGs Details werden angezeigt, die zuvor über das Suchformular gesucht wurden
-	
+	// MFGs Details werden angezeigt, die zuvor über das Suchformular gesucht
+	// wurden
+
 	@SuppressWarnings("unchecked")
 	public static Result suchDetailsAnzeigen(String id) {
 		String nutzer = session("connected");
@@ -1172,13 +1212,20 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.mfg_details_suche.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, info, typ, details2,
-				zaehler, check));
+				zaehler, check, facebook));
 	}
 
-	//Mit dieser Funktion haben die Mitfahrer die Möglichkeit eine Anfrage zu einer MFG zu starten
-	
+	// Mit dieser Funktion haben die Mitfahrer die Möglichkeit eine Anfrage zu
+	// einer MFG zu starten
+
 	@SuppressWarnings("unchecked")
 	public static Result anfrageStarten(String id) {
 
@@ -1312,8 +1359,9 @@ public class Anwendung extends Controller {
 
 	}
 
-	//Diese Funktion hilft den Benutzern eine grobe Übersicht über ihre Anfragen zu gewinnen
-	
+	// Diese Funktion hilft den Benutzern eine grobe Übersicht über ihre
+	// Anfragen zu gewinnen
+
 	@SuppressWarnings("unchecked")
 	public static Result anfragen_index() {
 
@@ -1453,9 +1501,15 @@ public class Anwendung extends Controller {
 				e.printStackTrace();
 			}
 
+			String facebook = "";
+			
+			if(session("facebook_logged") != null) {
+				facebook = "Ja";
+			}
+			
 			return ok(views.html.anwendung.anwendung_anfragen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-					zaehler));
+					zaehler, facebook));
 
 		} else {
 			List<DBObject> feld = new ArrayList<>();
@@ -1603,9 +1657,15 @@ public class Anwendung extends Controller {
 				e.printStackTrace();
 			}
 
+			String facebook = "";
+			
+			if(session("facebook_logged") != null) {
+				facebook = "Ja";
+			}
+			
 			return ok(views.html.anwendung.anwendung_anfragen.render(
 					"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-					zaehler));
+					zaehler, facebook));
 
 		}
 
@@ -1742,18 +1802,23 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-				zaehler, person, teilnehmer));
+				zaehler, person, teilnehmer, facebook));
 	}
-	
-	
-	
-	//Mit dieser Funktion können die Benutzer(Mitfahrer) Nachrichten lesen, die vom
-	//Fahrer verschickt wurden.
+
+	// Mit dieser Funktion können die Benutzer(Mitfahrer) Nachrichten lesen, die
+	// vom
+	// Fahrer verschickt wurden.
 	@SuppressWarnings("unchecked")
-	public static Result nachricht_lesen(String id) { 
-		
+	public static Result nachricht_lesen(String id) {
+
 		String nutzer = session("connected");
 		String typ = session("typ");
 
@@ -1768,15 +1833,15 @@ public class Anwendung extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		@SuppressWarnings("rawtypes")
 		Map<String, String> nachrichtenfeld = new HashMap();
-		
+
 		String nachricht = "";
-		
+
 		List<DBObject> feld = new ArrayList<>();
 		List<Zaehler> zaehler = new ArrayList<>();
-		
+
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
 			DB db = mongoClient.getDB("play_basics");
@@ -1785,27 +1850,25 @@ public class Anwendung extends Controller {
 
 			BasicDBObject query = (BasicDBObject) new BasicDBObject("_id",
 					new ObjectId(id));
-			
+
 			feld = coll.find(query).toArray();
-			
-			for(DBObject s : feld) {
-				
+
+			for (DBObject s : feld) {
+
 				nachrichtenfeld = (Map<String, String>) s.get("nachrichten");
-				
-				if(nachrichtenfeld.containsKey(nutzer)) {
+
+				if (nachrichtenfeld.containsKey(nutzer)) {
 					nachricht = nachrichtenfeld.get(nutzer);
-					
+
 				}
-				
+
 			}
-			
-			
-			//user_statistiken lesen
-			
+
+			// user_statistiken lesen
+
 			coll = db.getCollection("user_statistiken");
 			com.mongodb.DBCursor cursor = coll.find();
-			query = (BasicDBObject) new BasicDBObject("username",
-					nutzer);
+			query = (BasicDBObject) new BasicDBObject("username", nutzer);
 			cursor = coll.find(query);
 
 			if (cursor.count() != 0) {
@@ -1818,25 +1881,223 @@ public class Anwendung extends Controller {
 
 			}
 
-			
 			mongoClient.close();
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		String facebook = "";
 		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
 		
-		
-		
-		return ok(views.html.anwendung.nachricht.render("ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler, nachricht));
+		return ok(views.html.anwendung.nachricht.render(
+				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, zaehler,
+				nachricht, facebook));
+	}
+
+	@SuppressWarnings("unchecked")
+	public static Result FB() {
+
+		DynamicForm requestData = Form.form().bindFromRequest();
+
+		String nutzer = session("connected");
+		String typ = session("typ");
+
+		String email = "";
+		List<Orte> ortsdetails = new ArrayList<>();
+		List<Zaehler> zaehler = new ArrayList<>();
+
+		if (nutzer == null) {
+
+			List<DBObject> feld;
+
+			try {
+				if (typ == null) {
+
+				} else {
+					if (!typ.equals("Fahrer")) {
+						typ = "";
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			email = requestData.get("fb_emailAdresse");
+			String name = requestData.get("fb_name");
+			String id = requestData.get("fb_idNr");
+			String geburtsdatum = requestData.get("fb_birthday");
+			String gender;
+			String mitfahrer = "Mitfahrer";
+			String[] splitResult = name.split(" ");
+			String vorname = splitResult[0];
+			String nachname = splitResult[1];
+
+			String[] splitResultDatum = geburtsdatum.split("/");
+			String monat = splitResultDatum[0];
+			String tag = splitResultDatum[1];
+			String jahr = splitResultDatum[2];
+
+			if (requestData.get("fb_geschlecht").equals("male")) {
+				gender = "Herr";
+			} else {
+				gender = "Frau";
+			}
+
+			// Das Alter wird zunaechst ermittelt
+			String alter = "";
+			int alt;
+
+			GregorianCalendar today = new GregorianCalendar();
+			GregorianCalendar past = new GregorianCalendar(
+					Integer.parseInt(jahr), Integer.parseInt(monat) - 1,
+					Integer.parseInt(tag));
+
+			long difference = today.getTimeInMillis() - past.getTimeInMillis();
+			int days = (int) (difference / (1000 * 60 * 60 * 24));
+			double years = (double) days / 365;
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("");
+			sb.append(years);
+			alter = sb.toString();
+
+			DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM);
+			String registrierungsdatum = df.format(today.getTime());
+
+			int anfragen = 0;
+
+			// Bestimmung des Alters als ganze Zahl
+			alt = (int) Math.floor(Double.parseDouble(alter));
+
+			try {
+				MongoClient mongoClient = new MongoClient("localhost", 27017);
+				DB db = mongoClient.getDB("play_basics");
+
+				DBCollection coll = (DBCollection) db.getCollection("mfg");
+				BasicDBObject query = new BasicDBObject();
+
+				feld = coll.find(query).toArray();
+
+				String vergleich = "";
+
+				// Auflistung der unterschiedlichen Orte
+				for (DBObject s : feld) {
+
+					if (vergleich.contains(s.get("start").toString())) {
+
+					} else {
+						vergleich += s.get("start").toString();
+						ortsdetails.add(new Orte((String) s.get("start")));
+					}
+
+					if (vergleich.contains(s.get("ziel").toString())) {
+
+					} else {
+						vergleich += s.get("ziel").toString();
+						ortsdetails.add(new Orte((String) s.get("ziel")));
+					}
+
+					if (vergleich.contains(s.get("strecke").toString())) {
+
+					} else {
+						vergleich += s.get("strecke").toString();
+						ortsdetails.add(new Orte((String) s.get("strecke")));
+					}
+
+				}
+
+				// Die Collection des Nutzers finden
+				coll = db.getCollection("user");
+				com.mongodb.DBCursor cursor;
+				query = (BasicDBObject) new BasicDBObject("email", email);
+
+				feld = coll.find(query).toArray();
+				cursor = coll.find(query);
+
+				if (cursor.count() < 1) {
+					BasicDBObject doc = new BasicDBObject("email", email)
+							.append("titel", gender)
+							.append("fahrertyp", mitfahrer)
+							.append("geburtsdatum",
+									tag + "." + monat + "." + jahr)
+							.append("vorname", vorname)
+							.append("name", nachname)
+							.append("registrierungsdatum", registrierungsdatum)
+							.append("alt", alt)
+							.append("tel", "")
+							.append("password", "")
+							.append("username", email);
+
+					coll.insert(doc);
+
+					coll = db.getCollection("user_statistiken");
+					cursor = coll.find();
+					// Hier muss Email und Username beachtet werden
+					query = (BasicDBObject) new BasicDBObject();
+
+					doc = new BasicDBObject("username", email)
+							.append("suchergebnisse", 0)
+							.append("meine_mfgs", 0).append("anfragen", 0);
+
+					coll.insert(doc);
+
+					if (cursor.count() != 0) {
+
+						for (DBObject s : cursor) {
+							zaehler.add(new Zaehler((int) s
+									.get("suchergebnisse"), (int) s
+									.get("meine_mfgs"), (int) s.get("anfragen")));
+
+						}
+
+					}
+
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			// Hier wird die Session für den Benutzer angelegt, damit später bei
+			// der Nutzung der MFG Seite immer festgestellt werden
+			// kann welcher Benutzer gerade aktiv ist.
+			session("connected", email);
+			session("facebook_logged", "Ja");
+			session("typ", "Mitfahrer");
+
+			return ok(views.html.anwendung.anwendung.render(
+					"ProTramp Mitfahrgelegenheit", email, "", "", ortsdetails,
+					zaehler, "Ok"));
+
+		} else {
+			return ok(views.html.anwendung.anwendung.render(
+					"ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails,
+					zaehler, ""));
+
+		}
+
 	}
 	
+	
+	public static Result FBLogout() {
+		
+		
+		session().clear();
+		
+		return redirect("/");
+	}
 	
 
 	// Funktion soll eine Anfrage mit Ja bestätigen. Anpassung der Datenbank und
 	// MFG
 	@SuppressWarnings("unchecked")
 	public static Result zustimmen(String id, String user) {
+		
+	
 
 		String nutzer = session("connected");
 		String typ = session("typ");
@@ -2049,9 +2310,15 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-				zaehler, person, teilnehmer));
+				zaehler, person, teilnehmer, facebook));
 	}
 
 	// Funktion soll eine Anfrage mit Nein ablehnen. Anpassung der Datenbank und
@@ -2262,9 +2529,15 @@ public class Anwendung extends Controller {
 			e.printStackTrace();
 		}
 
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.anwendung.mfg_anfragen_details.render(
 				"ProTramp Mitfahrgelegenheit", nutzer, "", typ, details,
-				zaehler, person, teilnehmer));
+				zaehler, person, teilnehmer, facebook));
 
 	}
 

@@ -15,6 +15,8 @@ POST	/anwendung/mfg_suchen			 controllers.Anwendung.mfg_suchen()
 POST	/anwendung/:id/anfragen		     controllers.Anwendung.anfrageStarten(id: String)
 GET		/anwendung/anfragen_index		 controllers.Anwendung.anfragen_index()
 GET		/info							 controllers.Anwendung.info()
+POST	/anwendung/FB					 controllers.Anwendung.FB()
+GET		/anwendung/FBLogout				 controllers.Anwendung.FBLogout()
 
 # Benutzerlogin
 

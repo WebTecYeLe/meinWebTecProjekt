@@ -1,16 +1,17 @@
 package controllers;
 
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Map;
+
+
+
 
 
 
 import models.KontoDetails;
 import play.Logger;
 import play.mvc.Controller;
-
 import play.mvc.Result;
 
 import com.mongodb.BasicDBObject;
@@ -63,8 +64,15 @@ public class Konto extends Controller {
 		} catch (Exception e) {
 
 		}
+		
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
+		
 		return ok(views.html.konto.kontoeinstellungen.render(
-				"ProTramp Mitfahrgelegenheit", nutzer, "", details));
+				"ProTramp Mitfahrgelegenheit", nutzer, "", details, facebook));
 	}
 
 
@@ -72,6 +80,12 @@ public class Konto extends Controller {
 	
 	public static Result kontoeinstellungen_aendern() {
 		String nutzer = session("connected");
+		
+		String facebook = "";
+		
+		if(session("facebook_logged") != null) {
+			facebook = "Ja";
+		}
 
 		Map<String, String[]> parameters = request().body().asFormUrlEncoded();
 
@@ -124,7 +138,7 @@ public class Konto extends Controller {
 
 		//Hier wird überprüft ob das Kennwort richtig eingegeben wurde
 		if (altesPasswort == "") {
-			return ok(views.html.konto.kontoeinstellungen.render("ProTramp Mitfahrgelegenheit", nutzer, "Ihre Eingaben waren nicht gültig. Versuchen Sie es erneut.", details));
+			return ok(views.html.konto.kontoeinstellungen.render("ProTramp Mitfahrgelegenheit", nutzer, "Ihre Eingaben waren nicht gültig. Versuchen Sie es erneut.", details, facebook));
 
 		} else {
 
@@ -182,8 +196,10 @@ public class Konto extends Controller {
 				
 				//falls der Benutzer das Kennwort nicht korrekt eingegeben hat wird er darauf mit einem Hinweis benachrichtigt
 				
+				
+				
 				return ok(views.html.konto.kontoeinstellungen.render(
-						"ProTramp Mitfahrgelegenheit", nutzer, "Das Passwort wurde nicht korrekt wiederholt. Versuchen Sie es erneut.", details));
+						"ProTramp Mitfahrgelegenheit", nutzer, "Das Passwort wurde nicht korrekt wiederholt. Versuchen Sie es erneut.", details, facebook));
 			}
 
 		}
@@ -280,8 +296,14 @@ public class Konto extends Controller {
 
 			}
 			
+			String facebook = "";
+			
+			if(session("facebook_logged") != null) {
+				facebook = "Ja";
+			}
+			
 			return ok(views.html.konto.kontoeinstellungen.render(
-					"ProTramp Mitfahrgelegenheit", nutzer, "", details));
+					"ProTramp Mitfahrgelegenheit", nutzer, "", details, facebook));
 		}
 		
 	}

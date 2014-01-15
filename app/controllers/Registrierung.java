@@ -296,7 +296,7 @@ public class Registrierung extends Controller {
 		//Standardseite wird aufgerufen
 		return ok(views.html.anwendung.anwendung
 				.render("ProTramp Mitfahrgelegenheit", "", "", "", ortsdetails,
-						zaehler));
+						zaehler, ""));
 
 	}
 }
