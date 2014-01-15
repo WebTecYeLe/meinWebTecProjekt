@@ -2056,6 +2056,25 @@ public class Anwendung extends Controller {
 
 					}
 
+				} else {
+					coll = db.getCollection("user_statistiken");
+					
+					// Hier muss Email und Username beachtet werden
+					query = (BasicDBObject) new BasicDBObject("username", email);
+					cursor = coll.find();
+
+					if (cursor.count() != 0) {
+
+						for (DBObject s : cursor) {
+							zaehler.add(new Zaehler((int) s
+									.get("suchergebnisse"), (int) s
+									.get("meine_mfgs"), (int) s.get("anfragen")));
+
+						}
+
+					}
+					
+					
 				}
 
 			} catch (Exception e) {
@@ -2069,9 +2088,13 @@ public class Anwendung extends Controller {
 			session("facebook_logged", "Ja");
 			session("typ", "Mitfahrer");
 
+			return redirect("/anwendung/mfg_anzeigen");
+			
+			/*
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", email, "", "", ortsdetails,
 					zaehler, "Ok"));
+			*/
 
 		} else {
 			return ok(views.html.anwendung.anwendung.render(
