@@ -1387,9 +1387,7 @@ public class Anwendung extends Controller {
 		String nutzer = session("connected");
 		String typ = session("typ");
 
-		String[] splitResult;
-		String usr = "";
-		String msg = "";
+		
 
 		List<String> nachrichtenfeld = new ArrayList<>();
 
@@ -1576,10 +1574,28 @@ public class Anwendung extends Controller {
 					
 					
 					if (difference <= 0) {
+						String[] splitResult;
+						String usr = "";
+						String msg = "";
 
 						nachrichtenfeld = (List<String>) s.get("nachrichten");
-
 						
+						for (int i = 0; i < nachrichtenfeld.size(); i++) {
+							nachricht = nachrichtenfeld.get(i).toString();
+							
+							if (nachricht.contains(nutzer)) {								
+								
+								splitResult = nachricht.split(" _ ");
+								usr = splitResult[0];
+								msg = splitResult[1];
+								test += msg;
+							}
+
+						}
+
+						if(msg.isEmpty()) {
+							msg = "";
+						}
 
 						if (s.get("gestarteteAnfragen").toString()
 								.contains(nutzer)) {
@@ -1602,24 +1618,24 @@ public class Anwendung extends Controller {
 						if (s.get("erfolgreicheAnfragen").toString()
 								.contains(nutzer)) {
 							
-							for (int i = 0; i < nachrichtenfeld.size(); i++) {
-
-
-								nachricht = nachrichtenfeld.get(i).toString();
-								
-								
-								if (nachricht.contains(nutzer)) {
-									
-									
-									
-									
-									splitResult = nachricht.split(" _ ");
-									usr = splitResult[0];
-									msg = splitResult[1];
-									test += msg;
-								}
-
-							}
+//							for (int i = 0; i < nachrichtenfeld.size(); i++) {
+//
+//
+//								nachricht = nachrichtenfeld.get(i).toString();
+//								
+//								
+//								if (nachricht.contains(nutzer)) {
+//									
+//									
+//									
+//									
+//									splitResult = nachricht.split(" _ ");
+//									usr = splitResult[0];
+//									msg = splitResult[1];
+//									test += msg;
+//								}
+//
+//							}
 							
 							
 							details.add(new AnzeigeDetails(s.get("_id")
@@ -1639,24 +1655,24 @@ public class Anwendung extends Controller {
 						if (s.get("abgelehnteAnfragen").toString()
 								.contains(nutzer)) {
 							
-							for (int i = 0; i < nachrichtenfeld.size(); i++) {
-
-
-								nachricht = nachrichtenfeld.get(i).toString();
-								
-								
-								if (nachricht.contains(nutzer)) {
-									
-									
-									
-									
-									splitResult = nachricht.split(" _ ");
-									usr = splitResult[0];
-									msg = splitResult[1];
-									test += msg;
-								}
-
-							}
+//							for (int i = 0; i < nachrichtenfeld.size(); i++) {
+//
+//
+//								nachricht = nachrichtenfeld.get(i).toString();
+//								
+//								
+//								if (nachricht.contains(nutzer)) {
+//									
+//									
+//									
+//									
+//									splitResult = nachricht.split(" _ ");
+//									usr = splitResult[0];
+//									msg = splitResult[1];
+//									test += msg;
+//								}
+//
+//							}
 							
 							details.add(new AnzeigeDetails(s.get("_id")
 									.toString(), (String) s.get("start"),
