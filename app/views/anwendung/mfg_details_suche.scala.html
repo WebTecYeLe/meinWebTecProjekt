@@ -433,8 +433,10 @@ List[AnzeigeDetails])(zaehler: List[Zaehler])(bereitsAngefragt: String)(facebook
 				</form>
 
 				} else { <span><h4>Wurde bereits angefragt.</h4></span> } } else { @if(info) {
+				<form method="POST" action="/anwendung/@i.id/mfg_anfrage_details">
 				<button type="submit" class="btn btn-primary btn-block">Anfragen
 					und Teilnehmer zeigen</button>
+				</form>	
 				} } }
 
 			</div>

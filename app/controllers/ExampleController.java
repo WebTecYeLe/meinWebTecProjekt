@@ -11,6 +11,7 @@ import play.mvc.Result;
 
 import java.util.List;
 
+import models.AnzeigeDetails;
 import models.Orte;
 import models.Zaehler;
 
@@ -32,7 +33,6 @@ import com.mongodb.MongoClient;
  * 
  * */
 
-
 //Diese Klasse kümmert sich darum, wenn Benutzer die Seite zum ersten Mal aufrufen.
 //Anhand Sessions wird überprüft ob der Benutzer eingeloggt ist oder nicht
 
@@ -49,6 +49,7 @@ public class ExampleController extends Controller {
 
 		List<Orte> ortsdetails = new ArrayList<>();
 		List<DBObject> feld;
+		List<String> nachrichtenfeld = new ArrayList<>();
 
 		try {
 			MongoClient mongoClient = new MongoClient("localhost", 27017);
@@ -93,16 +94,6 @@ public class ExampleController extends Controller {
 			e.printStackTrace();
 		}
 
-		if (typ != null) {
-			if (!typ.equals("Fahrer")) {
-				typ = "";
-
-			}
-
-		} else {
-			typ = "";
-		}
-
 		// Aktuelles Datum in Format dd.MM.yyyy holen
 		long difference = 0;
 		DateFormat date = new SimpleDateFormat("dd.MM.yyyy HH:mm");
@@ -115,59 +106,163 @@ public class ExampleController extends Controller {
 		int anfragen = 0;
 		String email = "";
 
-		//Datenbankverbindung aufbauen
-		//Hier werden gestartete Anfragen aufgelistet, die vom Datum her 30min in der Vergangenheit bzw. in der Zukunft liegen
-		try {
-			MongoClient mongoClient = new MongoClient("localhost", 27017);
-			DB db = mongoClient.getDB("play_basics");
+		if (typ != null) {
+			if (!typ.equals("Fahrer")) {
+				// Mitfahrer
+				typ = "";
 
-			DBCollection coll = db.getCollection("user");
+				feld = new ArrayList<>();
+				List<AnzeigeDetails> details = new ArrayList<>();
 
-			BasicDBObject query = (BasicDBObject) new BasicDBObject("username",
-					user);
-			List<DBObject> feldEmail = coll.find(query).toArray();
+				if (!typ.equals("Fahrer")) {
+					typ = "";
+				}
 
-			for (DBObject s : feldEmail) {
-				email = (String) s.get("email");
-			}
+				anfragen = 0;
 
-			coll = db.getCollection("mfg");
-
-			query = (BasicDBObject) new BasicDBObject("email", email);
-
-			feld = coll.find(query).toArray();
-
-			for (DBObject s : feld) {
-				String dateDB = (String) s.get("datum") + " "
-						+ (String) s.get("uhrzeit");
-
-				//1800000 sind angegeben in ms. Dies entspricht 30min.
 				try {
+					MongoClient mongoClient = new MongoClient("localhost",
+							27017);
+					DB db = mongoClient.getDB("play_basics");
 
-					dateDBParsen = date.parse(dateDB);
-					difference = todayDate.getTime() - dateDBParsen.getTime()
-							- 1800000;
+					DBCollection coll = db.getCollection("mfg");
+
+					BasicDBObject query = (BasicDBObject) new BasicDBObject();
+
+					feld = coll.find(query).toArray();
+
+					String nachricht = "";
+
+					for (DBObject s : feld) {
+
+						String dateDB = (String) s.get("datum") + " "
+								+ (String) s.get("uhrzeit");
+
+						try {
+
+							dateDBParsen = date.parse(dateDB);
+							difference = todayDate.getTime()
+									- dateDBParsen.getTime() - 1800000;
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						if (difference <= 0) {
+							String[] splitResult;
+							String usr = "";
+							String msg = "";
+
+							nachrichtenfeld = (List<String>) s
+									.get("nachrichten");
+
+							for (int i = 0; i < nachrichtenfeld.size(); i++) {
+								nachricht = nachrichtenfeld.get(i).toString();
+
+								if (nachricht.contains(user)) {
+
+									splitResult = nachricht.split(" _ ");
+									usr = splitResult[0];
+									msg = splitResult[1];
+									
+								}
+
+							}
+
+							if (msg.isEmpty()) {
+								msg = "";
+							}
+
+							if (s.get("gestarteteAnfragen").toString()
+									.contains(user)) {
+
+								anfragen++;
+
+								
+
+							}
+
+							
+
+							
+						}
+
+					}
+
+					mongoClient.close();
+
+				} catch (Exception e) {
+
+					e.printStackTrace();
+
+				}
+
+			} else {
+				// Fahrer
+				// Datenbankverbindung aufbauen
+				// Hier werden gestartete Anfragen aufgelistet, die vom Datum
+				// her 30min in der Vergangenheit bzw. in der Zukunft liegen
+				try {
+					MongoClient mongoClient = new MongoClient("localhost",
+							27017);
+					DB db = mongoClient.getDB("play_basics");
+
+					DBCollection coll = db.getCollection("user");
+
+					BasicDBObject query = (BasicDBObject) new BasicDBObject(
+							"username", user);
+					List<DBObject> feldEmail = coll.find(query).toArray();
+
+					for (DBObject s : feldEmail) {
+						email = (String) s.get("email");
+					}
+
+					coll = db.getCollection("mfg");
+
+					query = (BasicDBObject) new BasicDBObject("email", email);
+
+					feld = coll.find(query).toArray();
+
+					for (DBObject s : feld) {
+						String dateDB = (String) s.get("datum") + " "
+								+ (String) s.get("uhrzeit");
+
+						// 1800000 sind angegeben in ms. Dies entspricht 30min.
+						try {
+
+							dateDBParsen = date.parse(dateDB);
+							difference = todayDate.getTime()
+									- dateDBParsen.getTime() - 1800000;
+
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						// Falls es Anfragen gibt die gestartet wurden und vom
+						// Datum gültig sind werden übernommen
+						if (difference <= 0) {
+							anfrageListe = (List<String>) s
+									.get("gestarteteAnfragen");
+
+							if (anfrageListe.size() >= 1) {
+
+								anfragen += anfrageListe.size();
+
+							}
+
+						}
+
+					}
+
+					mongoClient.close();
 
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-
-				//Falls es Anfragen gibt die gestartet wurden und vom Datum gültig sind werden übernommen
-				if (difference <= 0) {
-					anfrageListe = (List<String>) s.get("gestarteteAnfragen");
-
-					if (anfrageListe.size() >= 1) {
-
-						anfragen += anfrageListe.size();
-
-					}
-
-				}
-
 			}
 
-		} catch (Exception e) {
-			e.printStackTrace();
+		} else {
+			typ = "";
 		}
 
 		// user_statistiken bearbeiten und lesen
@@ -206,15 +301,16 @@ public class ExampleController extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//Falls hier der Benutzer vorher noch nicht eingeloggt ist, wird er auf die Standardseite weitergeleitet
-		
+
+		// Falls hier der Benutzer vorher noch nicht eingeloggt ist, wird er auf
+		// die Standardseite weitergeleitet
+
 		String facebook = "";
-		
-		if(session("facebook_logged") != null) {
+
+		if (session("facebook_logged") != null) {
 			facebook = "Ja";
 		}
-		
+
 		if (user != null) {
 			return ok(views.html.anwendung.anwendung.render(
 					"ProTramp Mitfahrgelegenheit", user, "", typ, ortsdetails,
